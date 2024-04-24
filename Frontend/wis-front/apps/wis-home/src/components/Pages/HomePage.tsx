@@ -1,4 +1,4 @@
-import NavBar from "../main-layout/NavBar";
+import { NavBar } from "@repo/ui";
 
 const HomePage = () => {
     return(

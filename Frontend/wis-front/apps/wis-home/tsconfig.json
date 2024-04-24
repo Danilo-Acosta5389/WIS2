@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "../../packages/ui/src/components/main-layout/NavBar.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

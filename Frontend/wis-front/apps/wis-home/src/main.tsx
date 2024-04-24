@@ -49,7 +49,7 @@ declare module "@tanstack/react-router" {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <body className=' bg-black h-screen w-screen'>
+    <body className=" h-screen bg-black text-white flex flex-col">
       <RouterProvider router={router} />
     </body>
   </React.StrictMode>,

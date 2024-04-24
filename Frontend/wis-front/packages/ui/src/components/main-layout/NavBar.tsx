@@ -5,6 +5,7 @@ import {
   XMarkIcon,
 } from '@repo/ui';
 import { Button } from "@repo/ui";
+import { Link } from '@tanstack/react-router'
 
 // const products = [
 //   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -22,7 +23,7 @@ import { Button } from "@repo/ui";
 //   return classes.filter(Boolean).join(' ')
 // }
 
-export default function Example() {
+ const NavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -98,11 +99,11 @@ export default function Example() {
             </Transition>
           </Popover> */}
 
+          <Link to="/" className="text-sm font-semibold leading-6 text-gray-900">
+            Home
+          </Link>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Forum
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Blog
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Survey
@@ -110,7 +111,7 @@ export default function Example() {
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Button className="text-sm font-semibold leading-6 text-black bg-white mx-4 hover:bg-gray-200">
-            Log in <span aria-hidden="true"></span>
+            <Link to="/login">Log in <span aria-hidden="true"></span></Link>
           </Button>
           <Button className="text-sm font-semibold leading-6 pl-5 hover:bg-gray-500 bg-blue-600">
             Sign up <span aria-hidden="true"></span>
@@ -166,12 +167,12 @@ export default function Example() {
                     </>
                   )}
                 </Disclosure> */}
-                <a
-                  href="#"
+                <Link
+                  to="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  Forum
-                </a>
+                  Home
+                </Link>
                 <a
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
@@ -186,12 +187,15 @@ export default function Example() {
                 </a>
               </div>
               <div className="py-6">
-                <a
+                <Link to="/login" className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                  Log in &rarr;
+                </Link>
+                {/* <a
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Log in &rarr;
-                </a>
+                </a> */}
                 {/* <Button
                   className="-mx-3 block rounded-lg px-3 py-2.5 font-semibold  text-white hover:bg-gray-500"
                 >
@@ -205,3 +209,6 @@ export default function Example() {
     </header>
   )
 }
+
+
+export { NavBar };
