@@ -18,7 +18,6 @@ namespace WisApi.Controllers
         {
             _tokenRepository = tokenRepository;
             _authRepository = authRepository;
-
         }
 
         // POST: /api/auth/register
