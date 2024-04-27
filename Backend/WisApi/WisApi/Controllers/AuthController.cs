@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WisApi.Models;
 using WisApi.Models.DTO_s;
 using WisApi.Repositories.Interfaces;
 
@@ -13,9 +14,9 @@ namespace WisApi.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser>? _userManager;
-        private readonly ITokenRepository? _tokenRepository;
-        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository)
+        private readonly UserManager<ExtendedIdentityUser>? _userManager;
+        private readonly ITokenRepository _tokenRepository;
+        public AuthController(UserManager<ExtendedIdentityUser> userManager, ITokenRepository tokenRepository)
         {
             _userManager = userManager;
             _tokenRepository = tokenRepository;
@@ -26,7 +27,7 @@ namespace WisApi.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerRequestDTO)
         {
-            var identityUser = new IdentityUser
+            var identityUser = new ExtendedIdentityUser
             {
                 UserName = registerRequestDTO.UserName,
                 Email = registerRequestDTO.Email
@@ -64,17 +65,38 @@ namespace WisApi.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     if (roles != null)
                     {
-                        // Create token
+                        // Create tokens
                         var jwtToken = _tokenRepository!.CreateJWTToken(user, roles.ToList());
+                        var refreshToken = _tokenRepository!.GenerateRefreshTokenString();
                         var response = new LoginResponseDTO
                         {
-                            JwtToken = jwtToken
+                            IsLoggedIn = true,
+                            JwtToken = jwtToken,
+                            RefreshToken = refreshToken
                         };
+
+                        //Setting new refresh token to user
+                        user.RefreshToken = response.RefreshToken;
+                        user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(6);
+                        await _userManager.UpdateAsync(user);
+
                         return Ok(response);
                     }
                 }
             }
             return BadRequest("username or password was incorrect");
+        }
+
+
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenModel model)
+        {
+            var loginResult = await _tokenRepository.RefreshToken(model);
+            if (loginResult.IsLoggedIn == true)
+            {
+                return Ok(loginResult);
+            }
+            return Unauthorized();
         }
     }
 }

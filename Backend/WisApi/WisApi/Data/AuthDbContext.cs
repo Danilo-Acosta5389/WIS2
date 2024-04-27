@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WisApi.Models;
 
 namespace WisApi.Data
 {
-    public class AuthDbContext : IdentityDbContext
+    public class AuthDbContext : IdentityDbContext<ExtendedIdentityUser>
     {
         public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options) { }
-
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

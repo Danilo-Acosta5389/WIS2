@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using WisApi.Data;
+using WisApi.Models;
 using WisApi.Repositories.Interfaces;
 using WisApi.Repositories.Services;
 
@@ -55,7 +56,7 @@ namespace WisApi
 
             
             // Identity & Auth config
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            builder.Services.AddIdentity<ExtendedIdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 3;
                 options.Password.RequireNonAlphanumeric = false;
