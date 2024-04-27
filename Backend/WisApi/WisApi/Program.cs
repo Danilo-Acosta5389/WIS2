@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using WisApi.Data;
+using WisApi.Repositories.Interfaces;
+using WisApi.Repositories.Services;
 
 namespace WisApi
 {
@@ -16,9 +18,6 @@ namespace WisApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
-
-            
             //Auth Db Context
             builder.Services.AddDbContext<AuthDbContext>(options =>
             {
@@ -33,8 +32,11 @@ namespace WisApi
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Could not find connection string: 'DefaultConnection'.")));
 
-            builder.Services.AddControllers();
+            //Services DI
+            builder.Services.AddScoped<ITokenRepository, TokenService>();
 
+
+            builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
             //Setting up Swagger to use Auth
@@ -53,7 +55,6 @@ namespace WisApi
 
             
             // Identity & Auth config
-            
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 3;
@@ -82,8 +83,6 @@ namespace WisApi
             });
 
             builder.Services.AddAuthorization();
-
-
 
             var app = builder.Build();
 
