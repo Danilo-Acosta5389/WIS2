@@ -25,7 +25,7 @@ namespace WisApi.Repositories.Services
         {
             // Create claims
             var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, user.Email!));
+            claims.Add(new Claim(ClaimTypes.Name, user.Email!));   //Might want to check what is relevant in claims for this app in particualar
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
@@ -42,18 +42,6 @@ namespace WisApi.Repositories.Services
         }
 
 
-        public string GenerateRefreshTokenString()
-        {
-            var randomNumber = new byte[64];
-
-            using (var numberGenerator = RandomNumberGenerator.Create())
-            {
-                numberGenerator.GetBytes(randomNumber);
-            }
-
-            return Convert.ToBase64String(randomNumber);
-        }
-
         public async Task<LoginResponseDTO> RefreshToken(RefreshTokenModel model)
         {
             var principal = GetTokenPrincipal(model.JwtToken);
@@ -62,7 +50,7 @@ namespace WisApi.Repositories.Services
             if (principal?.Identity?.Name is null)
                 return response;
 
-            var identityUser = await _userManager.FindByEmailAsync(principal.Identity.Name);
+            var identityUser = await _userManager.FindByEmailAsync(principal.Identity.Name); 
             
 
             if (identityUser is null || identityUser.RefreshToken != model.RefreshToken || identityUser.RefreshTokenExpiry < DateTime.UtcNow)
@@ -105,6 +93,19 @@ namespace WisApi.Repositories.Services
                 IssuerSigningKey = securityKey
             };
             return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
+        }
+
+
+        public string GenerateRefreshTokenString()
+        {
+            var randomNumber = new byte[64];
+
+            using (var numberGenerator = RandomNumberGenerator.Create())
+            {
+                numberGenerator.GetBytes(randomNumber);
+            }
+
+            return Convert.ToBase64String(randomNumber);
         }
     }
 }
