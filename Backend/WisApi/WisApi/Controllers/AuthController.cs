@@ -49,7 +49,7 @@ namespace WisApi.Controllers
 
         // this might need Authorize annotation
         [HttpPost("RefreshToken")]
-        public async Task<IActionResult> RefreshToken(RefreshTokenModel model)
+        public async Task<IActionResult> RefreshToken(RefreshTokenDTO model)
         {
             var loginResult = await _tokenRepository.RefreshToken(model);
             if (loginResult.IsLoggedIn == true)

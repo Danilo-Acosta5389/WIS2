@@ -8,6 +8,6 @@ namespace WisApi.Repositories.Interfaces
     {
         public string CreateJWTToken(IdentityUser user, List<string> roles);
         public string GenerateRefreshTokenString();
-        public Task<LoginResponseDTO> RefreshToken(RefreshTokenModel model);
+        public Task<LoginResponseDTO> RefreshToken(RefreshTokenDTO model);
     }
 }

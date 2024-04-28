@@ -42,7 +42,7 @@ namespace WisApi.Repositories.Services
         }
 
 
-        public async Task<LoginResponseDTO> RefreshToken(RefreshTokenModel model)
+        public async Task<LoginResponseDTO> RefreshToken(RefreshTokenDTO model)
         {
             var principal = GetTokenPrincipal(model.JwtToken);
             
