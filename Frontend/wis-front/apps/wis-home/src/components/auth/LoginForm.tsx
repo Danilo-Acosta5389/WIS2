@@ -14,7 +14,26 @@ import {
     FormLabel,
     FormDescription
 } from '@repo/ui'
+import { useEffect } from 'react';
 
+
+
+interface Credentials {
+      username: String,
+      password: String,
+    };
+
+async function loginUser(credentials: Credentials)  {
+  const response = await fetch("https://localhost:7118/api/Auth/Login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  }).then((data) => data.json());
+  //console.log(response)
+  return response;
+}
 
 
 const formSchema = z.object({
@@ -30,6 +49,10 @@ const formSchema = z.object({
 
 const LoginForm = () => {
 
+  useEffect(() => {
+
+  }, [])
+
 // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,9 +65,11 @@ const LoginForm = () => {
 
 // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
+    loginUser({username:values.email, password:values.password});
+
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+    //console.log(response)
   }
   
     return(

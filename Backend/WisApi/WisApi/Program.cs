@@ -44,7 +44,7 @@ namespace WisApi
             //Setting up Swagger to use Auth
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "WIS API", Version = "v1"});
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "WIS API", Version = "v1" });
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -55,7 +55,7 @@ namespace WisApi
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            
+
             // Identity & Auth config
             builder.Services.AddIdentity<ExtendedIdentityUser, IdentityRole>(options =>
             {
@@ -86,6 +86,20 @@ namespace WisApi
 
             builder.Services.AddAuthorization();
 
+
+            //Setting up CORS policy
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: "BlazorCors",
+                    policy =>
+                    {
+                        //policy.WithOrigins("https://localhost:7021")
+                        policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -96,7 +110,11 @@ namespace WisApi
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors(builder => builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+            );
             app.UseAuthentication();
             app.UseAuthorization();
 

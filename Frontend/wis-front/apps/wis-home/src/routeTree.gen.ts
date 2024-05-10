@@ -12,7 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/Login'
-import { Route as HomeImport } from './routes/Home'
+import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
@@ -21,8 +21,8 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const HomeRoute = HomeImport.update({
-  path: '/Home',
+const IndexRoute = IndexImport.update({
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -30,8 +30,8 @@ const HomeRoute = HomeImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/Home': {
-      preLoaderRoute: typeof HomeImport
+    '/': {
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
     '/Login': {
@@ -43,6 +43,6 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([HomeRoute, LoginRoute])
+export const routeTree = rootRoute.addChildren([IndexRoute, LoginRoute])
 
 /* prettier-ignore-end */

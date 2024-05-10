@@ -15,7 +15,8 @@ import {
 import { cn } from "@ui/lib/utils"
 import { Label } from "@ui/components/ui/label"
 
-const Form = FormProvider;
+const Form: <TFieldValues extends FieldValues, TContext = any, TTransformedValues extends FieldValues | undefined = undefined>(props: FormProviderProps<TFieldValues, TContext, TTransformedValues>) => React.JSX.Element
+ = FormProvider;
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
