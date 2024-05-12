@@ -13,7 +13,10 @@ import {
     Input,
     FormLabel,
     FormDescription
-} from '@repo/ui'
+} from '@repo/ui';
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from '@tanstack/react-router';
+import { useGlobalState } from '../../main';
 import { useEffect } from 'react';
 
 
@@ -31,7 +34,6 @@ async function loginUser(credentials: Credentials)  {
     },
     body: JSON.stringify(credentials),
   }).then((data) => data.json());
-  //console.log(response)
   return response;
 }
 
@@ -48,12 +50,10 @@ const formSchema = z.object({
 
 
 const LoginForm = () => {
+  const context = useAuth();
+  const navigate = useNavigate({ from: '/Login' })
+  const { globalState, setGlobalState } = useGlobalState();
 
-  useEffect(() => {
-
-  }, [])
-
-// 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,14 +63,37 @@ const LoginForm = () => {
     },
   });
 
-// 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    loginUser({username:values.email, password:values.password});
 
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    //console.log(response)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    
+    const loginAttempt = await loginUser({username:values.email, password:values.password});
+    console.log(loginAttempt.isLoggedIn);
+    
+    if (loginAttempt.isLoggedIn) {
+      context.signIn();
+
+      setGlobalState(prevState => ({
+      ...prevState,
+      isLoggedIn: !prevState.isLoggedIn // Toggle someProperty to true/false
+      }));
+
+      console.log("user logged in");
+      
+      
+      navigate({to:"/"})
+
+    }
+    else {
+      console.log("Failed to log in")
+    }
+    
   }
+
+  useEffect((() => {
+    console.log("global state is: " + globalState.isLoggedIn );
+  }), [globalState.isLoggedIn])
+
+
   
     return(
       <div className='w-80 pb-6 bg-black rounded-lg border  shadow-md  flex flex-col items-center justify-center text-white '>

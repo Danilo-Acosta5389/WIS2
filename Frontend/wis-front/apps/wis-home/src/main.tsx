@@ -1,11 +1,60 @@
-import React from 'react'
+import React, { createContext, useState, useContext, FC, ReactNode  } from 'react'
 import ReactDOM from 'react-dom/client'
 import "@repo/ui/main.css";
 import App from './App';
+import { useAuth } from "./hooks/useAuth";
+
+const auth = useAuth();
+// Define types for your global state
+interface GlobalState {
+  isLoggedIn: boolean;
+  // Define your global state properties here
+}
+
+// Define context type
+interface GlobalStateContextType {
+  globalState: GlobalState;
+  setGlobalState: React.Dispatch<React.SetStateAction<GlobalState>>;
+}
+
+// Define initial state
+const initialState: GlobalState = {
+  isLoggedIn: auth.isLogged(),
+};
+
+// Create context
+const GlobalStateContext = createContext<GlobalStateContextType | undefined>(undefined);
+
+
+
+// Custom hook to access global state
+export const useGlobalState = () => {
+  const context = useContext(GlobalStateContext);
+  if (!context) {
+    throw new Error('useGlobalState must be used within a GlobalStateProvider');
+  }
+  return context;
+};
+
+
+// Global state provider
+export const GlobalStateProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [globalState, setGlobalState] = useState<GlobalState>(initialState);
+
+  return (
+    <GlobalStateContext.Provider value={{ globalState, setGlobalState }}>
+      {children}
+    </GlobalStateContext.Provider>
+  );
+};
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  
   <React.StrictMode>
-    <App />
+    <div className='bg-black h-screen'>
+      <GlobalStateProvider>
+        <App />
+      </GlobalStateProvider>
+    </div>
   </React.StrictMode>
-)
+);

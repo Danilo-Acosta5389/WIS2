@@ -6,7 +6,8 @@ import {
 } from '@repo/ui';
 import { Button } from "@repo/ui";
 import { Link } from '@tanstack/react-router'
-import { boolean } from 'zod';
+import { useAuth } from '../hooks/useAuth';
+import { useGlobalState } from '../main';
 
 // const products = [
 //   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -24,20 +25,24 @@ import { boolean } from 'zod';
 //   return classes.filter(Boolean).join(' ')
 // }
 
- const NavBar = (context: any, signedIn: any) => {
+ const NavBar = () => {
+  const { globalState, setGlobalState } = useGlobalState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  //const [signedIn, setSignedIn] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+  const context = useAuth();
 
-
-
-  function handleEvent() {
-    
+  const handleSignOut = () => {
+    context.signOut();
+    setGlobalState(prevState => ({
+      ...prevState,
+      isLoggedIn: !prevState.isLoggedIn // Toggle someProperty to true/false
+      }));
+    setSignedIn(globalState.isLoggedIn);
   }
 
   useEffect(() => {
-    console.log(signedIn)
-    
-  }, [signedIn])
+    setSignedIn(globalState.isLoggedIn);
+  }, [handleSignOut])
 
   return (
     <header className=" bg-white ">
@@ -48,9 +53,12 @@ import { boolean } from 'zod';
           </a>
         </div>
         <div className="flex lg:hidden">
-          {signedIn && (<Button className="text-sm font-semibold hover:bg-gray-500 bg-blue-600 mx-8">
+          {signedIn && 
+          (
+          <Button className="text-sm font-semibold hover:bg-gray-500 bg-blue-600 mx-8">
             Sign up <span aria-hidden="true"></span>
-          </Button>)}
+          </Button>
+          )}
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
@@ -126,7 +134,9 @@ import { boolean } from 'zod';
         (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Button className="text-sm font-semibold leading-6 text-black bg-white mx-4 hover:bg-gray-200"
-            onClick={handleEvent}>
+            onClick={() => {
+              handleSignOut()
+            }}>
             Sign out
           </Button>
         </div>
@@ -134,7 +144,7 @@ import { boolean } from 'zod';
         (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Button className="text-sm font-semibold leading-6 text-black bg-white mx-4 hover:bg-gray-200">
-            <Link to="/login">Log in <span aria-hidden="true"></span></Link>
+            <Link to="/Login">Log in <span aria-hidden="true"></span></Link>
           </Button>
           <Button className="text-sm font-semibold leading-6 pl-5 hover:bg-gray-500 bg-blue-600">
             Sign up <span aria-hidden="true"></span>
@@ -212,7 +222,7 @@ import { boolean } from 'zod';
                 </a>
               </div>
               <div className="py-6">
-                <Link to="/login" className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                <Link to="/Login" className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
                   Log in &rarr;
                 </Link>
                 {/* <a
