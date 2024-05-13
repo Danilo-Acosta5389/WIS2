@@ -36,10 +36,11 @@ namespace WisApi.Repositories.Services
                         var refreshToken = _tokenRepository!.GenerateRefreshTokenString();
                         var response = new LoginResponseDTO
                         {
-                            IsLoggedIn = true,
                             JwtToken = jwtToken,
                             RefreshToken = refreshToken
                         };
+
+
 
                         //Setting new refresh token to user
                         user.RefreshToken = response.RefreshToken;

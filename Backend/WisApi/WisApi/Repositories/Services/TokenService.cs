@@ -65,7 +65,6 @@ namespace WisApi.Repositories.Services
             var refreshToken = GenerateRefreshTokenString();
             response = new LoginResponseDTO
             {
-                IsLoggedIn = true,
                 JwtToken = jwtToken,
                 RefreshToken = refreshToken
             };
@@ -106,6 +105,29 @@ namespace WisApi.Repositories.Services
             }
 
             return Convert.ToBase64String(randomNumber);
+        }
+
+        public void SetTokensInsideCookie(TokenDTO tokenDTO, HttpContext context )
+        {
+            context.Response.Cookies.Append("accessToken", tokenDTO.AccessToken,
+                new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(20),
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                });
+
+            context.Response.Cookies.Append("refreshToken", tokenDTO.RefreshToken,
+                new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddHours(6),
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                });
         }
     }
 }

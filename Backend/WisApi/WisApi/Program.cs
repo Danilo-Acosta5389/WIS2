@@ -93,8 +93,8 @@ namespace WisApi
                 options.AddPolicy(name: "BlazorCors",
                     policy =>
                     {
-                        //policy.WithOrigins("https://localhost:7021")
-                        policy.AllowAnyOrigin()
+                        policy.WithOrigins("https://localhost:7118")
+                        //policy.AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                     });
