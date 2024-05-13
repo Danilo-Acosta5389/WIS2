@@ -17,8 +17,14 @@ import {
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from '@tanstack/react-router';
 import { useGlobalState } from '../../main';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
+
+// interface CustomJwtPayload {
+//   role: string,
+//   name: string,
+// }
 
 
 interface Credentials {
@@ -27,6 +33,9 @@ interface Credentials {
     };
 
 async function loginUser(credentials: Credentials)  {
+
+  //SET credentials: "include" and make it work with server CORS policy
+
   const response = await fetch("https://localhost:7118/api/Auth/Login", {
     method: "POST",
     headers: {
@@ -50,10 +59,13 @@ const formSchema = z.object({
 
 
 const LoginForm = () => {
+  const { globalState, setGlobalState } = useGlobalState();
   const context = useAuth();
   const navigate = useNavigate({ from: '/Login' })
-  const { globalState, setGlobalState } = useGlobalState();
 
+  const [jwt, setJwt] = useState<string | undefined>(undefined);
+  const [name, setName] = useState<string>("");
+  const [role, setRole] = useState<string>("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,31 +79,43 @@ const LoginForm = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     
     const loginAttempt = await loginUser({username:values.email, password:values.password});
-    console.log(loginAttempt.isLoggedIn);
-    
+    //console.log(loginAttempt.jwtToken);
+    setJwt(loginAttempt.jwtToken)
     if (loginAttempt.isLoggedIn) {
       context.signIn();
-
       setGlobalState(prevState => ({
       ...prevState,
       isLoggedIn: !prevState.isLoggedIn // Toggle someProperty to true/false
       }));
-
+      
       console.log("user logged in");
       
-      
-      navigate({to:"/"})
+      //navigate({to:"/"})
 
     }
     else {
       console.log("Failed to log in")
     }
-    
   }
 
-  useEffect((() => {
-    console.log("global state is: " + globalState.isLoggedIn );
-  }), [globalState.isLoggedIn])
+
+  useEffect(() => {
+    if (jwt) {      
+      const decodedToken = jwtDecode(jwt);
+      const nameClaim: any = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+      const roleClaim: any = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      // setName(decodedToken.usernames);
+      // setRole(decodedToken.roles);
+      console.log(decodedToken);
+      console.log(nameClaim);
+      console.log(roleClaim);
+    }
+  }, [jwt]);
+
+
+  // useEffect((() => {
+  //   console.log("global state is: " + globalState.isLoggedIn );
+  // }), [globalState.isLoggedIn]);
 
 
   
