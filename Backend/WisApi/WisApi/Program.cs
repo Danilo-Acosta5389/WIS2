@@ -90,11 +90,12 @@ namespace WisApi
             //Setting up CORS policy
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(name: "BlazorCors",
+                options.AddPolicy(name: "WisCors",
                     policy =>
                     {
-                        policy.WithOrigins("https://localhost:7118")
+                        policy.WithOrigins("http://localhost:5173")
                         //policy.AllowAnyOrigin()
+                        .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                     });
@@ -110,11 +111,7 @@ namespace WisApi
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(builder => builder
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyOrigin()
-            );
+            app.UseCors("WisCors");
             app.UseAuthentication();
             app.UseAuthorization();
 
