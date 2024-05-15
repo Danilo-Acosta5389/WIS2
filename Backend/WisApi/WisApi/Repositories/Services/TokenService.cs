@@ -42,37 +42,40 @@ namespace WisApi.Repositories.Services
         }
 
 
-        public async Task<LoginResponseDTO> RefreshToken(RefreshTokenDTO model)
+        public async Task<LoginResponseDTO> RefreshToken(RefreshCookieDTO model)
         {
-            var principal = GetTokenPrincipal(model.JwtToken);
-            
+            //var principal = GetTokenPrincipal(model.JwtToken);
+
+            var user = _userManager.Users.Where(x => x.PublicId == model.PublicId).SingleOrDefault();
+
             var response = new LoginResponseDTO();
-            if (principal?.Identity?.Name is null)
+            if (user is null)
                 return response;
 
-            var identityUser = await _userManager.FindByEmailAsync(principal.Identity.Name); 
+            //var identityUser = await _userManager.FindByEmailAsync(principal.Identity.Name); 
             
 
-            if (identityUser is null || identityUser.RefreshToken != model.RefreshToken || identityUser.RefreshTokenExpiry < DateTime.UtcNow)
+            if (user is null || user.RefreshToken != model.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
             {
                 return response;
             }
 
-            var roles = await _userManager.GetRolesAsync(identityUser);
+            var roles = await _userManager.GetRolesAsync(user);
 
             // Create tokens
-            var jwtToken = CreateJWTToken(identityUser, roles.ToList());
+            var jwtToken = CreateJWTToken(user, roles.ToList());
             var refreshToken = GenerateRefreshTokenString();
             response = new LoginResponseDTO
             {
+                PublicId = user.PublicId,
                 JwtToken = jwtToken,
                 RefreshToken = refreshToken
             };
 
             //Setting new refresh token to user
-            identityUser.RefreshToken = response.RefreshToken;
-            identityUser.RefreshTokenExpiry = DateTime.UtcNow.AddHours(6);
-            await _userManager.UpdateAsync(identityUser);
+            user.RefreshToken = response.RefreshToken;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(6);
+            await _userManager.UpdateAsync(user);
             return response;
         }
 
@@ -107,19 +110,20 @@ namespace WisApi.Repositories.Services
             return Convert.ToBase64String(randomNumber);
         }
 
-        public void SetTokensInsideCookie(TokenDTO tokenDTO, HttpContext context )
+        public void SetTokensInsideCookie(RefreshCookieDTO cookie, HttpContext context )
         {
-            context.Response.Cookies.Append("accessToken", tokenDTO.AccessToken,
+
+            context.Response.Cookies.Append("publicId", cookie.PublicId,
                 new CookieOptions
                 {
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(20),
+                    Expires = DateTimeOffset.UtcNow.AddHours(6),
                     HttpOnly = true,
                     IsEssential = true,
                     Secure = true,
                     SameSite = SameSiteMode.None,
                 });
 
-            context.Response.Cookies.Append("refreshToken", tokenDTO.RefreshToken,
+            context.Response.Cookies.Append("refreshToken", cookie.RefreshToken,
                 new CookieOptions
                 {
                     Expires = DateTimeOffset.UtcNow.AddHours(6),

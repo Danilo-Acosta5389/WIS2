@@ -41,14 +41,16 @@ namespace WisApi.Controllers
 
             if (loginResult != null)
             {
-                var tokenDTO = new TokenDTO(loginResult.JwtToken, loginResult.RefreshToken);
+                var cookieDTO = new RefreshCookieDTO(loginResult.PublicId, loginResult.RefreshToken);
 
-                _tokenRepository.SetTokensInsideCookie(tokenDTO, HttpContext);
+                _tokenRepository.SetTokensInsideCookie(cookieDTO, HttpContext);
 
-                return Ok();
+                var response = new AccessTokenDTO(loginResult.JwtToken);
+
+                return Ok(response);
             }
 
-            else return BadRequest("username or password was incorrect");
+            else return Unauthorized("username or password was incorrect");
         }
 
         //OLD
@@ -65,25 +67,27 @@ namespace WisApi.Controllers
         //}
 
         //NEW
+        // this might need Authorize annotation
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
-            HttpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken);
+            HttpContext.Request.Cookies.TryGetValue("publicId", out var publicId);
             HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
 
             //This will be refactored
 
-            if (!string.IsNullOrEmpty(refreshToken))
+            if (!string.IsNullOrEmpty(refreshToken) && !string.IsNullOrEmpty(publicId))
             {
-                var refreshDTO = new RefreshTokenDTO(accessToken, refreshToken);
+                var tokens = new RefreshCookieDTO(publicId, refreshToken);
+                var refreshResponse = await _tokenRepository.RefreshToken(tokens);
 
-                var refreshResponse = await _tokenRepository.RefreshToken(refreshDTO);
-
-                var tokenResponse = new TokenDTO(refreshResponse.JwtToken, refreshResponse.RefreshToken);
+                var tokenResponse = new RefreshCookieDTO(refreshResponse.PublicId, refreshResponse.RefreshToken);
 
                 _tokenRepository.SetTokensInsideCookie(tokenResponse, HttpContext);
 
-                return Ok();
+                var response = new AccessTokenDTO(refreshResponse.JwtToken);
+
+                return Ok(response);
             }
             return Unauthorized();
         }

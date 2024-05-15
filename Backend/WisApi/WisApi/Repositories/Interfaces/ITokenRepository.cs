@@ -8,7 +8,7 @@ namespace WisApi.Repositories.Interfaces
     {
         string CreateJWTToken(IdentityUser user, List<string> roles);
         string GenerateRefreshTokenString();
-        Task<LoginResponseDTO> RefreshToken(RefreshTokenDTO model);
-        void SetTokensInsideCookie(TokenDTO tokenDTO, HttpContext context);
+        Task<LoginResponseDTO> RefreshToken(RefreshCookieDTO model);
+        void SetTokensInsideCookie(RefreshCookieDTO cookie, HttpContext context);
     }
 }

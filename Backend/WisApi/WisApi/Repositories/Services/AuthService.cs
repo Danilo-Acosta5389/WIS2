@@ -36,6 +36,7 @@ namespace WisApi.Repositories.Services
                         var refreshToken = _tokenRepository!.GenerateRefreshTokenString();
                         var response = new LoginResponseDTO
                         {
+                            PublicId = user.PublicId,
                             JwtToken = jwtToken,
                             RefreshToken = refreshToken
                         };
@@ -54,14 +55,15 @@ namespace WisApi.Repositories.Services
             return new LoginResponseDTO();
         }
 
-        //Register
+        //Register  USER NOT ALLOWED TO USE "-" and maybe other special chars aswell
         public async Task<bool> RegisterAsync(RegisterRequestDTO registerRequestDTO)
         {
             var user = new ExtendedIdentityUser
             {
                 UserName = registerRequestDTO.UserName,
-                Email = registerRequestDTO.Email
-            };
+                Email = registerRequestDTO.Email,
+                PublicId = Guid.NewGuid().ToString()
+        };
             var identityResult = await _userManager!.CreateAsync(user, registerRequestDTO.Password);
 
             if (identityResult.Succeeded)
