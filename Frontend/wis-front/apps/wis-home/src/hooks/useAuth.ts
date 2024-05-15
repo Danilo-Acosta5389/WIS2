@@ -1,3 +1,6 @@
+
+// This hook is only for testing
+
 export const useAuth = () => {
   const signIn = () => {
     localStorage.setItem("isAuthenticated", "true");

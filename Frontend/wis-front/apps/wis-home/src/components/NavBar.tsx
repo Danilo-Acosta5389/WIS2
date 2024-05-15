@@ -35,13 +35,17 @@ import { useGlobalState } from '../main';
     context.signOut();
     setGlobalState(prevState => ({
       ...prevState,
-      isLoggedIn: !prevState.isLoggedIn // Toggle someProperty to true/false
+      isLoggedIn: false, // Toggle someProperty to true/false
+      accessToken: "",
+      userName: "",
+      role: ""
       }));
     setSignedIn(globalState.isLoggedIn);
   }
 
   useEffect(() => {
     setSignedIn(globalState.isLoggedIn);
+    //console.log(JSON.stringify(globalState))
   }, [handleSignOut])
 
   return (
@@ -53,7 +57,7 @@ import { useGlobalState } from '../main';
           </a>
         </div>
         <div className="flex lg:hidden">
-          {signedIn && 
+          {!signedIn && 
           (
           <Button className="text-sm font-semibold hover:bg-gray-500 bg-blue-600 mx-8">
             Sign up <span aria-hidden="true"></span>
@@ -158,12 +162,21 @@ import { useGlobalState } from '../main';
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
-              <p className="sr-only">Your Company</p>
+              {
+                signedIn ? (
+                  <p className="">{globalState.userName}</p>
+                )
+                : (
+                  <p className="sr-only"></p>
+                )
+              }
             </a>
             <div className='flex'>
+              {!signedIn && (
                 <Button className="text-sm font-semibold hover:bg-gray-500 bg-blue-600 mx-8">
-              Sign up <span aria-hidden="true"></span>
-            </Button>
+                  Sign up <span aria-hidden="true"></span>
+                </Button>
+              )}
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
@@ -222,9 +235,22 @@ import { useGlobalState } from '../main';
                 </a>
               </div>
               <div className="py-6">
-                <Link to="/Login" className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                  Log in &rarr;
-                </Link>
+                {
+                  signedIn ? 
+                  (
+                    <Link to="/" onClick={handleSignOut} className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                      sign out &rarr;
+                    </Link>
+                    
+                  )
+                  : 
+                  (
+                    <Link to="/Login" className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                      Log in &rarr;
+                    </Link>
+                  )
+                  
+                }
                 {/* <a
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"

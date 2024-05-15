@@ -1,4 +1,3 @@
-export { NavBar } from "./main-layout/NavBar";
 export * from "./ui/button";
 export * from "@headlessui/react";
 export {

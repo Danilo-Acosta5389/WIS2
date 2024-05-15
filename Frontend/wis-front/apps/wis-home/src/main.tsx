@@ -2,13 +2,17 @@ import React, { createContext, useState, useContext, FC, ReactNode  } from 'reac
 import ReactDOM from 'react-dom/client'
 import "@repo/ui/main.css";
 import App from './App';
-import { useAuth } from "./hooks/useAuth";
+//import { useAuth } from "./hooks/useAuth";
 
-const auth = useAuth();
+//const auth = useAuth();
+
 // Define types for your global state
 interface GlobalState {
-  isLoggedIn: boolean;
   // Define your global state properties here
+  isLoggedIn: boolean;
+  accessToken: string;
+  userName: string;
+  role: string;
 }
 
 // Define context type
@@ -19,12 +23,14 @@ interface GlobalStateContextType {
 
 // Define initial state
 const initialState: GlobalState = {
-  isLoggedIn: auth.isLogged(),
+  isLoggedIn: false,
+  accessToken: "",
+  userName: "",
+  role: "",
 };
 
 // Create context
 const GlobalStateContext = createContext<GlobalStateContextType | undefined>(undefined);
-
 
 
 // Custom hook to access global state

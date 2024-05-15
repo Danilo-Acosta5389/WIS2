@@ -1,30 +1,27 @@
 import { Button } from "@repo/ui";
-import { useAuth } from "../../hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useGlobalState } from "../../main";
 
 
 const HomePage = () => {
-    const { globalState, setGlobalState } = useGlobalState();
-    const [signedIn, setSignedIn] = useState(globalState.isLoggedIn);
-    const context = useAuth();
-    
+  const { globalState, setGlobalState } = useGlobalState();
+  const [signedIn, setSignedIn] = useState(false);
 
-    const handleSignOut = () => {
-        context.signOut();
-        setGlobalState(prevState => ({
+  const handleSignOut = () => {
+    setGlobalState(prevState => ({
       ...prevState,
-      isLoggedIn: !prevState.isLoggedIn // Toggle someProperty to true/false
+      isLoggedIn: false, // Toggle someProperty to true/false
+      accessToken: "",
+      userName: "",
+      role: ""
       }));
-      setSignedIn(globalState.isLoggedIn)
-    }
+    setSignedIn(globalState.isLoggedIn);
+  }
 
-    console.log("global state is: " + globalState.isLoggedIn );
-    
-    useEffect(() => {
-        console.log(context.isLogged());
-        setSignedIn(globalState.isLoggedIn)
-    }, [handleSignOut, globalState.isLoggedIn])
+  useEffect(() => {
+    setSignedIn(globalState.isLoggedIn);
+    //console.log(JSON.stringify(globalState))
+  }, [handleSignOut])
 
     return(
         <>

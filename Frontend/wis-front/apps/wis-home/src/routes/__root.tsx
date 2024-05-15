@@ -6,8 +6,6 @@ type RouterContext = {
     authentication: AuthContext;
 }
 
-
-
 export const Route = createRootRouteWithContext<RouterContext>()({
     component: root
 });
