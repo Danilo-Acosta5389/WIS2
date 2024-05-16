@@ -36,7 +36,7 @@ namespace WisApi.Repositories.Services
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.UtcNow.AddMinutes(20),
+                expires: DateTime.UtcNow.AddSeconds(5),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -65,6 +65,7 @@ namespace WisApi.Repositories.Services
             // Create tokens
             var jwtToken = CreateJWTToken(user, roles.ToList());
             var refreshToken = GenerateRefreshTokenString();
+
             response = new LoginResponseDTO
             {
                 PublicId = user.PublicId,
@@ -116,7 +117,7 @@ namespace WisApi.Repositories.Services
             context.Response.Cookies.Append("publicId", cookie.PublicId,
                 new CookieOptions
                 {
-                    Expires = DateTimeOffset.UtcNow.AddHours(6),
+                    Expires = DateTimeOffset.UtcNow.AddSeconds(20),
                     HttpOnly = true,
                     IsEssential = true,
                     Secure = true,
@@ -126,7 +127,7 @@ namespace WisApi.Repositories.Services
             context.Response.Cookies.Append("refreshToken", cookie.RefreshToken,
                 new CookieOptions
                 {
-                    Expires = DateTimeOffset.UtcNow.AddHours(6),
+                    Expires = DateTimeOffset.UtcNow.AddSeconds(20),
                     HttpOnly = true,
                     IsEssential = true,
                     Secure = true,

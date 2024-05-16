@@ -73,13 +73,22 @@ namespace WisApi.Controllers
         {
             HttpContext.Request.Cookies.TryGetValue("publicId", out var publicId);
             HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
+            
 
             //This will be refactored
 
             if (!string.IsNullOrEmpty(refreshToken) && !string.IsNullOrEmpty(publicId))
             {
+
+                
                 var tokens = new RefreshCookieDTO(publicId, refreshToken);
                 var refreshResponse = await _tokenRepository.RefreshToken(tokens);
+                
+                //Console.WriteLine("############ Incomming refresh token: " + tokens.RefreshToken);
+                //Console.WriteLine("############ PublicId: " + tokens.PublicId);
+                //Console.WriteLine("############ Outgoing refreshToken: " + refreshResponse.RefreshToken);
+                
+
 
                 var tokenResponse = new RefreshCookieDTO(refreshResponse.PublicId, refreshResponse.RefreshToken);
 
