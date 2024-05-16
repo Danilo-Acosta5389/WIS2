@@ -41,6 +41,7 @@ import { useGlobalState } from '../main';
       role: ""
       }));
     setSignedIn(globalState.isLoggedIn);
+    setMobileMenuOpen(false)
   }
 
   useEffect(() => {
@@ -127,9 +128,9 @@ import { useGlobalState } from '../main';
           <Link to="/" className="text-sm font-semibold leading-6 text-gray-900">
             Home
           </Link>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <Link to="/forum" className="text-sm font-semibold leading-6 text-gray-900">
             Forum
-          </a>
+          </Link>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Survey
           </a>
@@ -218,34 +219,34 @@ import { useGlobalState } from '../main';
                 <Link
                   to="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  onClick={() => {setMobileMenuOpen(false)}}
                 >
                   Home
                 </Link>
-                <a
-                  href="#"
+                <Link
+                  to={"/forum"}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  onClick={() => {setMobileMenuOpen(false)}}
                 >
-                  Blog
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Survey
-                </a>
+                  Forum
+                </Link>
               </div>
               <div className="py-6">
                 {
                   signedIn ? 
                   (
-                    <Link to="/" onClick={handleSignOut} className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                    <Link to="/" 
+                    onClick={handleSignOut} className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
                       sign out &rarr;
                     </Link>
                     
                   )
-                  : 
+                  :
                   (
-                    <Link to="/Login" className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                    <Link 
+                    to="/Login" 
+                    className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    onClick={() => {setMobileMenuOpen(false)}}>
                       Log in &rarr;
                     </Link>
                   )

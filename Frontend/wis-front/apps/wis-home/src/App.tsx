@@ -1,8 +1,10 @@
 import { useAuth } from "./hooks/useAuth";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import useRefresh from "./hooks/useRefresh";
-// import { useGlobalState } from "./main";
+import { REFRESH_URL } from "./api/urls";
+import { useGlobalState } from "./main";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useRef } from "react";
 
 
 const router = createRouter({
@@ -15,28 +17,49 @@ declare module '@tanstack/react-router' {
   }
 }
 
+const useRefreshToken = async () => {
+  const response = await fetch(REFRESH_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include'
+      });
+
+  return response
+};
 
 function App() {
-  //const { globalState } = useGlobalState();
-  //console.log(JSON.stringify(globalState.accessToken))
-  
-  try {
-    useRefresh();
-  }
-  catch (err) {
-    console.log(err)
+  const { globalState, setGlobalState } = useGlobalState();
+
+  async function RefreshToken() {
+    const refresh = await useRefreshToken();
+
+    if (refresh.status === 200) {
+        const data = await refresh.json();
+        const decoded = jwtDecode(data.token);
+        setGlobalState(prevState => ({
+          ...prevState,
+          isLoggedIn: true,
+          accessToken: data.token,
+          userName: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+          role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+        }));
+      } else {
+        console.error('Failed to refresh token');
+      }
   }
   
 
-  // useEffect(() => {
-  //   try {
-  //   refreshToken
-  // }
-  // catch (error) {
-  //   console.log("error:" + error)
-  // }
+  const intercept = useRef(false);
+  
+  useEffect(() => {
 
-  // },[]);
+    if (intercept.current === false) {
+      RefreshToken();
+      intercept.current = true;
+    }
+  }, []);
 
   const authentication = useAuth();
   return <RouterProvider router={router} context={{ authentication }} />;

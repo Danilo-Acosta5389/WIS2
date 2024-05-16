@@ -64,7 +64,7 @@ const LoginForm = () => {
       if (loginAttempt.status === 200) {
         //console.log(loginAttempt)
         const data = await loginAttempt.json();
-        console.log(data)
+        //console.log(data)
         setJwt(data.token);
         console.log("user logged in");
       
@@ -94,8 +94,8 @@ const LoginForm = () => {
       // console.log(nameClaim);
       // console.log(roleClaim);
 
-      setGlobalState(prevState => ({
-      ...prevState,
+      setGlobalState(prev => ({
+      ...prev,
       isLoggedIn: true, // Toggle someProperty to true/false
       accessToken: jwt,
       userName: nameClaim,
