@@ -18,9 +18,15 @@ import {
 // import { useNavigate } from '@tanstack/react-router';
 import { useGlobalState } from '../../main';
 import { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { SIGN_IN_URL } from '../../api/urls';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { SIGN_IN } from '../../api/urls';
+import { useNavigate } from '@tanstack/react-router';
 
+
+interface CustomJwtPayload extends JwtPayload {
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string;
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
+}
 
 
 interface Credentials {
@@ -33,7 +39,7 @@ interface Credentials {
 async function loginUser(credentials: Credentials)  {
 
   //SET credentials: "include" to work with server CORS policy ✅
-  const response = await fetch(SIGN_IN_URL, {
+  const response = await fetch(SIGN_IN, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -50,7 +56,7 @@ async function loginUser(credentials: Credentials)  {
 //Login form component
 const LoginForm = () => {
   const { setGlobalState } = useGlobalState();
-  //const navigate = useNavigate({ from: '/Login' });
+  const navigate = useNavigate({ from: '/Login' });
   const [jwt, setJwt] = useState<string | undefined>(undefined);
 
 
@@ -68,7 +74,7 @@ const LoginForm = () => {
         setJwt(data.token);
         console.log("user logged in");
       
-        //navigate({to:"/"})
+        
 
       }
       else {
@@ -85,7 +91,7 @@ const LoginForm = () => {
   useEffect(() => {
     if (jwt) {
 
-      const decodedToken = jwtDecode(jwt);
+      const decodedToken = jwtDecode<CustomJwtPayload>(jwt);
       //Find a solution for this
       const nameClaim = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
       const roleClaim = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
@@ -101,8 +107,8 @@ const LoginForm = () => {
       userName: nameClaim,
       role: roleClaim,
       }));
+      navigate({to:"/"});
     }
-
   }, [jwt]);
 
 

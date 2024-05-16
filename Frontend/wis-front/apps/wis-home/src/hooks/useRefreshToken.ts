@@ -1,11 +1,16 @@
-import { REFRESH_URL } from "../api/urls";
+import { REFRESH } from "../api/urls";
 import { useGlobalState } from "../main";
-import { jwtDecode } from "jwt-decode";
+import { JwtPayload, jwtDecode } from "jwt-decode";
 
+
+interface CustomJwtPayload extends JwtPayload {
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string;
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
+}
 
 
 const requestToken = async () => {
-  const response = await fetch(REFRESH_URL, {
+  const response = await fetch(REFRESH, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,7 +29,7 @@ const refresh = await requestToken();
 
     if (refresh.status === 200) {
         const data = await refresh.json();
-        const decoded = jwtDecode(data.token);
+        const decoded = jwtDecode<CustomJwtPayload>(data.token);
         setGlobalState(prevState => ({
           ...prevState,
           isLoggedIn: true,

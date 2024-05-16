@@ -8,6 +8,7 @@ import { Button } from "@repo/ui";
 import { Link } from '@tanstack/react-router'
 import { useAuth } from '../hooks/useAuth';
 import { useGlobalState } from '../main';
+import { SIGN_OUT } from '../api/urls';
 
 // const products = [
 //   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -29,10 +30,21 @@ import { useGlobalState } from '../main';
   const { globalState, setGlobalState } = useGlobalState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
-  const context = useAuth();
+  //const context = useAuth();
 
-  const handleSignOut = () => {
-    context.signOut();
+  async function signOut()  {
+  //SET credentials: "include" to work with server CORS policy ✅
+  const response = await fetch(SIGN_OUT, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: 'include',
+  });
+  //const data = await response.json();
+  console.log(response)
+  
+  if (response.status === 200) {
     setGlobalState(prevState => ({
       ...prevState,
       isLoggedIn: false, // Toggle someProperty to true/false
@@ -41,13 +53,21 @@ import { useGlobalState } from '../main';
       role: ""
       }));
     setSignedIn(globalState.isLoggedIn);
-    setMobileMenuOpen(false)
+  }
+}
+
+  const handleSignOut = () => {
+    signOut();
   }
 
   useEffect(() => {
     setSignedIn(globalState.isLoggedIn);
-    //console.log(JSON.stringify(globalState))
-  }, [handleSignOut])
+  }, [globalState])
+
+  // useEffect(() => {
+  //   setSignedIn(globalState.isLoggedIn);
+  //   //console.log(JSON.stringify(globalState))
+  // }, [handleSignOut])
 
   return (
     <header className=" bg-white ">
