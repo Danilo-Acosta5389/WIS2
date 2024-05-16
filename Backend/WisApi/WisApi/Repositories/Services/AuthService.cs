@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WisApi.Models;
 using WisApi.Models.DTO_s;
 using WisApi.Repositories.Interfaces;
@@ -63,7 +65,7 @@ namespace WisApi.Repositories.Services
                 UserName = registerRequestDTO.UserName,
                 Email = registerRequestDTO.Email,
                 PublicId = Guid.NewGuid().ToString()
-        };
+            };
             var identityResult = await _userManager!.CreateAsync(user, registerRequestDTO.Password);
 
             if (identityResult.Succeeded)
@@ -78,6 +80,43 @@ namespace WisApi.Repositories.Services
                     }
                 }
             }
+            return false;
+        }
+
+        //Sign out by deleting HttpOnly Cookies
+        public async Task<bool> SignOutAsync(HttpContext context)
+        {
+            context.Request.Cookies.TryGetValue("publicId", out var publicId);
+            context.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
+
+            if (!string.IsNullOrEmpty(refreshToken) && !string.IsNullOrEmpty(publicId)) 
+            {
+                var user = _userManager!.Users.Where(x => x.PublicId == publicId && x.RefreshToken == refreshToken).SingleOrDefault();
+                
+                if (user == null)
+                    return false;
+
+
+                var cookies = new RefreshCookieDTO(publicId, refreshToken);
+
+                user!.RefreshToken = string.Empty;
+                user.RefreshTokenExpiry = DateTime.UtcNow;
+
+                await _userManager.UpdateAsync(user);
+
+                try
+                {
+                    _tokenRepository.DeleteCookies(context);
+                }
+                catch (Exception e)
+                {
+
+                    Console.WriteLine("ERROR With cookies:" + e.Message);
+                }
+
+                return true;
+            }
+
             return false;
         }
     }

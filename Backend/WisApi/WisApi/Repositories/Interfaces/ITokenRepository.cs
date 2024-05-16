@@ -10,5 +10,6 @@ namespace WisApi.Repositories.Interfaces
         string GenerateRefreshTokenString();
         Task<LoginResponseDTO> RefreshToken(RefreshCookieDTO model);
         void SetTokensInsideCookie(RefreshCookieDTO cookie, HttpContext context);
+        void DeleteCookies(HttpContext context);
     }
 }

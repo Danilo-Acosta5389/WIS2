@@ -134,5 +134,28 @@ namespace WisApi.Repositories.Services
                     SameSite = SameSiteMode.None,
                 });
         }
+
+
+        // Will delete cookies from browser
+        public void DeleteCookies(HttpContext context)
+        {
+            context.Response.Cookies.Delete("publicId", 
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None
+                });
+            context.Response.Cookies.Delete("refreshToken", 
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None
+                });
+
+        }
     }
 }

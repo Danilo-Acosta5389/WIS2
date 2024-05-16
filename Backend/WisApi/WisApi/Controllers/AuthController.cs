@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WisApi.Models.DTO_s;
 using WisApi.Repositories.Interfaces;
 
@@ -53,18 +54,7 @@ namespace WisApi.Controllers
             else return Unauthorized("username or password was incorrect");
         }
 
-        //OLD
-        // this might need Authorize annotation
-        //[HttpPost("RefreshToken")]
-        //public async Task<IActionResult> RefreshToken(RefreshTokenDTO model)
-        //{
-        //    var loginResult = await _tokenRepository.RefreshToken(model);
-        //    if (loginResult != null)
-        //    {
-        //        return Ok(loginResult);
-        //    }
-        //    return Unauthorized();
-        //}
+        
 
         //NEW
         // this might need Authorize annotation
@@ -100,5 +90,30 @@ namespace WisApi.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpGet("SignOut")]
+        public async Task<IActionResult> SignOutUser()
+        {
+            var response = await _authRepository.SignOutAsync(HttpContext);
+
+            if (response)
+                return Ok();
+            
+            return BadRequest();
+        }
+
+
+        //OLD
+        // this might need Authorize annotation
+        //[HttpPost("RefreshToken")]
+        //public async Task<IActionResult> RefreshToken(RefreshTokenDTO model)
+        //{
+        //    var loginResult = await _tokenRepository.RefreshToken(model);
+        //    if (loginResult != null)
+        //    {
+        //        return Ok(loginResult);
+        //    }
+        //    return Unauthorized();
+        //}
     }
 }
