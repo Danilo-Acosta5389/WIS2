@@ -117,7 +117,7 @@ namespace WisApi.Repositories.Services
             context.Response.Cookies.Append("publicId", cookie.PublicId,
                 new CookieOptions
                 {
-                    Expires = DateTimeOffset.UtcNow.AddSeconds(20),
+                    Expires = DateTimeOffset.UtcNow.AddDays(5),
                     HttpOnly = true,
                     IsEssential = true,
                     Secure = true,
@@ -127,7 +127,7 @@ namespace WisApi.Repositories.Services
             context.Response.Cookies.Append("refreshToken", cookie.RefreshToken,
                 new CookieOptions
                 {
-                    Expires = DateTimeOffset.UtcNow.AddSeconds(20),
+                    Expires = DateTimeOffset.UtcNow.AddDays(5),
                     HttpOnly = true,
                     IsEssential = true,
                     Secure = true,
