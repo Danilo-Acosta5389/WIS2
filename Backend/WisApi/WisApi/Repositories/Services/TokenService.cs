@@ -42,6 +42,7 @@ namespace WisApi.Repositories.Services
         }
 
 
+        // SetTokensInsideCookie Should be dependent on RefreshToken method
         public async Task<LoginResponseDTO> RefreshToken(RefreshCookieDTO model)
         {
             //var principal = GetTokenPrincipal(model.JwtToken);
@@ -75,7 +76,7 @@ namespace WisApi.Repositories.Services
 
             //Setting new refresh token to user
             user.RefreshToken = response.RefreshToken;
-            user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(6);
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(6);
             await _userManager.UpdateAsync(user);
             return response;
         }
@@ -111,6 +112,8 @@ namespace WisApi.Repositories.Services
             return Convert.ToBase64String(randomNumber);
         }
 
+
+        // SetTokensInsideCookie Should be dependent on RefreshToken method
         public void SetTokensInsideCookie(RefreshCookieDTO cookie, HttpContext context )
         {
 
