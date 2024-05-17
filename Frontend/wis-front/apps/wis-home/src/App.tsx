@@ -5,52 +5,64 @@ import { useGlobalState } from "./main";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 import { useEffect, useRef } from "react";
 
-
 const router = createRouter({
   routeTree,
-  context: { authentication: undefined! } 
+  context: { authentication: undefined! },
 });
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
 }
 
-
 function App() {
   const { setGlobalState } = useGlobalState();
-  const authentication = useAuth()
+  const authentication = useAuth();
+  const { refresh } = useAuth();
   const intercept = useRef(false);
 
   interface CustomJwtPayload extends JwtPayload {
-  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string;
-  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string;
+    "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string;
   }
-  
-  useEffect(() => {
 
+  useEffect(() => {
     if (intercept.current === false) {
-      
       async function RefreshToken() {
-      const response = await authentication.refresh();
+        const response = await refresh();
 
         if (response.status === 200) {
           const data = await response.json();
           const decoded = jwtDecode<CustomJwtPayload>(data.token);
-          setGlobalState(prevState => ({
+          setGlobalState((prevState) => ({
             ...prevState,
             isLoggedIn: true,
             accessToken: data.token,
-            userName: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-            role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+            userName:
+              decoded[
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+              ],
+            role: decoded[
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            ],
           }));
-        } else {
-          console.error('Failed to refresh token');
         }
+        // else {
+        //   await authentication.signOut();
+        //   setGlobalState((prevState) => ({
+        //     ...prevState,
+        //     isLoggedIn: false,
+        //     accessToken: "",
+        //     userName: "",
+        //     role: "",
+        //   }));
+        //   console.error("Failed to refresh token, signing out.");
+        // }
       }
       RefreshToken();
       intercept.current = true;
+      console.log("intercept is: " + intercept.current);
     }
   }, []);
 
