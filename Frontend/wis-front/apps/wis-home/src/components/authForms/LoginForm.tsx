@@ -17,39 +17,15 @@ import {
 // import { useAuth } from '../../hooks/useAuth';
 // import { useNavigate } from '@tanstack/react-router';
 import { useGlobalState } from '../../main';
+import { useAuth } from '../../hooks/useAuth';
 import { useEffect, useState } from 'react';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { SIGN_IN } from '../../api/urls';
+import { JwtPayload, jwtDecode } from 'jwt-decode';
 import { useNavigate } from '@tanstack/react-router';
 
-
+// For decoder
 interface CustomJwtPayload extends JwtPayload {
   'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string;
   'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
-}
-
-
-interface Credentials {
-      username: String,
-      password: String,
-    };
-
-
-// Login function
-async function loginUser(credentials: Credentials)  {
-
-  //SET credentials: "include" to work with server CORS policy ✅
-  const response = await fetch(SIGN_IN, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: 'include',
-    body: JSON.stringify(credentials),
-  });
-  //const data = await response.json();
-  //console.log(response)
-  return response;
 }
 
 
@@ -58,70 +34,16 @@ const LoginForm = () => {
   const { setGlobalState } = useGlobalState();
   const navigate = useNavigate({ from: '/Login' });
   const [jwt, setJwt] = useState<string | undefined>(undefined);
+  const { signIn } = useAuth();
 
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    
-    try {
-      const loginAttempt = await loginUser({username:values.email, password:values.password});
-
-      console.log("api response: " + loginAttempt.status);
-    
-      if (loginAttempt.status === 200) {
-        //console.log(loginAttempt)
-        const data = await loginAttempt.json();
-        //console.log(data)
-        setJwt(data.token);
-        console.log("user logged in");
-      
-        
-
-      }
-      else {
-        console.log("Failed to log in")
-      }
-    }
-    catch (error) {
-      console.log("Could not log in: " + error )
-    }
-    
-  }
-
-
-  useEffect(() => {
-    if (jwt) {
-
-      const decodedToken = jwtDecode<CustomJwtPayload>(jwt);
-      //Find a solution for this
-      const nameClaim = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
-      const roleClaim = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-
-      // console.log(decodedToken);
-      // console.log(nameClaim);
-      // console.log(roleClaim);
-
-      setGlobalState(prev => ({
-      ...prev,
-      isLoggedIn: true, // Toggle someProperty to true/false
-      accessToken: jwt,
-      userName: nameClaim,
-      role: roleClaim,
-      }));
-      navigate({to:"/"});
-    }
-  }, [jwt]);
-
-
-
-  // zod form schema
+   // zod form schema
   const formSchema = z.object({
   email: z.string().email( {message: "Please enter email"}),
   password: z.string().min(1, { message: "Please enter password" }),
   newPassword: z
     .string()
     .optional(),
-});
-
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -131,6 +53,37 @@ const LoginForm = () => {
       newPassword: "",
     },
   });
+
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+
+    try {
+      const login = await signIn({username:values.email, password:values.password});
+      setJwt(login)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+
+  useEffect(() => {
+    if (jwt) {
+
+      const decodedToken = jwtDecode<CustomJwtPayload>(jwt);
+      //Find a solution for this ✅
+      const nameClaim = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+      const roleClaim = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+      setGlobalState(prev => ({
+      ...prev,
+      isLoggedIn: true,
+      accessToken: jwt,
+      userName: nameClaim,
+      role: roleClaim,
+      }));
+      navigate({to:"/"});
+    }
+  }, [jwt]);
 
 
   

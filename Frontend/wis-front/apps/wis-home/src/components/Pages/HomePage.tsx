@@ -1,7 +1,7 @@
 import { Button } from "@repo/ui";
 import { useEffect, useState } from "react";
 import { useGlobalState } from "../../main";
-import { SIGN_OUT } from "../../api/urls";
+import { useAuth } from "../../hooks/useAuth";
 
 
 
@@ -11,33 +11,18 @@ import { SIGN_OUT } from "../../api/urls";
 const HomePage = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const [signedIn, setSignedIn] = useState(false);
+  const {signOut} = useAuth();
 
-  async function signOut()  {
-  //SET credentials: "include" to work with server CORS policy ✅
-  const response = await fetch(SIGN_OUT, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: 'include',
-  });
-  //const data = await response.json();
-  console.log(response)
-  
-  if (response.status === 200) {
+  const handleSignOut = async () => {
+    await signOut();
     setGlobalState(prevState => ({
       ...prevState,
-      isLoggedIn: false, // Toggle someProperty to true/false
+      isLoggedIn: false,
       accessToken: "",
       userName: "",
       role: ""
       }));
     setSignedIn(globalState.isLoggedIn);
-  }
-}
-
-  const handleSignOut = () => {
-    signOut();
   }
 
   useEffect(() => {

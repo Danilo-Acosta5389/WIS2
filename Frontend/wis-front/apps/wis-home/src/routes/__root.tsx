@@ -12,13 +12,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 
 function root() {
-    // const context = useAuth();
-    // const [signedIn, setSignedIn] = useState(context.isLogged());
-    // useEffect(() => {
-    //     console.log(signedIn)
-        
-    // }, [])
-
     return (
         <>
         <NavBar />

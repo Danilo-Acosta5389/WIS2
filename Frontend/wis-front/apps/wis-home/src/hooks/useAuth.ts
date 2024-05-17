@@ -1,18 +1,83 @@
-
-// This hook is only for testing
+import { REFRESH, SIGN_IN, SIGN_OUT } from "../api/urls";
 
 export const useAuth = () => {
-  const signIn = () => {
+  
+  interface Credentials {
+      username: String,
+      password: String,
+    };
+
+  // SignIn Function
+  const signIn = async (creds:Credentials) => {
     localStorage.setItem("isAuthenticated", "true");
+   try {
+     const response = await fetch(SIGN_IN, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        credentials: 'include',
+        body: JSON.stringify(creds),
+      });
+
+      //console.log(response);
+      //console.log("api response: " + response.status);
+    
+      if (response.status === 200) {
+        //console.log(loginAttempt)
+        const data = await response.json();
+        //console.log(data)
+        //setJwt(data.token);
+        console.log("user logged in");
+      
+        return data.token;
+
+      }
+      else {
+        console.log("Failed to log in, response status: " + response.status)
+      }
+   } catch (err) {
+    console.log("API ERROR: " + err)
+   }
+
   };
 
-  const signOut = () => {
+
+
+
+  // SignOut Function
+  const signOut = async () => {
     localStorage.removeItem("isAuthenticated");
+    const response = await fetch(SIGN_OUT, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: 'include',
+  });
+
+  return response;
   };
 
+
+
+  // Check if authenticated
   const isLogged = () => localStorage.getItem("isAuthenticated") === "true";
 
-  return { signIn, signOut, isLogged };
+
+  // get refresh token
+  const refresh = async () => {
+  const response = await fetch(REFRESH, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include'
+      });
+      return response;
+};
+
+  return { signIn, signOut, isLogged, refresh };
 };
 
 export type AuthContext = ReturnType<typeof useAuth>;

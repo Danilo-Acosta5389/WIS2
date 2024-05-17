@@ -1,15 +1,9 @@
 import { REFRESH } from "../api/urls";
-import { useGlobalState } from "../main";
-import { JwtPayload, jwtDecode } from "jwt-decode";
 
 
-interface CustomJwtPayload extends JwtPayload {
-  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string;
-  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
-}
 
 
-const requestToken = async () => {
+const useRefreshToken = async () => {
   const response = await fetch(REFRESH, {
         method: "POST",
         headers: {
@@ -21,70 +15,4 @@ const requestToken = async () => {
   return response
 };
 
-
-const useRefreshToken = async () => {
-  const { setGlobalState } = useGlobalState();
-
-const refresh = await requestToken();
-
-    if (refresh.status === 200) {
-        const data = await refresh.json();
-        const decoded = jwtDecode<CustomJwtPayload>(data.token);
-        setGlobalState(prevState => ({
-          ...prevState,
-          isLoggedIn: true,
-          accessToken: data.token,
-          userName: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-          role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-        }));
-      } else {
-        console.error('Failed to refresh token');
-      }
-  }
-
 export default useRefreshToken;
-
-
-
-
-
-// const useRefreshToken = () => {
-//     const { globalState, setGlobalState } = useGlobalState();
-//     const [decodedToken, setDecodedToken] = useState<JwtPayload>();
-
-//     useEffect(() => {
-//         if(globalState.isLoggedIn === true) {
-//             const fetchAndSetToken = async () => {
-//             const response = await fetch(REFRESH_URL, {
-//                 method: "POST",
-//                 headers: {
-//                     "Content-Type": "application/json",
-//                 },
-//                 credentials: 'include'
-//             });
-//             if (response.status === 200) {
-//                 const data = await response.json();
-//                 //console.log("data: " + data.token)
-//                 const decoded = jwtDecode(data.token);
-//                 console.log(decoded)
-//                 setDecodedToken(data);
-//                 setGlobalState(prevState => ({
-//                    ...prevState,
-//                     isLoggedIn: true,
-//                     accessToken: data.token,
-//                     userName: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-//                     role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-//                 }));
-//             } else {
-//                 console.error('Failed to refresh token');
-//             }
-//         };
-//         fetchAndSetToken();
-//         }
-//         console.log("run")
-//     }, []);
-
-//     return decodedToken;
-// };
-
-// export default useRefreshToken;

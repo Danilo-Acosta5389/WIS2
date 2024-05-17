@@ -2,9 +2,8 @@ import React, { createContext, useState, useContext, FC, ReactNode  } from 'reac
 import ReactDOM from 'react-dom/client'
 import "@repo/ui/main.css";
 import App from './App';
-//import { useAuth } from "./hooks/useAuth";
 
-//const auth = useAuth();
+// MUST REFACT THIS, PUT CONTEXT HOOK IN SEPARATE FILE
 
 // Define types for your global state
 interface GlobalState {
@@ -53,7 +52,6 @@ export const GlobalStateProvider: FC<{ children: ReactNode }> = ({ children }) =
     </GlobalStateContext.Provider>
   );
 };
-
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
