@@ -9,8 +9,12 @@ export {
   SquaresPlusIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-export { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid';
-export * from 'react-hook-form'; 
+export {
+  ChevronDownIcon,
+  PhoneIcon,
+  PlayCircleIcon,
+} from "@heroicons/react/20/solid";
+export * from "react-hook-form";
 export {
   useFormField,
   Form,
@@ -20,11 +24,13 @@ export {
   FormDescription,
   FormMessage,
   FormField,
-} from './ui/form';
-export { z } from 'zod';
+} from "./ui/form";
+export { z } from "zod";
 export { zodResolver } from "@hookform/resolvers/zod";
 export * from "./ui/card";
 export * from "./ui/avatar";
 export * from "./ui/label";
 export * from "./ui/input";
 export * from "./ui/dropdown-menu";
+export * from "./ui/separator";
+export * from "./ui/scroll-area";

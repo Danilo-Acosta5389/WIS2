@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as ForumImport } from './routes/forum'
 import { Route as LoginImport } from './routes/Login'
 import { Route as IndexImport } from './routes/index'
+import { Route as ForumTopicImport } from './routes/forum/$topic'
 
 // Create/Update Routes
 
@@ -32,6 +33,11 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ForumTopicRoute = ForumTopicImport.update({
+  path: '/$topic',
+  getParentRoute: () => ForumRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -48,6 +54,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForumImport
       parentRoute: typeof rootRoute
     }
+    '/forum/$topic': {
+      preLoaderRoute: typeof ForumTopicImport
+      parentRoute: typeof ForumImport
+    }
   }
 }
 
@@ -56,7 +66,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   LoginRoute,
-  ForumRoute,
+  ForumRoute.addChildren([ForumTopicRoute]),
 ])
 
 /* prettier-ignore-end */

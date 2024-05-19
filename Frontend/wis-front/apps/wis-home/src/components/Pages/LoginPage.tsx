@@ -1,15 +1,11 @@
-import LoginForm  from "../authForms/LoginForm";
-
+import LoginForm from "../authForms/LoginForm";
 
 const LoginPage = () => {
-  
-
-    return(
-      <div className=" w-screen h-screen flex items-center justify-center flex-col">
-          <LoginForm />
-      </div>
-        
-    )
-}
+  return (
+    <div className=" bg-black flex flex-col justify-evenly items-center h-[89vh]">
+      <LoginForm />
+    </div>
+  );
+};
 
 export default LoginPage;

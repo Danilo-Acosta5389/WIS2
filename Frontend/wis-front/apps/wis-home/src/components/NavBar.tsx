@@ -1,10 +1,11 @@
 import { Fragment, useEffect, useState } from "react";
 import {
-  ChartPieIcon,
   ChevronDownIcon,
   Dialog,
   Disclosure,
   Popover,
+  ScrollArea,
+  ScrollBar,
   Transition,
 } from "@repo/ui";
 import { Bars3Icon, XMarkIcon } from "@repo/ui";
@@ -23,31 +24,7 @@ import {
 import { Link } from "@tanstack/react-router";
 import { useGlobalState } from "../main";
 import { useAuth } from "../hooks/useAuth";
-
-const topics = [
-  {
-    name: "Analytics",
-    description: "Get a better understanding of your traffic",
-    href: "#",
-    icon: ChartPieIcon,
-  },
-  {
-    name: "Engagement",
-    description: "Speak directly to your customers",
-  },
-  {
-    name: "Security",
-    description: "Your customers’ data will be safe and secure",
-  },
-  {
-    name: "Integrations",
-    description: "Connect with third-party tools",
-  },
-  {
-    name: "Automations",
-    description: "Build strategic funnels that will convert",
-  },
-];
+import { topics } from "../assets/data";
 
 const NavBar = () => {
   const { globalState, setGlobalState } = useGlobalState();
@@ -139,26 +116,39 @@ const NavBar = () => {
                     <span className=" font-semibold">Recent topics</span>
                     <Link
                       onClick={() => setShowPopover(false)}
-                      to={"/forum"}
+                      to={"/forum/$topic"}
+                      params={{
+                        topic: "General",
+                      }}
                       className=" font-medium text-blue-700"
                     >
                       see all &rarr;
                     </Link>
                   </div>
-                  {topics.map((item) => (
-                    <div
-                      key={item.name}
-                      className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50 cursor-pointer"
-                    >
-                      <div className="flex-auto">
-                        <div className="block font-semibold text-gray-900">
-                          {item.name}
-                          <span className="absolute inset-0" />
-                        </div>
-                        <p className="mt-1 text-gray-600">{item.description}</p>
+                  <ScrollArea className=" flex flex-col max-h-96">
+                    {topics.map((item) => (
+                      <div
+                        key={item.id}
+                        className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50 cursor-pointer"
+                      >
+                        <Link
+                          to={"/forum/$topic"}
+                          params={{ topic: item.name }}
+                          className="flex-auto"
+                          onClick={() => setShowPopover(false)}
+                        >
+                          <div className="block font-semibold text-gray-900">
+                            {item.name}
+                            <span className="absolute inset-0" />
+                          </div>
+                          <p className="mt-1 text-gray-600">
+                            {item.description}
+                          </p>
+                        </Link>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                    <ScrollBar orientation="vertical" />
+                  </ScrollArea>
                 </div>
               </Popover.Panel>
             </Transition>
@@ -167,7 +157,7 @@ const NavBar = () => {
             to={"/"}
             className="text-sm font-semibold leading-6 text-gray-900"
           >
-            Survey
+            Blog
           </Link>
         </Popover.Group>
         {signedIn ? (
@@ -320,18 +310,32 @@ const NavBar = () => {
                         <div className=" flex justify-between m-5">
                           <span className=" font-semibold">Recent topics</span>
                           <Link
-                            to={"/forum"}
+                            to={"/forum/$topic"}
+                            params={{
+                              topic: "bulbazzaar",
+                            }}
                             className=" font-medium text-blue-700"
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                            }}
                           >
                             see all &rarr;
                           </Link>
                         </div>
                         {[...topics].map((item) => (
                           <Disclosure.Button
-                            key={item.name}
+                            key={item.id}
                             className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                           >
-                            {item.name}
+                            <Link
+                              to={"/forum/$topic"}
+                              params={{ topic: item.name }}
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                              }}
+                            >
+                              {item.name}
+                            </Link>
                           </Disclosure.Button>
                         ))}
                       </Disclosure.Panel>

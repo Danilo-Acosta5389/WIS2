@@ -1,7 +1,13 @@
-import React, { createContext, useState, useContext, FC, ReactNode  } from 'react'
-import ReactDOM from 'react-dom/client'
+import React, {
+  createContext,
+  useState,
+  useContext,
+  FC,
+  ReactNode,
+} from "react";
+import ReactDOM from "react-dom/client";
 import "@repo/ui/main.css";
-import App from './App';
+import App from "./App";
 
 // MUST REFACT THIS, PUT CONTEXT HOOK IN SEPARATE FILE
 
@@ -29,21 +35,23 @@ const initialState: GlobalState = {
 };
 
 // Create context
-const GlobalStateContext = createContext<GlobalStateContextType | undefined>(undefined);
-
+const GlobalStateContext = createContext<GlobalStateContextType | undefined>(
+  undefined
+);
 
 // Custom hook to access global state
 export const useGlobalState = () => {
   const context = useContext(GlobalStateContext);
   if (!context) {
-    throw new Error('useGlobalState must be used within a GlobalStateProvider');
+    throw new Error("useGlobalState must be used within a GlobalStateProvider");
   }
   return context;
 };
 
-
 // Global state provider
-export const GlobalStateProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const GlobalStateProvider: FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [globalState, setGlobalState] = useState<GlobalState>(initialState);
 
   return (
@@ -53,12 +61,10 @@ export const GlobalStateProvider: FC<{ children: ReactNode }> = ({ children }) =
   );
 };
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <div className='bg-black h-screen'>
-      <GlobalStateProvider>
-        <App />
-      </GlobalStateProvider>
-    </div>
+    <GlobalStateProvider>
+      <App />
+    </GlobalStateProvider>
   </React.StrictMode>
 );
