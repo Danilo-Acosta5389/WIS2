@@ -4,5 +4,6 @@ namespace WisApi.Controllers.ForumControllers
 {
     public class CommentController : ControllerBase
     {
+
     }
 }
