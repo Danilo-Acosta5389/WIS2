@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using WisApi.Models.DTO_s;
 using WisApi.Repositories.Interfaces;
 

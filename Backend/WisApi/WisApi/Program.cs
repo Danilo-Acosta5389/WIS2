@@ -56,6 +56,7 @@ namespace WisApi
             });
 
 
+            //Bad Password only for development
             // Identity & Auth config
             builder.Services.AddIdentity<ExtendedIdentityUser, IdentityRole>(options =>
             {
@@ -93,7 +94,7 @@ namespace WisApi
                 options.AddPolicy(name: "WisCors",
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:5173")
+                        policy.WithOrigins("http://localhost:5174")
                         //policy.AllowAnyOrigin()
                         .AllowCredentials()
                         .AllowAnyHeader()

@@ -1,7 +1,4 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿using Microsoft.AspNetCore.Identity;
 using WisApi.Models;
 using WisApi.Models.DTO_s;
 using WisApi.Repositories.Interfaces;
@@ -89,10 +86,10 @@ namespace WisApi.Repositories.Services
             context.Request.Cookies.TryGetValue("publicId", out var publicId);
             context.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
 
-            if (!string.IsNullOrEmpty(refreshToken) && !string.IsNullOrEmpty(publicId)) 
+            if (!string.IsNullOrEmpty(refreshToken) && !string.IsNullOrEmpty(publicId))
             {
                 var user = _userManager!.Users.Where(x => x.PublicId == publicId && x.RefreshToken == refreshToken).SingleOrDefault();
-                
+
                 if (user == null)
                     return false;
 
