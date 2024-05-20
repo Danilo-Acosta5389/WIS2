@@ -36,6 +36,9 @@ namespace WisApi
             //Services DI
             builder.Services.AddScoped<ITokenRepository, TokenService>();
             builder.Services.AddScoped<IAuthRepository, AuthService>();
+            builder.Services.AddScoped<ITopicRepository, TopicService>();
+            builder.Services.AddScoped<IPostRepository, PostService>();
+            builder.Services.AddScoped<ICommentRepository, CommentService>();
 
 
             builder.Services.AddControllers();

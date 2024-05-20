@@ -1,6 +1,6 @@
-@WisApi_HostAddress = http://localhost:5245
+# @WisApi_HostAddress = http://localhost:5245
 
-GET {{WisApi_HostAddress}}/weatherforecast/
-Accept: application/json
+# GET {{WisApi_HostAddress}}/weatherforecast/
+# Accept: application/json
 
 ###
