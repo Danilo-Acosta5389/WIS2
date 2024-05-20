@@ -18,12 +18,21 @@ namespace WisApi.Controllers.ForumControllers
         [HttpGet]
         public ActionResult<IEnumerable<TopicDTO>> GetTopics()
         {
-            var topics = _topicRepository.GetAll().Select(x => 
-                new TopicDTO 
-                { 
-                    Title = x.Title, 
-                    Description = x.Description, 
-                    CreatedAt = x.CreatedAt, UpdatedAt = x.UpdatedAt, UserName = x.UserName
+            var topics = _topicRepository.GetAll();
+
+            if (topics == null)
+            {
+                return NotFound();
+            }
+
+            topics.Select(x =>
+                new TopicDTO
+                {
+                    Title = x.Title,
+                    Description = x.Description,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt,
+                    UserName = x.UserName
                 });
 
             return Ok(topics);
