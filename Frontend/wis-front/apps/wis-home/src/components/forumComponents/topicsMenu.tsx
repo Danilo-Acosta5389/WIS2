@@ -1,5 +1,5 @@
 import { ScrollArea, ScrollBar, Separator } from "@repo/ui";
-import { Link, Outlet } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { topics } from "../../assets/data.ts";
 
 function TopicsMenu() {
@@ -35,7 +35,6 @@ function TopicsMenu() {
           <ScrollBar orientation="vertical" />
         </ScrollArea>
       </div>
-      <Outlet />
     </>
   );
 }

@@ -10,8 +10,11 @@ import {
 } from "@repo/ui";
 import { useEffect, useState } from "react";
 import { topics } from "../../assets/data";
+import { Link } from "@tanstack/react-router";
+import { Route } from "../../routes/forum/$topic";
 
-function MainView(params: any) {
+function MainView() {
+  const { topic } = Route.useParams();
   const [item] = useState(topics[0].name);
 
   useEffect(() => {
@@ -20,13 +23,19 @@ function MainView(params: any) {
   return (
     <ScrollArea className=" flex flex-col p-6 bg-black w-full">
       <span className=" m-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-white">
-        {params.name}
+        {topic}
       </span>
       {topics
-        .filter((topic) => topic.name === params.name)
-        .map((topic) =>
-          topic.posts.map((p) => (
-            <>
+        .filter((t) => t.name === topic)
+        .map((t) =>
+          t.posts.map((p) => (
+            <Link
+              to={"/forum/$topic/$postId"}
+              params={{
+                topic: t.name,
+                postId: p.id.toString(),
+              }}
+            >
               <Card className=" cursor-pointer hover:bg-slate-800 my-7 w-10/12 self-center text-white bg-black">
                 <CardHeader>
                   <CardTitle>{p.title}</CardTitle>
@@ -40,7 +49,7 @@ function MainView(params: any) {
                 </CardFooter>
               </Card>
               <Separator className=" mt-5 w-10/12 self-center" />
-            </>
+            </Link>
           ))
         )}
     </ScrollArea>

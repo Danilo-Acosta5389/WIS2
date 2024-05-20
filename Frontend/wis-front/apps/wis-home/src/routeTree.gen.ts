@@ -14,7 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as ForumImport } from './routes/forum'
 import { Route as LoginImport } from './routes/Login'
 import { Route as IndexImport } from './routes/index'
-import { Route as ForumTopicImport } from './routes/forum/$topic'
+import { Route as ForumTopicIndexImport } from './routes/forum/$topic/index'
+import { Route as ForumTopicPostIdImport } from './routes/forum/$topic/$postId'
 
 // Create/Update Routes
 
@@ -33,8 +34,13 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ForumTopicRoute = ForumTopicImport.update({
-  path: '/$topic',
+const ForumTopicIndexRoute = ForumTopicIndexImport.update({
+  path: '/$topic/',
+  getParentRoute: () => ForumRoute,
+} as any)
+
+const ForumTopicPostIdRoute = ForumTopicPostIdImport.update({
+  path: '/$topic/$postId',
   getParentRoute: () => ForumRoute,
 } as any)
 
@@ -54,8 +60,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForumImport
       parentRoute: typeof rootRoute
     }
-    '/forum/$topic': {
-      preLoaderRoute: typeof ForumTopicImport
+    '/forum/$topic/$postId': {
+      preLoaderRoute: typeof ForumTopicPostIdImport
+      parentRoute: typeof ForumImport
+    }
+    '/forum/$topic/': {
+      preLoaderRoute: typeof ForumTopicIndexImport
       parentRoute: typeof ForumImport
     }
   }
@@ -66,7 +76,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   LoginRoute,
-  ForumRoute.addChildren([ForumTopicRoute]),
+  ForumRoute.addChildren([ForumTopicPostIdRoute, ForumTopicIndexRoute]),
 ])
 
 /* prettier-ignore-end */
