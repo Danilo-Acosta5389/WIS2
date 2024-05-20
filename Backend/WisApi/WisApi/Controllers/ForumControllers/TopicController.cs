@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WisApi.Models;
 using WisApi.Models.DTO_s.ForumDTOs;
 using WisApi.Repositories.Interfaces;
 
@@ -25,9 +24,10 @@ namespace WisApi.Controllers.ForumControllers
                 return NotFound();
             }
 
-            topics.Select(x =>
+            var response = topics.Select(x =>
                 new TopicDTO
                 {
+                    Id = x.Id,
                     Title = x.Title,
                     Description = x.Description,
                     CreatedAt = x.CreatedAt,
@@ -35,7 +35,7 @@ namespace WisApi.Controllers.ForumControllers
                     UserName = x.UserName
                 });
 
-            return Ok(topics);
+            return Ok(response);
         }
 
     }
