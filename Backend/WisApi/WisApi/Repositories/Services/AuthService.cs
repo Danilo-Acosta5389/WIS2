@@ -68,14 +68,25 @@ namespace WisApi.Repositories.Services
             if (identityResult.Succeeded)
             {
                 // add role to this user
-                if (registerRequestDTO.Roles != null && registerRequestDTO.Roles.Any())
+
+                //Default role
+                var roles = new string[] { "User" };
+
+                identityResult = await _userManager.AddToRolesAsync(user, roles);
+                if (identityResult.Succeeded)
                 {
-                    identityResult = await _userManager.AddToRolesAsync(user, registerRequestDTO.Roles);
-                    if (identityResult.Succeeded)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
+
+                //Save this for later
+                //if (registerRequestDTO.Roles != null && registerRequestDTO.Roles.Any())
+                //{
+                //    identityResult = await _userManager.AddToRolesAsync(user, registerRequestDTO.Roles);
+                //    if (identityResult.Succeeded)
+                //    {
+                //        return true;
+                //    }
+                //}
             }
             return false;
         }

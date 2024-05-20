@@ -3,7 +3,21 @@ namespace WisApi.Models
 {
     public class PostModel
     {
-        
+        public PostModel() { }
+
+        public PostModel(string title, string subTitle, string text, DateTime createdAt, string userName, string userId, string ipAdress, bool isAnonymous, int topicId)
+        {
+            Title = title;
+            SubTitle = subTitle;
+            Text = text;
+            CreatedAt = createdAt;
+            UserName = userName;
+            UserId = userId;
+            IpAdress = ipAdress;
+            IsAnonymous = isAnonymous;
+            TopicId = topicId;
+        }
+
         public int Id { get; set; }
         
         public string Title { get; set; }
@@ -18,9 +32,11 @@ namespace WisApi.Models
 
         public string UserId { get; set; }
 
-        public string? UserName { get; set; }
+        public string? UserName { get; set; } = "Anonymous";
 
         public string IpAdress { get; set; }
+
+        public bool IsAnonymous { get; set; } = false;
 
         public int TopicId { get; set; }
 

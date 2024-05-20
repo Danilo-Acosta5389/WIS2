@@ -101,18 +101,5 @@ namespace WisApi.Controllers
             return BadRequest();
         }
 
-
-        //OLD
-        // this might need Authorize annotation
-        //[HttpPost("RefreshToken")]
-        //public async Task<IActionResult> RefreshToken(RefreshTokenDTO model)
-        //{
-        //    var loginResult = await _tokenRepository.RefreshToken(model);
-        //    if (loginResult != null)
-        //    {
-        //        return Ok(loginResult);
-        //    }
-        //    return Unauthorized();
-        //}
     }
 }

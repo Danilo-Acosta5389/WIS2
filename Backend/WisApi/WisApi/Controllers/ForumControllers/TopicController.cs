@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using WisApi.Models;
 using WisApi.Models.DTO_s.ForumDTOs;
 using WisApi.Repositories.Interfaces;
 
@@ -9,17 +11,19 @@ namespace WisApi.Controllers.ForumControllers
     public class TopicController : ControllerBase
     {
         private readonly ITopicRepository _topicRepository;
-        public TopicController(ITopicRepository topicRepository) 
+        private readonly UserManager<ExtendedIdentityUser> _userManager;
+        public TopicController(ITopicRepository topicRepository, UserManager<ExtendedIdentityUser> userManager) 
         {
             _topicRepository = topicRepository;
+            _userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet("Topics")]
         public ActionResult<IEnumerable<TopicDTO>> GetTopics()
         {
             var topics = _topicRepository.GetAll();
 
-            if (topics == null)
+            if (topics is null)
             {
                 return NotFound();
             }
@@ -36,6 +40,43 @@ namespace WisApi.Controllers.ForumControllers
                 });
 
             return Ok(response);
+        }
+
+        [HttpPost("Create")]
+        public IActionResult CreateTopic(CreateTopicDTO topic) 
+        {
+            HttpContext.Request.Cookies.TryGetValue("publicId", out var publicId);
+            HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            if (refreshToken is null && publicId is null)
+                return BadRequest("User credentials not found.");
+
+            if (topic is null)
+                return BadRequest("Something went wrong, topic content not found.");
+
+            //Add more validation parameters in the futurre, for now this is ok
+            var user = _userManager.Users.Where(x => x.PublicId == publicId && x.RefreshToken == refreshToken).SingleOrDefault();
+
+            if (user is null)
+                return NotFound("User not found");
+
+            var newTopic = new TopicModel()
+            {
+                Title = topic.Title,
+                Description = topic.Description,
+                CreatedAt = topic.CreatedAt,
+                UserName= topic.UserName,
+                UserId = user.Id,
+                IpAdress = ip,
+                IsAnonymous = topic.IsAnonymous
+            };
+
+            _topicRepository.Create(newTopic);
+            _topicRepository.Save();
+
+            return Ok("Success!");
+            
         }
 
     }
