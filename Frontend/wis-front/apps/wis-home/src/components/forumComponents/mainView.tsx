@@ -26,12 +26,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Route } from "../../routes/forum/$topic";
 import { Route as r } from "../../routes/__root";
-import {
-  CreatePost,
-  PostDetails,
-  createPost,
-  getPosts,
-} from "../../api/ForumApi";
+import { useForumApi, CreatePost, PostDetails } from "../../api/ForumApi";
 import { useGlobalState } from "../../main";
 
 function MainView() {
@@ -45,6 +40,8 @@ function MainView() {
   //console.log(posts);
   const intercept = useRef(false);
   const { globalState } = useGlobalState();
+
+  const { createPost, getPosts } = useForumApi();
 
   // zod form schema
   const formSchema = z.object({
@@ -78,11 +75,13 @@ function MainView() {
       };
 
       console.log(newPost);
-      await createPost(newPost);
+      await createPost(newPost, globalState.accessToken);
       setShowTextArea(false);
+      form.reset();
     } catch (err) {
       console.log(err);
       setShowTextArea(false);
+      form.reset();
     }
   };
 
@@ -114,128 +113,136 @@ function MainView() {
         {topic}
       </span>
 
-      {showTextArea ? (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="bg-black text-white flex flex-col my-10 max-w-[48rem]"
-          >
+      {(globalState.role === "User" ||
+        globalState.role === "Admin" ||
+        globalState.role === "Super") && (
+        <>
+          {showTextArea ? (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="bg-black text-white flex flex-col my-10 max-w-[48rem]"
+              >
+                <div
+                  onClick={() => {
+                    setShowTextArea(false);
+                  }}
+                  className=" flex flex-row text-lg hover:text-slate-400 cursor-pointer -mb-5 mr-5 md:mr-40 self-end z-10"
+                >
+                  <lucide.X size={22} />
+                  <span className=" -m-[4px] ml-[1px]">close</span>
+                </div>
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => {
+                    return (
+                      <FormItem className="flex flex-col mb-2">
+                        <FormLabel className=" flex flex-row justify-between">
+                          <span className="text-xl font-semibold mx-2">
+                            Title
+                          </span>
+                        </FormLabel>
+                        <FormControl className="">
+                          {/* <CardTitle>Comment</CardTitle> */}
+                          <Input
+                            {...field}
+                            placeholder="Write a title for your post here..."
+                            className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
+                          />
+                        </FormControl>
+                        <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="subTitle"
+                  render={({ field }) => {
+                    return (
+                      <FormItem className="flex flex-col mb-2">
+                        <FormLabel className=" flex flex-row justify-between">
+                          <span className="text-xl font-semibold mx-2">
+                            Subtitle
+                          </span>
+                        </FormLabel>
+                        <FormControl className="my-15">
+                          {/* <CardTitle>Comment</CardTitle> */}
+                          <Input
+                            {...field}
+                            placeholder="Optional..."
+                            className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
+                          />
+                        </FormControl>
+                        <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="text"
+                  render={({ field }) => {
+                    return (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className=" flex flex-row justify-between">
+                          <span className="text-2xl font-semibold mx-2">
+                            New post
+                          </span>
+                        </FormLabel>
+                        <FormControl className="my-15">
+                          {/* <CardTitle>Comment</CardTitle> */}
+                          <Textarea
+                            {...field}
+                            rows={5}
+                            placeholder="Write your thoughts here..."
+                            className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
+                          />
+                        </FormControl>
+                        <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="isAnonymous"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row sm:justify-end mt-6 ml-5 sm:ml-0 sm:mr-[10rem]">
+                      <FormControl className="">
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className=" bg-slate-200 mt-2 size-5 mr-2"
+                        />
+                      </FormControl>
+                      <FormLabel className="text-white text-md flex-wrap">
+                        Do not display my username
+                      </FormLabel>
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className=" bg-slate-200 max-w-24 text-black hover:bg-slate-500 mt-5 sm:-mt-6 ml-5 sm:z-10"
+                >
+                  Submit
+                </Button>
+              </form>
+            </Form>
+          ) : (
             <div
               onClick={() => {
-                setShowTextArea(false);
+                setShowTextArea(true);
               }}
-              className=" flex flex-row text-lg hover:text-slate-400 cursor-pointer -mb-5 mr-5 md:mr-40 self-end z-10"
+              className=" text-white max-w-max text-xl flex flex-row m-5 p-2 hover:bg-gray-500 cursor-pointer hover:font-bold hover:rounded-sm"
             >
-              <lucide.X size={22} />
-              <span className=" -m-[4px] ml-[1px]">close</span>
+              <lucide.SquarePen size={28} color="white" />
+              <span className=" ml-2">Create new post!</span>
             </div>
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => {
-                return (
-                  <FormItem className="flex flex-col mb-2">
-                    <FormLabel className=" flex flex-row justify-between">
-                      <span className="text-xl font-semibold mx-2">Title</span>
-                    </FormLabel>
-                    <FormControl className="">
-                      {/* <CardTitle>Comment</CardTitle> */}
-                      <Input
-                        {...field}
-                        placeholder="Write a title for your post here..."
-                        className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
-                      />
-                    </FormControl>
-                    <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="subTitle"
-              render={({ field }) => {
-                return (
-                  <FormItem className="flex flex-col mb-2">
-                    <FormLabel className=" flex flex-row justify-between">
-                      <span className="text-xl font-semibold mx-2">
-                        Subtitle
-                      </span>
-                    </FormLabel>
-                    <FormControl className="my-15">
-                      {/* <CardTitle>Comment</CardTitle> */}
-                      <Input
-                        {...field}
-                        placeholder="Optional..."
-                        className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
-                      />
-                    </FormControl>
-                    <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="text"
-              render={({ field }) => {
-                return (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className=" flex flex-row justify-between">
-                      <span className="text-2xl font-semibold mx-2">
-                        New post
-                      </span>
-                    </FormLabel>
-                    <FormControl className="my-15">
-                      {/* <CardTitle>Comment</CardTitle> */}
-                      <Textarea
-                        {...field}
-                        rows={5}
-                        placeholder="Write your thoughts here..."
-                        className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
-                      />
-                    </FormControl>
-                    <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="isAnonymous"
-              render={({ field }) => (
-                <FormItem className="flex flex-row sm:justify-end mt-6 ml-5 sm:ml-0 sm:mr-[10rem]">
-                  <FormControl className="">
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      className=" bg-slate-200 mt-2 size-5 mr-2"
-                    />
-                  </FormControl>
-                  <FormLabel className="text-white text-md flex-wrap">
-                    Do not display my username
-                  </FormLabel>
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              className=" bg-slate-200 max-w-24 text-black hover:bg-slate-500 mt-5 sm:-mt-6 ml-5 sm:z-10"
-            >
-              Submit
-            </Button>
-          </form>
-        </Form>
-      ) : (
-        <div
-          onClick={() => {
-            setShowTextArea(true);
-          }}
-          className=" text-white max-w-max text-xl flex flex-row m-5 p-2 hover:bg-gray-500 cursor-pointer hover:font-bold hover:rounded-sm"
-        >
-          <lucide.SquarePen size={28} color="white" />
-          <span className=" ml-2">Create new post!</span>
-        </div>
+          )}
+        </>
       )}
 
       {posts?.map((p) => (

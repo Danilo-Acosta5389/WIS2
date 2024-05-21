@@ -60,7 +60,8 @@ const NavBar = () => {
   return (
     <header className=" bg-white ">
       <nav
-        className="mx-auto flex max-w-full items-center justify-between p-6 lg:px-8"
+        onClick={() => setShowPopover(false)}
+        className="mx-auto flex max-w-full items-center justify-between p-6 lg:px-8 text-lg font-semibold"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
@@ -80,16 +81,13 @@ const NavBar = () => {
           </button>
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <Link
-            to="/"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
+          <Link to="/" className=" leading-6 text-gray-900">
             Home
           </Link>
           <Popover className="relative">
             <Popover.Button
               onClick={() => setShowPopover(!showPopover)}
-              className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
+              className="flex items-center gap-x-1 leading-6 text-gray-900"
             >
               Forum
               <ChevronDownIcon
@@ -151,10 +149,7 @@ const NavBar = () => {
               </Popover.Panel>
             </Transition>
           </Popover>
-          <Link
-            to={"/"}
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
+          <Link to={"/"} className="leading-6 text-gray-900">
             Blog
           </Link>
         </Popover.Group>
@@ -193,7 +188,7 @@ const NavBar = () => {
           </div>
         ) : (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Button className="text-sm font-semibold leading-6 text-black bg-white mx-4 hover:bg-gray-200">
+            <Button className=" text-base font-semibold leading-6 text-black bg-white mx-4 hover:bg-gray-200">
               <Link to="/Login">
                 Log in <span aria-hidden="true"></span>
               </Link>

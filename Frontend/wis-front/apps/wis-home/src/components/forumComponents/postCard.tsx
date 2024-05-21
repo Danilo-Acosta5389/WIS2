@@ -24,8 +24,7 @@ import {
   CommentDetails,
   CreateComment,
   PostDetails,
-  createComment,
-  getComments,
+  useForumApi,
 } from "../../api/ForumApi";
 import { useEffect, useState } from "react";
 import { lucide } from "@repo/ui";
@@ -39,7 +38,8 @@ function PostCard() {
   const [showTextArea, setShowTextArea] = useState(false);
   const navigate = useNavigate({ from: "/forum/$topic/$postId" });
   const { globalState } = useGlobalState();
-  //console.log(comments);
+  //console.log(globalState.accessToken);
+  const { createComment, getComments } = useForumApi();
 
   // zod form schema
   const formSchema = z.object({
@@ -67,11 +67,13 @@ function PostCard() {
         postId: parseInt(postId),
       };
       // console.log(comment);
-      await createComment(comment);
+      await createComment(comment, globalState.accessToken);
       setShowTextArea(false);
+      form.reset();
     } catch (err) {
       console.log(err);
       setShowTextArea(false);
+      form.reset();
     }
   };
 
@@ -125,81 +127,85 @@ function PostCard() {
         return null; // Or return a different component indicating no post found
       })}
       <div className=" max-w-[50rem] flex flex-col md:px-5 lg:px-7">
-        {showTextArea ? (
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="bg-black text-white flex flex-col my-10"
-            >
-              <FormField
-                control={form.control}
-                name="textarea"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className=" flex flex-row justify-between mb-2">
-                      <span className="text-2xl font-semibold mx-2">
-                        Comment
-                      </span>
+        {globalState.isLoggedIn && (
+          <>
+            {showTextArea ? (
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="bg-black text-white flex flex-col my-10"
+                >
+                  <FormField
+                    control={form.control}
+                    name="textarea"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className=" flex flex-row justify-between mb-2">
+                          <span className="text-2xl font-semibold mx-2">
+                            Comment
+                          </span>
 
-                      <div
-                        onClick={() => {
-                          setShowTextArea(false);
-                        }}
-                        className=" flex flex-row text-lg hover:text-slate-400 cursor-pointer mr-20 md:mr-40"
-                      >
-                        <lucide.X size={22} />
-                        <span className=" -m-[4px] ml-[1px]">close</span>
-                      </div>
-                    </FormLabel>
-                    <FormControl className="my-15">
-                      {/* <CardTitle>Comment</CardTitle> */}
-                      <Textarea
-                        {...field}
-                        rows={5}
-                        placeholder="Write your thoughts here..."
-                        className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
-                      />
-                    </FormControl>
-                    <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="isAnonymous"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row sm:justify-end mt-6 ml-5 sm:ml-0 sm:mr-[10rem]">
-                    <FormControl className="">
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className=" bg-slate-200 mt-2 size-5 mr-2"
-                      />
-                    </FormControl>
-                    <FormLabel className="text-white text-md flex-wrap">
-                      Do not display my username
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
+                          <div
+                            onClick={() => {
+                              setShowTextArea(false);
+                            }}
+                            className=" flex flex-row text-lg hover:text-slate-400 cursor-pointer mr-20 md:mr-40"
+                          >
+                            <lucide.X size={22} />
+                            <span className=" -m-[4px] ml-[1px]">close</span>
+                          </div>
+                        </FormLabel>
+                        <FormControl className="my-15">
+                          {/* <CardTitle>Comment</CardTitle> */}
+                          <Textarea
+                            {...field}
+                            rows={5}
+                            placeholder="Write your thoughts here..."
+                            className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
+                          />
+                        </FormControl>
+                        <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="isAnonymous"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row sm:justify-end mt-6 ml-5 sm:ml-0 sm:mr-[10rem]">
+                        <FormControl className="">
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className=" bg-slate-200 mt-2 size-5 mr-2"
+                          />
+                        </FormControl>
+                        <FormLabel className="text-white text-md flex-wrap">
+                          Do not display my username
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    className=" bg-slate-200 max-w-24 text-black hover:bg-slate-500 mt-5 sm:-mt-6 ml-5 sm:z-10"
+                  >
+                    Submit
+                  </Button>
+                </form>
+              </Form>
+            ) : (
               <Button
-                type="submit"
-                className=" bg-slate-200 max-w-24 text-black hover:bg-slate-500 mt-5 sm:-mt-6 ml-5 sm:z-10"
+                onClick={() => {
+                  setShowTextArea(true);
+                }}
+                className=" bg-slate-200 max-w-min text-black hover:bg-slate-500 m-5"
               >
-                Submit
+                <p className=" mr-1">Comment!</p>
+                <lucide.StickyNote size={16} />
               </Button>
-            </form>
-          </Form>
-        ) : (
-          <Button
-            onClick={() => {
-              setShowTextArea(true);
-            }}
-            className=" bg-slate-200 max-w-min text-black hover:bg-slate-500 m-5"
-          >
-            <p className=" mr-1">Comment!</p>
-            <lucide.StickyNote size={16} />
-          </Button>
+            )}
+          </>
         )}
         {/* get better key, id is better */}
         {comments?.map((c) => (
