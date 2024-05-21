@@ -8,31 +8,83 @@ import {
   Separator,
   Textarea,
   Button,
-  CardTitle,
-  Label,
   Checkbox,
+  z,
+  zodResolver,
+  useForm,
+  Form,
+  FormField,
+  FormLabel,
+  FormControl,
+  FormItem,
+  FormMessage,
 } from "@repo/ui";
 import { Route } from "../../routes/forum/$topic/$postId";
-import { CommentDetails, PostDetails, getComments } from "../../api/ForumApi";
+import {
+  CommentDetails,
+  CreateComment,
+  PostDetails,
+  createComment,
+  getComments,
+} from "../../api/ForumApi";
 import { useEffect, useState } from "react";
 import { lucide } from "@repo/ui";
 import { useNavigate } from "@tanstack/react-router";
+import { useGlobalState } from "../../main";
 
 function PostCard() {
   const { postId } = Route.useParams();
   const post: PostDetails[] = Route.useLoaderData();
   const [comments, setComments] = useState<CommentDetails[] | undefined>([]);
   const [showTextArea, setShowTextArea] = useState(false);
-
   const navigate = useNavigate({ from: "/forum/$topic/$postId" });
+  const { globalState } = useGlobalState();
   //console.log(comments);
+
+  // zod form schema
+  const formSchema = z.object({
+    textarea: z.string().min(1, { message: "Please write something" }),
+    isAnonymous: z.boolean(),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      textarea: "",
+      isAnonymous: false,
+    },
+  });
+
+  // Some issue with how the json is sent, it still works but not perfectly
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      // console.log(JSON.stringify(values));
+      const comment: CreateComment = {
+        userName: globalState.userName,
+        comment: values.textarea,
+        createdAt: new Date(),
+        isAnonymous: values.isAnonymous,
+        postId: parseInt(postId),
+      };
+      // console.log(comment);
+      await createComment(comment);
+      setShowTextArea(false);
+    } catch (err) {
+      console.log(err);
+      setShowTextArea(false);
+    }
+  };
+
   useEffect(() => {
     const fetchComments = async () => {
       const response = await getComments(Number(postId));
+      // console.log(response);
       setComments(response);
     };
     fetchComments();
-  }, []);
+    // console.log(showTextArea);
+  }, [showTextArea]);
+
   return (
     <ScrollArea className="flex flex-col p-6 bg-black w-full">
       <lucide.ArrowLeft
@@ -58,6 +110,14 @@ function PostCard() {
                 )}
                 <p>{p.text}</p>
               </span>
+              <div className="flex flex-row font-semibold mt-4 mr-10 self-end text-slate-400">
+                <p>By "{p.userName}" - </p>
+                <p className="ml-1">
+                  {new Intl.DateTimeFormat("sv-SE").format(
+                    new Date(p.createdAt.toString())
+                  )}
+                </p>
+              </div>
               <Separator className="mt-5 w-[90%] self-start" />
             </div>
           );
@@ -66,28 +126,70 @@ function PostCard() {
       })}
       <div className=" max-w-[50rem] flex flex-col md:px-5 lg:px-7">
         {showTextArea ? (
-          <div className="bg-black text-white flex flex-col p-5 m-5">
-            <CardTitle>Comment</CardTitle>
-            <Textarea
-              rows={5}
-              placeholder="Write your thoughts here..."
-              className=" bg-slate-600 text-white max-w-[40rem] my-10 placeholder:text-slate-400"
-            />
-            <div className="flex flex-row justify-start">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="bg-black text-white flex flex-col my-10"
+            >
+              <FormField
+                control={form.control}
+                name="textarea"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className=" flex flex-row justify-between mb-2">
+                      <span className="text-2xl font-semibold mx-2">
+                        Comment
+                      </span>
+
+                      <div
+                        onClick={() => {
+                          setShowTextArea(false);
+                        }}
+                        className=" flex flex-row text-lg hover:text-slate-400 cursor-pointer mr-20 md:mr-40"
+                      >
+                        <lucide.X size={22} />
+                        <span className=" -m-[4px] ml-[1px]">close</span>
+                      </div>
+                    </FormLabel>
+                    <FormControl className="my-15">
+                      {/* <CardTitle>Comment</CardTitle> */}
+                      <Textarea
+                        {...field}
+                        rows={5}
+                        placeholder="Write your thoughts here..."
+                        className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
+                      />
+                    </FormControl>
+                    <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="isAnonymous"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row sm:justify-end mt-6 ml-5 sm:ml-0 sm:mr-[10rem]">
+                    <FormControl className="">
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className=" bg-slate-200 mt-2 size-5 mr-2"
+                      />
+                    </FormControl>
+                    <FormLabel className="text-white text-md flex-wrap">
+                      Do not display my username
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
               <Button
-                onClick={() => {
-                  setShowTextArea(false);
-                }}
-                className=" bg-slate-200 max-w-24 text-black hover:bg-slate-500 ml-5"
+                type="submit"
+                className=" bg-slate-200 max-w-24 text-black hover:bg-slate-500 mt-5 sm:-mt-6 ml-5 sm:z-10"
               >
                 Submit
               </Button>
-              <Checkbox className=" bg-slate-200 ml-8 size-5" />
-              <Label className="text-white mx-2 text-sm">
-                Do not display my username
-              </Label>
-            </div>
-          </div>
+            </form>
+          </Form>
         ) : (
           <Button
             onClick={() => {
@@ -102,7 +204,7 @@ function PostCard() {
         {/* get better key, id is better */}
         {comments?.map((c) => (
           <Card
-            key={c.userName}
+            key={c.id}
             className="my-7 w-max text-white bg-black self-start"
           >
             <CardHeader>

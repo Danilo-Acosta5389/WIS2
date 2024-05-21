@@ -77,12 +77,24 @@ namespace WisApi.Controllers.ForumControllers
                 HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
                 var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-                if (publicId is null && refreshToken is null) return BadRequest("Credentials not found.");
+                if (publicId is null && refreshToken is null) return Unauthorized("Credentials not found.");
 
                 var user = _userManager.Users.Where(x => x.PublicId == publicId && x.RefreshToken == refreshToken).SingleOrDefault();
 
+                if (user == null) return BadRequest("User not found");
 
-                var newPost = new PostModel(post.Title, post.SubTitle, post.Text, post.CreatedAt, post.UserName, user.Id, ip, post.IsAnonymous, post.TopicId);
+                var newPost = new PostModel()
+                {
+                    Title = post.Title,
+                    SubTitle = post.SubTitle,
+                    Text = post.Text,
+                    UserName = post.IsAnonymous ? "Anonymous" : post.UserName,
+                    CreatedAt = post.CreatedAt,
+                    UserId = user?.Id,
+                    IpAdress = ip,
+                    IsAnonymous = post.IsAnonymous,
+                    TopicId = post.TopicId,
+                };
 
                 _postRepository.Create(newPost);
                 _postRepository.Save();

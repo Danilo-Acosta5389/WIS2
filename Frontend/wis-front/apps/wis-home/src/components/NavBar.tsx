@@ -25,6 +25,7 @@ import { Link } from "@tanstack/react-router";
 import { useGlobalState } from "../main";
 import { useAuth } from "../hooks/useAuth";
 import { Route } from "../routes/__root";
+import SignUpForm from "./authForms/SignUpForm";
 
 const NavBar = () => {
   const { globalState, setGlobalState } = useGlobalState();
@@ -68,11 +69,7 @@ const NavBar = () => {
           </a>
         </div>
         <div className="flex lg:hidden">
-          {!signedIn && (
-            <Button className="text-sm font-semibold hover:bg-gray-500 bg-blue-600 mx-8">
-              Sign up <span aria-hidden="true"></span>
-            </Button>
-          )}
+          {!signedIn && <SignUpForm />}
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
@@ -201,9 +198,7 @@ const NavBar = () => {
                 Log in <span aria-hidden="true"></span>
               </Link>
             </Button>
-            <Button className="text-sm font-semibold leading-6 pl-5 hover:bg-gray-500 bg-blue-600">
-              Sign up <span aria-hidden="true"></span>
-            </Button>
+            <SignUpForm />
           </div>
         )}
       </nav>

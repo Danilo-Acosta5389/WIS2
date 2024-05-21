@@ -34,6 +34,7 @@ namespace WisApi.Controllers.ForumControllers
 
                 var response = comments.Select(x => new CommentDTO
                 {
+                    Id = x.Id,
                     UserName = x.UserName,
                     Comment = x.Comment,
                     CreatedAt = x.CreatedAt,
@@ -75,7 +76,7 @@ namespace WisApi.Controllers.ForumControllers
                 var newComment = new CommentModel
                 {
                     UserId = user.Id,
-                    UserName = comment.UserName,
+                    UserName = comment.IsAnonymous ? "Anonymous" : comment.UserName,
                     Comment = comment.Comment,
                     CreatedAt = comment.CreatedAt,
                     IpAdress = ip,
