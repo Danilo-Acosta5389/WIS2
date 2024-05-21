@@ -1,9 +1,10 @@
 import { ScrollArea, ScrollBar, Separator } from "@repo/ui";
 import { Link } from "@tanstack/react-router";
-import { topics } from "../../assets/data.ts";
+import { Route } from "../../routes/__root";
 
 function TopicsMenu() {
   //const pokemons = Route.useLoaderData();
+  const topics = Route.useLoaderData();
 
   return (
     <>
@@ -22,13 +23,13 @@ function TopicsMenu() {
                 className="block font-semibold text-white"
                 to="/forum/$topic"
                 params={{
-                  topic: topic.name,
+                  topic: topic.title,
                 }}
                 activeProps={{
                   style: { fontWeight: "bold", fontSize: "1.5rem" },
                 }}
               >
-                {topic.name}
+                {topic.title}
               </Link>
             </div>
           ))}

@@ -1,7 +1,7 @@
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { AuthContext } from "../hooks/useAuth";
 import { NavBar } from "../components/NavBar";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { getTopics } from "../api/ForumApi";
 
 type RouterContext = {
   authentication: AuthContext;
@@ -9,6 +9,7 @@ type RouterContext = {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: root,
+  loader: getTopics,
 });
 
 function root() {
@@ -16,7 +17,7 @@ function root() {
     <div className="w-screen h-screen bg-black">
       <NavBar />
       <Outlet />
-      <TanStackRouterDevtools />
+      {/* <TanStackRouterDevtools /> */}
     </div>
   );
 }

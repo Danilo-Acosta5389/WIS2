@@ -5,16 +5,6 @@ const HomePage = () => {
   const { globalState } = useGlobalState();
   const [signedIn, setSignedIn] = useState(false);
 
-  // async function fetchFromApi() {
-  //   const fetchData = await fetchForumData();
-  //   console.log(fetchData);
-  //   return fetchData;
-  // }
-
-  // useEffect(() => {
-  //   fetchFromApi();
-  // }, []);
-
   useEffect(() => {
     setSignedIn(globalState.isLoggedIn);
   }, [globalState]);

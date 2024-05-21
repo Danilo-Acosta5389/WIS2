@@ -24,7 +24,7 @@ import {
 import { Link } from "@tanstack/react-router";
 import { useGlobalState } from "../main";
 import { useAuth } from "../hooks/useAuth";
-import { topics } from "../assets/data";
+import { Route } from "../routes/__root";
 
 const NavBar = () => {
   const { globalState, setGlobalState } = useGlobalState();
@@ -32,6 +32,7 @@ const NavBar = () => {
   const [signedIn, setSignedIn] = useState(false);
   const { signOut } = useAuth();
   const [showPopover, setShowPopover] = useState<boolean>();
+  const topics = Route.useLoaderData();
 
   const handleSignOut = async () => {
     const response = await signOut();
@@ -48,7 +49,7 @@ const NavBar = () => {
   };
 
   useEffect(() => {
-    console.log("showPopover is: " + showPopover);
+    // console.log("showPopover is: " + showPopover);
   }, [showPopover]);
 
   useEffect(() => {
@@ -133,12 +134,12 @@ const NavBar = () => {
                       >
                         <Link
                           to={"/forum/$topic"}
-                          params={{ topic: item.name }}
+                          params={{ topic: item.title }}
                           className="flex-auto"
                           onClick={() => setShowPopover(false)}
                         >
                           <div className="block font-semibold text-gray-900">
-                            {item.name}
+                            {item.title}
                             <span className="absolute inset-0" />
                           </div>
                           <p className="mt-1 text-gray-600">
@@ -312,7 +313,7 @@ const NavBar = () => {
                           <Link
                             to={"/forum/$topic"}
                             params={{
-                              topic: "bulbazzaar",
+                              topic: topics[0].title,
                             }}
                             className=" font-medium text-blue-700"
                             onClick={() => {
@@ -329,12 +330,12 @@ const NavBar = () => {
                           >
                             <Link
                               to={"/forum/$topic"}
-                              params={{ topic: item.name }}
+                              params={{ topic: item.title }}
                               onClick={() => {
                                 setMobileMenuOpen(false);
                               }}
                             >
-                              {item.name}
+                              {item.title}
                             </Link>
                           </Disclosure.Button>
                         ))}

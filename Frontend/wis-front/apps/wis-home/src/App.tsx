@@ -48,17 +48,6 @@ function App() {
             ],
           }));
         }
-        // else {
-        //   await authentication.signOut();
-        //   setGlobalState((prevState) => ({
-        //     ...prevState,
-        //     isLoggedIn: false,
-        //     accessToken: "",
-        //     userName: "",
-        //     role: "",
-        //   }));
-        //   console.error("Failed to refresh token, signing out.");
-        // }
       }
       RefreshToken();
       intercept.current = true;
