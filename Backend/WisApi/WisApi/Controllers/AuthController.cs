@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WisApi.Models.DTO_s;
 using WisApi.Repositories.Interfaces;
 
@@ -58,6 +59,7 @@ namespace WisApi.Controllers
         //NEW
         // this might need Authorize annotation
         [HttpPost("RefreshToken")]
+        //[Authorize(Roles = "User, Creator, Admin, Super")]
         public async Task<IActionResult> RefreshToken()
         {
             HttpContext.Request.Cookies.TryGetValue("publicId", out var publicId);

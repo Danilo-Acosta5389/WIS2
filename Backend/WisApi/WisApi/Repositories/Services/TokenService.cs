@@ -25,7 +25,7 @@ namespace WisApi.Repositories.Services
         {
             // Create claims
             var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, user.Email!));   //Might want to check what is relevant in claims for this app in particualar
+            claims.Add(new Claim(ClaimTypes.Name, user.UserName!));   //Might want to check what is relevant in claims for this app in particualar
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));

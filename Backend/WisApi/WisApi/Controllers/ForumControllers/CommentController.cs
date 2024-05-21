@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using WisApi.Models;
@@ -53,6 +54,7 @@ namespace WisApi.Controllers.ForumControllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "User, Creator, Admin, Super")]
         public IActionResult CreateComment(CreateCommentDTO comment)
         {
             try

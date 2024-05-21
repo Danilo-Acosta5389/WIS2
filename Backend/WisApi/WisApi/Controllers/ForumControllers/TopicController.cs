@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WisApi.Models;
 using WisApi.Models.DTO_s.ForumDTOs;
@@ -43,6 +44,7 @@ namespace WisApi.Controllers.ForumControllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Creator, Admin, Super")]
         public IActionResult CreateTopic(CreateTopicDTO topic) 
         {
             HttpContext.Request.Cookies.TryGetValue("publicId", out var publicId);
