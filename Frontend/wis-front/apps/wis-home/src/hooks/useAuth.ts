@@ -74,7 +74,28 @@ export const useAuth = () => {
     }
   };
 
-  return { signIn, signOut, isLogged, refresh };
+  interface RegisterForm {
+    email: string;
+    userName: string;
+    password: string;
+  }
+
+  const registerUser = async (
+    params: RegisterForm
+  ): Promise<RegisterForm | undefined> => {
+    const response = await fetch("https://localhost:7118/api/Auth/Register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+    return data;
+  };
+
+  return { signIn, signOut, isLogged, refresh, registerUser };
 };
 
 export type AuthContext = ReturnType<typeof useAuth>;

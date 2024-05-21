@@ -29,6 +29,7 @@ function TopicsMenu() {
   const topics = Route.useLoaderData();
   const { globalState } = useGlobalState();
   const [rerender, setRerender] = useState(false);
+  const [successful, setSuccessful] = useState(false);
 
   // zod form schema
   const formSchema = z.object({
@@ -61,7 +62,7 @@ function TopicsMenu() {
 
       form.reset();
       console.log(newPost);
-      setRerender(true);
+      setSuccessful(true);
     } catch (err) {
       console.log(err);
     }
@@ -85,84 +86,97 @@ function TopicsMenu() {
             <span>Add topic</span>
           </d.DialogTrigger>
           <d.DialogContent className=" bg-black text-white">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="bg-black text-white flex flex-col my-10 max-w-[48rem]"
-              >
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => {
-                    return (
-                      <FormItem className="flex flex-col mb-2">
-                        <FormLabel className=" flex flex-row justify-between">
-                          <span className="text-xl font-semibold mx-2">
-                            Title
-                          </span>
-                        </FormLabel>
+            <d.DialogTitle>Add new topic</d.DialogTitle>
+            <Separator />
+            {!successful ? (
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="bg-black text-white flex flex-col my-10 max-w-[48rem]"
+                >
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="flex flex-col mb-6">
+                          <FormLabel className=" flex flex-row justify-between">
+                            <span className="text-xl font-semibold mx-2">
+                              Title
+                            </span>
+                          </FormLabel>
+                          <FormControl className="">
+                            <Input
+                              {...field}
+                              placeholder="The name of this topic..."
+                              className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
+                            />
+                          </FormControl>
+                          <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="flex flex-col mb-6">
+                          <FormLabel className=" flex flex-row justify-between">
+                            <span className="text-2xl font-semibold mx-2">
+                              Description
+                            </span>
+                          </FormLabel>
+                          <FormControl className="my-15">
+                            {/* <CardTitle>Comment</CardTitle> */}
+                            <Textarea
+                              {...field}
+                              rows={5}
+                              placeholder="What is this topic about?"
+                              className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
+                            />
+                          </FormControl>
+                          <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="isAnonymous"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row sm:justify-end items-center mt-6 ml-5">
                         <FormControl className="">
-                          <Input
-                            {...field}
-                            placeholder="The name of this topic..."
-                            className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className=" bg-slate-200 mt-2 size-5 mr-2"
                           />
                         </FormControl>
-                        <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
-                      </FormItem>
-                    );
-                  }}
-                />
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => {
-                    return (
-                      <FormItem className="flex flex-col">
-                        <FormLabel className=" flex flex-row justify-between">
-                          <span className="text-2xl font-semibold mx-2">
-                            Description
-                          </span>
+                        <FormLabel className="text-white text-md flex-wrap">
+                          Do not display my username
                         </FormLabel>
-                        <FormControl className="my-15">
-                          {/* <CardTitle>Comment</CardTitle> */}
-                          <Textarea
-                            {...field}
-                            rows={5}
-                            placeholder="What is this topic about?"
-                            className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
-                          />
-                        </FormControl>
-                        <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
                       </FormItem>
-                    );
-                  }}
-                />
-                <FormField
-                  control={form.control}
-                  name="isAnonymous"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row sm:justify-end items-center mt-6 ml-5">
-                      <FormControl className="">
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className=" bg-slate-200 mt-2 size-5 mr-2"
-                        />
-                      </FormControl>
-                      <FormLabel className="text-white text-md flex-wrap">
-                        Do not display my username
-                      </FormLabel>
-                    </FormItem>
-                  )}
-                />
-                <d.DialogClose type="submit" asChild>
-                  <Button className=" bg-slate-200 max-w-24 text-black hover:bg-slate-500 mt-5 sm:-mt-6 ml-5 sm:z-10">
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    className=" bg-slate-200 max-w-24 text-black hover:bg-slate-500 mt-5 sm:-mt-6 ml-5 sm:z-10"
+                  >
                     Submit
                   </Button>
+                </form>
+              </Form>
+            ) : (
+              <>
+                <d.DialogHeader>Topic was successfully added!</d.DialogHeader>
+                <p>Please refresh the page</p>
+                <d.DialogClose onClick={() => setSuccessful(false)}>
+                  Continue
                 </d.DialogClose>
-              </form>
-            </Form>
+              </>
+            )}
           </d.DialogContent>
         </d.Dialog>
         <ScrollArea className=" pl-5">
