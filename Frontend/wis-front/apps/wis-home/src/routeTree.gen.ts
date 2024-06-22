@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as ForumImport } from './routes/forum'
 import { Route as LoginImport } from './routes/Login'
 import { Route as IndexImport } from './routes/index'
+import { Route as UserUserNameImport } from './routes/user/$userName'
 import { Route as ForumTopicIndexImport } from './routes/forum/$topic/index'
 import { Route as ForumTopicPostIdImport } from './routes/forum/$topic/$postId'
 
@@ -31,6 +32,11 @@ const LoginRoute = LoginImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const UserUserNameRoute = UserUserNameImport.update({
+  path: '/user/$userName',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,6 +66,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForumImport
       parentRoute: typeof rootRoute
     }
+    '/user/$userName': {
+      preLoaderRoute: typeof UserUserNameImport
+      parentRoute: typeof rootRoute
+    }
     '/forum/$topic/$postId': {
       preLoaderRoute: typeof ForumTopicPostIdImport
       parentRoute: typeof ForumImport
@@ -77,6 +87,7 @@ export const routeTree = rootRoute.addChildren([
   IndexRoute,
   LoginRoute,
   ForumRoute.addChildren([ForumTopicPostIdRoute, ForumTopicIndexRoute]),
+  UserUserNameRoute,
 ])
 
 /* prettier-ignore-end */

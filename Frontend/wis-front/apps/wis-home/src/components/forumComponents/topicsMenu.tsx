@@ -25,7 +25,6 @@ import { CreateTopic, useForumApi } from "../../api/ForumApi";
 import { useEffect, useState } from "react";
 
 function TopicsMenu() {
-  //const pokemons = Route.useLoaderData();
   const topics = Route.useLoaderData();
   const { globalState } = useGlobalState();
   const [rerender, setRerender] = useState(false);

@@ -158,7 +158,7 @@ const NavBar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src="../../public/DefaultAvatar.jpg" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
@@ -166,7 +166,14 @@ const NavBar = () => {
                 <DropdownMenuLabel>{globalState.userName}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer">
-                  Profile
+                  <Link
+                    to={"/user/$userName"}
+                    params={{
+                      userName: globalState.userName,
+                    }}
+                  >
+                    Profile
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer">
                   Messages
@@ -210,7 +217,7 @@ const NavBar = () => {
               {signedIn ? (
                 <div className=" flex">
                   <Avatar className="mt-1">
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src="../../public/DefaultAvatar.jpg" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col ml-3 mt-0">
@@ -245,7 +252,10 @@ const NavBar = () => {
               {signedIn && (
                 <div className="space-y-2 py-6">
                   <Link
-                    to="/"
+                    to={"/user/$userName"}
+                    params={{
+                      userName: globalState.userName,
+                    }}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     onClick={() => {
                       setMobileMenuOpen(false);
@@ -341,7 +351,7 @@ const NavBar = () => {
                     onClick={handleSignOut}
                     className=" block rounded-lg py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
-                    sign out &rarr;
+                    Sign out &rarr;
                   </Link>
                 ) : (
                   <Link
