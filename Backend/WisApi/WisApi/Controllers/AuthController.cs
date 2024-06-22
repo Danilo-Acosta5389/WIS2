@@ -37,6 +37,9 @@ namespace WisApi.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
+
+            //Action/endpoint is returning 500 instead of 401, fix this.
+
             var loginResult = await _authRepository.LoginAsync(loginRequestDTO);
 
             if (loginResult != null)

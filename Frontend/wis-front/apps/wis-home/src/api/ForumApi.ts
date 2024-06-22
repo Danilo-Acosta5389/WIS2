@@ -1,10 +1,15 @@
 export const useForumApi = () => {
   async function getTopics(): Promise<Topics[]> {
-    const response = await fetch("https://localhost:7118/api/Topic/Topics");
-    const data = await response.json();
-    // console.log(data);
+    try {
+      const response = await fetch("https://localhost:7118/api/Topic/Topics");
+      const data: Topics[] = await response.json();
 
-    return data;
+      return data;
+    } catch (err) {
+      console.log(err);
+      const data: Topics[] = [];
+      return data;
+    }
   }
 
   async function getPosts(id: number | undefined): Promise<PostDetails[]> {
@@ -13,7 +18,6 @@ export const useForumApi = () => {
     );
     const data = await response.json();
     //   console.log(data);
-
     return data;
   }
 

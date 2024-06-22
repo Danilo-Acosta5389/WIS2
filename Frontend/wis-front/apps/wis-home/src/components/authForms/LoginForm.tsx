@@ -34,6 +34,7 @@ const LoginForm = () => {
   const navigate = useNavigate({ from: "/Login" });
   const [jwt, setJwt] = useState<string | undefined>(undefined);
   const { signIn } = useAuth();
+  const [error, setError] = useState<boolean>(false);
 
   // zod form schema
   const formSchema = z.object({
@@ -57,11 +58,18 @@ const LoginForm = () => {
         username: values.email,
         password: values.password,
       });
-      setJwt(login);
+      console.log(login === undefined ? "did not work" : "worked");
+      if (login === undefined) {
+        setError(true);
+      } else {
+        setJwt(login);
+      }
     } catch (err) {
       console.log(err);
     }
   }
+
+  useEffect(() => {}, [error]);
 
   useEffect(() => {
     if (jwt) {
@@ -90,7 +98,7 @@ const LoginForm = () => {
   return (
     <div className=" w-80 pb-6 bg-black rounded-lg border  shadow-md  flex flex-col items-center justify-center text-white ">
       <div className=" h-16 border-b mb-6 w-full rounded-t-lg flex flex-row items-center justify-center ">
-        <h3 className=" text-lg font-semibold ">Login</h3>
+        <h3 className=" text-lg font-semibold ">Log in</h3>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -120,6 +128,11 @@ const LoginForm = () => {
                 </FormControl>
 
                 <FormMessage />
+                {error && (
+                  <p className=" text-red-500 font-semibold pt-2">
+                    Wrong email or password
+                  </p>
+                )}
               </FormItem>
             )}
           />
