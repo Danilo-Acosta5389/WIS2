@@ -5,9 +5,9 @@ using WisApi.Repositories.Interfaces;
 
 namespace WisApi.Repositories.Services
 {
-    public class ProfileService : RepositoryBase<ProfileModel>, IProfileRepository
+    public class UserService : RepositoryBase<ProfileModel>, IUserRepository
     {
-        public ProfileService(ApplicationDbContext context) : base(context)
+        public UserService(ApplicationDbContext context) : base(context)
         {
 
         }

@@ -2,5 +2,5 @@
 
 namespace WisApi.Repositories.Interfaces
 {
-    public interface IProfileRepository : IRepositoryBase<ProfileModel> { }
+    public interface IUserRepository : IRepositoryBase<ProfileModel> { }
 }

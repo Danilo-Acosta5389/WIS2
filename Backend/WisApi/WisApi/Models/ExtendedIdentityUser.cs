@@ -12,5 +12,9 @@ namespace WisApi.Models
         public DateTime RefreshTokenExpiry { get; set; }
 
         public bool IsBlocked { get; set; } = false;
+
+        public string Bio {  get; set; }
+
+        public string Image {  get; set; }
     }
 }
