@@ -39,7 +39,7 @@ namespace WisApi
             builder.Services.AddScoped<ITopicRepository, TopicService>();
             builder.Services.AddScoped<IPostRepository, PostService>();
             builder.Services.AddScoped<ICommentRepository, CommentService>();
-
+            builder.Services.AddScoped<IUserRepository, UserService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
