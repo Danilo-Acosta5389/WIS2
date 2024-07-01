@@ -21,11 +21,12 @@ namespace WisApi.Repositories.Services
             _userManager = userManager;
         }
 
-        public string CreateJWTToken(IdentityUser user, List<string> roles)
+        public string CreateJWTToken(ExtendedIdentityUser user, List<string> roles)
         {
             // Create claims
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, user.UserName!));   //Might want to check what is relevant in claims for this app in particualar
+            claims.Add(new Claim("image", user.Image));
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));

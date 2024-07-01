@@ -37,7 +37,7 @@ namespace WisApi.Repositories.Services
                         {
                             PublicId = user.PublicId,
                             JwtToken = jwtToken,
-                            RefreshToken = refreshToken
+                            RefreshToken = refreshToken,
                         };
 
 
