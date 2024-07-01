@@ -25,6 +25,7 @@ function App() {
   interface CustomJwtPayload extends JwtPayload {
     "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string;
     "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string;
+    image: string;
   }
 
   useEffect(() => {
@@ -46,12 +47,13 @@ function App() {
             role: decoded[
               "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ],
+            image: decoded.image,
           }));
         }
       }
       RefreshToken();
       intercept.current = true;
-      console.log("intercept is: " + intercept.current);
+      //console.log("intercept is: " + intercept.current);
     }
   }, []);
 

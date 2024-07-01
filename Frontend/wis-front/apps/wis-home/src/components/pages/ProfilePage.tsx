@@ -9,7 +9,10 @@ const ProfilePage = () => {
   return (
     <div className=" flex flex-col sm:flex-row p-6">
       <Avatar className=" h-40 w-40">
-        <AvatarImage src={"../../../public/" + userDetails.image} />
+        <AvatarImage
+          className=" h-fit w-fit"
+          src={"../../../public/" + userDetails.image}
+        />
         <AvatarFallback className=" text-7xl font-semibold">
           {userDetails.userName.charAt(0)}
         </AvatarFallback>

@@ -18,6 +18,7 @@ interface GlobalState {
   accessToken: string;
   userName: string;
   role: string;
+  image: string;
 }
 
 // Define context type
@@ -32,6 +33,7 @@ const initialState: GlobalState = {
   accessToken: "",
   userName: "",
   role: "",
+  image: "",
 };
 
 // Create context

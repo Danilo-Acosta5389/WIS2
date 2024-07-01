@@ -26,6 +26,7 @@ import { useNavigate } from "@tanstack/react-router";
 interface CustomJwtPayload extends JwtPayload {
   "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string;
   "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string;
+  image: string;
 }
 
 //Login form component
@@ -58,7 +59,7 @@ const LoginForm = () => {
         username: values.email,
         password: values.password,
       });
-      console.log(login === undefined ? "did not work" : "worked");
+      //console.log(login === undefined ? "did not work" : "worked");
       if (login === undefined) {
         setError(true);
       } else {
@@ -74,6 +75,7 @@ const LoginForm = () => {
   useEffect(() => {
     if (jwt) {
       const decodedToken = jwtDecode<CustomJwtPayload>(jwt);
+      //console.log(decodedToken);
       //Find a solution for this ✅
       const nameClaim =
         decodedToken[
@@ -83,6 +85,7 @@ const LoginForm = () => {
         decodedToken[
           "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ];
+      const imageClaim = decodedToken["image"];
 
       setGlobalState((prev) => ({
         ...prev,
@@ -90,6 +93,7 @@ const LoginForm = () => {
         accessToken: jwt,
         userName: nameClaim,
         role: roleClaim,
+        image: imageClaim,
       }));
       navigate({ to: "/" });
     }

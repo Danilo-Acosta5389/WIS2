@@ -5,7 +5,7 @@ export const useUserApi = () => {
         `https://localhost:7118/api/User/${userName}`
       );
       const data: UserDetails[] = await response.json();
-      console.log(data);
+      //console.log(data);
       return data;
     } catch (err) {
       console.log(err);

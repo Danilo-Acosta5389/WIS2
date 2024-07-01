@@ -44,6 +44,7 @@ const NavBar = () => {
         accessToken: "",
         userName: "",
         role: "",
+        image: "",
       }));
       setSignedIn(globalState.isLoggedIn);
     }
@@ -158,8 +159,10 @@ const NavBar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src="../../public/DefaultAvatar.jpg" />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage src={"/" + globalState.image} />
+                  <AvatarFallback className=" text-xl font-semibold">
+                    {globalState.userName.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className=" mr-3 ">
@@ -217,8 +220,10 @@ const NavBar = () => {
               {signedIn ? (
                 <div className=" flex">
                   <Avatar className="mt-1">
-                    <AvatarImage src="../../public/DefaultAvatar.jpg" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage src={"/" + globalState.image} />
+                    <AvatarFallback className=" text-xl font-semibold">
+                      {globalState.userName.charAt(0)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col ml-3 mt-0">
                     <p className=" text-lg text-black font-semibold">

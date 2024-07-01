@@ -27,7 +27,7 @@ export const useAuth = () => {
         const data = await response.json();
         //console.log(data)
         //setJwt(data.token);
-        console.log("user logged in");
+        //console.log("user logged in");
 
         return data.token;
       } else {
