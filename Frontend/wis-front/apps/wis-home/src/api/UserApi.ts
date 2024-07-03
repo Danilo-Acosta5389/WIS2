@@ -14,13 +14,34 @@ export const useUserApi = () => {
     }
   }
 
+  async function EditUser(formData: FormData) {
+    try {
+      console.log(formData);
+      const response = await fetch("https://localhost:7118/api/User", {
+        method: "PUT",
+        body: formData,
+      });
+      console.log(response.status);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return {
     GetUser,
+    EditUser,
   };
 };
 
 export interface UserDetails {
   userName: string;
   bio: string;
-  image: string;
+  imageName: string;
+  imageSrc: string;
+}
+
+export interface UpdatedDetails {
+  userName: string;
+  bio: string;
+  imageFile: File | undefined;
 }

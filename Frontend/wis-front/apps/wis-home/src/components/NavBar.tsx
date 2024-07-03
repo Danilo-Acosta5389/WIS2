@@ -159,7 +159,7 @@ const NavBar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src={"/" + globalState.image} />
+                  <AvatarImage src={globalState.image} />
                   <AvatarFallback className=" text-xl font-semibold">
                     {globalState.userName.charAt(0)}
                   </AvatarFallback>
@@ -220,7 +220,7 @@ const NavBar = () => {
               {signedIn ? (
                 <div className=" flex">
                   <Avatar className="mt-1">
-                    <AvatarImage src={"/" + globalState.image} />
+                    <AvatarImage src={globalState.image} />
                     <AvatarFallback className=" text-xl font-semibold">
                       {globalState.userName.charAt(0)}
                     </AvatarFallback>
