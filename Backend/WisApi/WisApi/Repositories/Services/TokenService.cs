@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -26,7 +28,7 @@ namespace WisApi.Repositories.Services
             // Create claims
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, user.UserName!));   //Might want to check what is relevant in claims for this app in particualar
-            claims.Add(new Claim("image", user.Image));
+            claims.Add(new Claim("image", string.Format("{0}/Images/{1}", "https://localhost:7118", user.Image)));
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
