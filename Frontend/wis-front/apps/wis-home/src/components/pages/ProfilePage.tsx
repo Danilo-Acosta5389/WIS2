@@ -21,25 +21,31 @@ import {
 import { useGlobalState } from "../../main";
 import { Route } from "../../routes/user/$userName";
 import { UserDetails, useUserApi } from "../../api/UserApi";
-import { useState } from "react";
-
-const formSchema = z.object({
-  bio: z.string().max(250, "Max 250 characters"),
-  image: z.instanceof(FileList),
-});
+import { useEffect, useState } from "react";
 
 const ProfilePage = () => {
   const { globalState } = useGlobalState();
   const userDetails: UserDetails = Route.useLoaderData();
+  //console.log("userDetails: " + JSON.stringify(userDetails));
   const initialState = {
     userName: userDetails.userName,
     bio: userDetails.bio,
-    imageSrc: "",
+    imageSrc: globalState.image,
     imageFile: undefined,
   };
+  //console.log("initialState" + JSON.stringify(initialState));
+
+  //const [setImageSrc] = useState(globalState.image);
   const [edit, setEdit] = useState(false);
-  const [values, setValues] = useState(initialState);
+  const [newValues, setNewValues] = useState(initialState);
   const { EditUser } = useUserApi();
+
+  //console.log("values" + JSON.stringify(newValues));
+
+  const formSchema = z.object({
+    bio: z.string().max(250, "Max 250 characters"),
+    image: z.instanceof(FileList),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,24 +53,17 @@ const ProfilePage = () => {
       bio: userDetails.bio,
     },
   });
-
+  //console.log(userDetails.bio);
   const fileRef = form.register("image");
 
-  /*
-
-  User must be able to edit bio and change image.
-  Create an object to hold new bio and image info, 
-  send updates with api request.
-
-  */
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setNewValues({ ...newValues, bio: values.bio });
     const formData = new FormData();
     formData.append("userName", globalState.userName);
     formData.append("bio", values.bio);
     formData.append("imageFile", values.image[0]);
     await EditUser(formData);
-    console.log(JSON.stringify(edit));
+    //console.log(JSON.stringify(edit));
     setEdit(false);
   }
 
@@ -73,8 +72,8 @@ const ProfilePage = () => {
       let imageFile = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (x: any) => {
-        setValues({
-          ...values,
+        setNewValues({
+          ...newValues,
           imageSrc: x.target.result,
           imageFile,
         });
@@ -82,6 +81,8 @@ const ProfilePage = () => {
       reader.readAsDataURL(imageFile);
     }
   };
+
+  useEffect(() => {}, [edit]);
   return (
     <>
       {edit ? (
@@ -101,7 +102,7 @@ const ProfilePage = () => {
                         <Avatar className=" h-40 w-40">
                           <AvatarImage
                             className=" h-fit w-fit"
-                            src={values.imageSrc}
+                            src={newValues.imageSrc}
                           />
                           <AvatarFallback className=" text-7xl font-semibold text-black">
                             {userDetails.userName.charAt(0)}
@@ -135,6 +136,7 @@ const ProfilePage = () => {
                   control={form.control}
                   name="bio"
                   render={({ field }) => {
+                    //console.log(userDetails.bio);
                     return (
                       <FormItem className="flex flex-col">
                         <FormLabel className="text-base italic mx-2 text-slate-400">
@@ -182,26 +184,40 @@ const ProfilePage = () => {
             <Avatar className=" h-40 w-40">
               <AvatarImage
                 className=" h-fit w-fit"
-                src={userDetails.imageSrc}
+                src={
+                  userDetails.imageSrc === newValues.imageSrc
+                    ? newValues.imageSrc
+                    : userDetails.imageSrc
+                }
               />
               <AvatarFallback className=" text-7xl font-semibold">
                 {userDetails.userName.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <Button
-              className=" w-fit mt-5 self-center"
-              onClick={() => {
-                setEdit(!edit);
-              }}
-            >
-              Edit profile
-            </Button>
+            {globalState.isLoggedIn &&
+              globalState.userName === userDetails.userName && (
+                <Button
+                  className=" w-fit mt-5 self-center"
+                  onClick={() => {
+                    setEdit(!edit);
+                  }}
+                >
+                  Edit profile
+                </Button>
+              )}
           </div>
           <div className="flex flex-col mt-8 sm:ml-8 sm:mt-0 text-white">
-            <p className=" text-4xl font-semibold">{values.userName}</p>
-            <p className=" text-xl font-medium">{globalState.role}</p>
+            <p className=" text-4xl font-semibold">{userDetails.userName}</p>
+            {globalState.isLoggedIn &&
+              globalState.userName === userDetails.userName && (
+                <p className=" text-xl font-medium">{globalState.role}</p>
+              )}
 
-            <p className=" mt-5 max-w-[500px]">{userDetails.bio}</p>
+            <p className=" mt-5 max-w-[500px]">
+              {userDetails.bio === newValues.bio
+                ? newValues.bio
+                : userDetails.bio}
+            </p>
           </div>
         </div>
       )}

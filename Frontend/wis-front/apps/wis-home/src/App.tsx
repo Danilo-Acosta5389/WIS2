@@ -17,7 +17,7 @@ declare module "@tanstack/react-router" {
 }
 
 function App() {
-  const { setGlobalState } = useGlobalState();
+  const { globalState, setGlobalState } = useGlobalState();
   const authentication = useAuth();
   const { refresh } = useAuth();
   const intercept = useRef(false);
@@ -56,6 +56,8 @@ function App() {
       //console.log("intercept is: " + intercept.current);
     }
   }, []);
+
+  useEffect(() => {}, [globalState]);
 
   //const authentication = useAuth();
   return <RouterProvider router={router} context={{ authentication }} />;
