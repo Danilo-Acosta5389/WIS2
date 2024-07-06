@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 import { lucide } from "@repo/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { useGlobalState } from "../../main";
+import { ComponentActionsDropdown } from "./mainView";
 
 function PostCard() {
   const { postId } = Route.useParams();
@@ -102,7 +103,7 @@ function PostCard() {
           return (
             <div className=" m-4 text-white flex flex-col" key={p.id}>
               <span className="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6x">
-                {p.title}
+                {p.title} <ComponentActionsDropdown />
               </span>
               <span className=" mt-5">
                 {p.subTitle != null ? (
@@ -213,12 +214,13 @@ function PostCard() {
             key={c.id}
             className="my-7 w-max text-white bg-black self-start"
           >
-            <CardHeader>
+            <CardHeader className=" flex flex-row justify-between">
               <CardDescription>
                 {new Intl.DateTimeFormat("sv-SE").format(
                   new Date(c.createdAt.toString())
                 )}
               </CardDescription>
+              <ComponentActionsDropdown />
             </CardHeader>
             <CardContent>
               <p>{c.comment}</p>

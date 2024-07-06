@@ -21,6 +21,19 @@ import {
   Textarea,
   FormMessage,
   Input,
+  AlertDialog,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
 } from "@repo/ui";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
@@ -110,10 +123,11 @@ function MainView() {
   return (
     <ScrollArea className=" flex flex-col p-6 bg-black w-full">
       <span className=" m-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-white">
-        {topic}
+        {topic} <ComponentActionsDropdown />
       </span>
 
       {(globalState.role === "User" ||
+        globalState.role === "Creator" ||
         globalState.role === "Admin" ||
         globalState.role === "Super") && (
         <>
@@ -281,3 +295,59 @@ function MainView() {
 }
 
 export default MainView;
+
+export const ComponentActionsDropdown = () => {
+  const [openDialog, setOpenDialog] = useState(false);
+  return (
+    <AlertDialog>
+      <DropdownMenu open={openDialog}>
+        {openDialog && (
+          <div
+            onClick={() => {
+              setOpenDialog(!openDialog);
+            }}
+            className=" bg-black fixed top-0 bottom-0 left-0 right-0 z-50 pointer-events-auto opacity-55"
+          ></div>
+        )}
+        <DropdownMenuTrigger
+          onClick={() => {
+            setOpenDialog(!openDialog);
+          }}
+          className=" hover:bg-slate-700 rounded relative bottom-1 md:bottom-2 md:mx-1 md:h-8"
+        >
+          <lucide.EllipsisVertical className=" m-0" color="lightgray" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className=" bg-black text-white mr-3 relative top-2 ">
+          {/* <DropdownMenuLabel className=" font-bold">
+                    Interactions
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator /> */}
+          <DropdownMenuItem className="cursor-pointer">Report</DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
+            {/* <BlockUser
+                      name={"Block"}
+                      desc="This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers."
+                    /> */}
+            <AlertDialogTrigger className=" text-white w-full text-start">
+              Make invisible
+            </AlertDialogTrigger>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
