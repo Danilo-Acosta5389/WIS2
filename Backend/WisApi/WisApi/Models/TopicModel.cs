@@ -21,6 +21,8 @@
 
         public bool IsAnonymous { get; set; } = false;
 
+        public bool IsInvisible { get; set; }
+
         public ICollection<PostModel> Posts { get; } = new List<PostModel>();
 
 

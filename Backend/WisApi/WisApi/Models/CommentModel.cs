@@ -19,6 +19,8 @@ namespace WisApi.Models
 
         public bool IsAnonymous { get; set; } = false;
 
+        public bool IsInvisible { get; set; }
+
         public int PostId { get; set; }
 
         public PostModel Post { get; set; }

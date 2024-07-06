@@ -35,8 +35,8 @@ namespace WisApi.Controllers.UserControllers
             {
                 UserName = user.UserName,
                 Bio = user.Bio,
-                ImageName = user.Image,
-                ImageSrc = string.Format("{0}://{1}{2}/Images/{3}",Request.Scheme,Request.Host,Request.PathBase,user.Image)
+                ImageName = user.ImageName,
+                ImageSrc = string.Format("{0}://{1}{2}/Images/{3}",Request.Scheme,Request.Host,Request.PathBase,user.ImageName)
             };
 
             return Ok(result);
@@ -56,7 +56,7 @@ namespace WisApi.Controllers.UserControllers
             if (model.ImageFile != null)
             {
                 string imageName = await SaveImage(model.ImageFile);
-                user.Image = imageName;
+                user.ImageName = imageName;
             }
 
             await _userManager!.UpdateAsync(user);

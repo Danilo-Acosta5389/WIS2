@@ -5,7 +5,7 @@ namespace WisApi.Models
     {
         public PostModel() { }
 
-        public PostModel(string title, string subTitle, string text, DateTime createdAt, string userName, string userId, string ipAdress, bool isAnonymous, int topicId)
+        public PostModel(string title, string subTitle, string text, DateTime createdAt, string userName, string userId, string ipAdress, bool isAnonymous, bool isInvisible, int topicId)
         {
             Title = title;
             SubTitle = subTitle;
@@ -15,6 +15,7 @@ namespace WisApi.Models
             UserId = userId;
             IpAdress = ipAdress;
             IsAnonymous = isAnonymous;
+            IsInvisible = isInvisible;
             TopicId = topicId;
         }
 
@@ -37,6 +38,8 @@ namespace WisApi.Models
         public string IpAdress { get; set; }
 
         public bool IsAnonymous { get; set; } = false;
+
+        public bool IsInvisible { get; set; }
 
         public int TopicId { get; set; }
 
