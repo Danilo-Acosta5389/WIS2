@@ -39,3 +39,4 @@ export * as lucide from "lucide-react";
 export * from "./ui/label";
 export * as d from "./ui/dialog";
 export * from "./ui/checkbox";
+export * from "./ui/alert-dialog";

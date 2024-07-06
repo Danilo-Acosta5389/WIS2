@@ -82,13 +82,13 @@ const NavBar = () => {
           </button>
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <Link to="/" className=" leading-6 text-gray-900">
+          <Link to="/" className=" leading-6 text-gray-900 p-1">
             Home
           </Link>
           <Popover className="relative">
             <Popover.Button
               onClick={() => setShowPopover(!showPopover)}
-              className="flex items-center gap-x-1 leading-6 text-gray-900"
+              className="flex items-center gap-x-1 leading-6 text-gray-900 p-1"
             >
               Forum
               <ChevronDownIcon
@@ -150,7 +150,7 @@ const NavBar = () => {
               </Popover.Panel>
             </Transition>
           </Popover>
-          <Link to={"/"} className="leading-6 text-gray-900">
+          <Link to={"/"} className="leading-6 text-gray-900 p-1">
             Blog
           </Link>
         </Popover.Group>

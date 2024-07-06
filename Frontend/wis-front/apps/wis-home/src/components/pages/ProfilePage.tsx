@@ -17,6 +17,20 @@ import {
   lucide,
   FormLabel,
   Input,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
 } from "@repo/ui";
 import { useGlobalState } from "../../main";
 import { Route } from "../../routes/user/$userName";
@@ -38,6 +52,7 @@ const ProfilePage = () => {
   //const [setImageSrc] = useState(globalState.image);
   const [edit, setEdit] = useState(false);
   const [newValues, setNewValues] = useState(initialState);
+  const [openDialog, setOpenDialog] = useState(false);
   const { EditUser } = useUserApi();
 
   //console.log("values" + JSON.stringify(newValues));
@@ -83,6 +98,9 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {}, [edit]);
+  useEffect(() => {
+    console.log("dialgo is: " + openDialog);
+  }, [openDialog]);
   return (
     <>
       {edit ? (
@@ -180,49 +198,140 @@ const ProfilePage = () => {
         </Form>
       ) : (
         <div className=" flex flex-col sm:flex-row p-6">
-          <div className=" flex flex-col w-fit">
-            <Avatar className=" h-40 w-40">
-              <AvatarImage
-                className=" h-fit w-fit"
-                src={
-                  userDetails.imageSrc === newValues.imageSrc
-                    ? newValues.imageSrc
-                    : userDetails.imageSrc
-                }
-              />
-              <AvatarFallback className=" text-7xl font-semibold">
-                {userDetails.userName.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            {globalState.isLoggedIn &&
-              globalState.userName === userDetails.userName && (
-                <Button
-                  className=" w-fit mt-5 self-center"
-                  onClick={() => {
-                    setEdit(!edit);
-                  }}
-                >
-                  Edit profile
-                </Button>
-              )}
-          </div>
-          <div className="flex flex-col mt-8 sm:ml-8 sm:mt-0 text-white">
-            <p className=" text-4xl font-semibold">{userDetails.userName}</p>
-            {globalState.isLoggedIn &&
-              globalState.userName === userDetails.userName && (
-                <p className=" text-xl font-medium">{globalState.role}</p>
-              )}
+          <AlertDialog>
+            <div className=" flex flex-col w-fit">
+              <Avatar className=" h-40 w-40">
+                <AvatarImage
+                  className=" h-fit w-fit"
+                  src={
+                    userDetails.imageSrc === newValues.imageSrc
+                      ? userDetails.imageSrc
+                      : newValues.imageSrc
+                  }
+                />
+                <AvatarFallback className=" text-7xl font-semibold">
+                  {userDetails.userName.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              {globalState.isLoggedIn &&
+                globalState.userName === userDetails.userName && (
+                  <Button
+                    className=" w-fit mt-5 self-center"
+                    onClick={() => {
+                      setEdit(!edit);
+                    }}
+                  >
+                    Edit profile
+                  </Button>
+                )}
+            </div>
+            <div className="flex flex-col mt-8 sm:ml-8 sm:mt-0 text-white">
+              <div className=" flex flex-row">
+                <p className=" text-4xl font-semibold">
+                  {userDetails.userName}
+                </p>
+                {/* <div className=" m-1 relative bottom-1 pt-1 pb-1 rounded hover:bg-slate-700 cursor-pointer max-w-fit"></div> */}
+                <DropdownMenu open={openDialog}>
+                  {openDialog && (
+                    <div
+                      onClick={() => {
+                        setOpenDialog(!openDialog);
+                      }}
+                      className=" bg-black fixed top-0 bottom-0 left-0 right-0 z-50 pointer-events-auto opacity-55"
+                    ></div>
+                  )}
+                  <DropdownMenuTrigger
+                    onClick={() => {
+                      setOpenDialog(!openDialog);
+                    }}
+                    className=" hover:bg-slate-700 rounded relative bottom-1 mx-1 h-8"
+                  >
+                    <lucide.EllipsisVertical
+                      className="p-0 m-0"
+                      size={20}
+                      color="lightgray"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-black text-white mr-3 ">
+                    {/* <DropdownMenuLabel className=" font-bold">
+                    Interactions
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator /> */}
+                    <DropdownMenuItem className="cursor-pointer">
+                      Upgrade
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="cursor-pointer">
+                      Report
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
+                      {/* <BlockUser
+                      name={"Block"}
+                      desc="This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers."
+                    /> */}
+                      <AlertDialogTrigger className=" text-white w-full text-start">
+                        Block
+                      </AlertDialogTrigger>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              {globalState.isLoggedIn &&
+                globalState.userName === userDetails.userName && (
+                  <p className=" text-xl font-medium">{globalState.role}</p>
+                )}
 
-            <p className=" mt-5 max-w-[500px]">
-              {userDetails.bio === newValues.bio
-                ? newValues.bio
-                : userDetails.bio}
-            </p>
-          </div>
+              <p className=" mt-5 max-w-[500px]">
+                {userDetails.bio === newValues.bio
+                  ? userDetails.bio
+                  : newValues.bio}
+              </p>
+            </div>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>Continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       )}
+      {/* <button
+        onClick={() => {
+          setOpenDialog(!openDialog);
+        }}
+        className=" z-60 text-white"
+      >
+        Open
+      </button> */}
     </>
   );
 };
 
 export default ProfilePage;
+
+// const BlockUser = (props: any) => {
+//   return (
+//     <AlertDialog>
+//       <AlertDialogTrigger>{props.name}</AlertDialogTrigger>
+//       <AlertDialogContent>
+//         <AlertDialogHeader>
+//           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+//           <AlertDialogDescription>{props.desc}</AlertDialogDescription>
+//         </AlertDialogHeader>
+//         <AlertDialogFooter>
+//           <AlertDialogCancel>Cancel</AlertDialogCancel>
+//           <AlertDialogAction>Continue</AlertDialogAction>
+//         </AlertDialogFooter>
+//       </AlertDialogContent>
+//     </AlertDialog>
+//   );
+// };
