@@ -212,7 +212,7 @@ function PostCard() {
         {comments?.map((c) => (
           <Card
             key={c.id}
-            className="my-7 w-max text-white bg-black self-start"
+            className="my-7 w-full text-white bg-black self-start"
           >
             <CardHeader className=" flex flex-row justify-between">
               <CardDescription>

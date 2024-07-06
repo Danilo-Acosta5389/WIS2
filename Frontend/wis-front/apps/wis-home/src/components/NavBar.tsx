@@ -51,15 +51,17 @@ const NavBar = () => {
   };
 
   useEffect(() => {
-    // console.log("showPopover is: " + showPopover);
-  }, [showPopover]);
-
-  useEffect(() => {
     setSignedIn(globalState.isLoggedIn);
   }, [globalState]);
 
   return (
     <header className=" bg-white ">
+      {showPopover && (
+        <div
+          onClick={() => setShowPopover(!showPopover)}
+          className=" bg-black fixed top-0 bottom-0 left-0 right-0 z-10 pointer-events-auto opacity-55"
+        ></div>
+      )}
       <nav
         onClick={() => setShowPopover(false)}
         className="mx-auto flex max-w-full items-center justify-between p-6 lg:px-8 text-lg font-semibold"
@@ -112,7 +114,6 @@ const NavBar = () => {
                   <div className=" flex justify-between p-2">
                     <span className=" font-semibold">Recent topics</span>
                     <Link
-                      onClick={() => setShowPopover(false)}
                       to={"/forum/$topic"}
                       params={{
                         topic: "General",
@@ -132,7 +133,6 @@ const NavBar = () => {
                           to={"/forum/$topic"}
                           params={{ topic: item.title }}
                           className="flex-auto"
-                          onClick={() => setShowPopover(false)}
                         >
                           <div className="block font-semibold text-gray-900">
                             {item.title}
