@@ -22,7 +22,7 @@ namespace WisApi.Controllers.ForumControllers
         [HttpGet("Topics")]
         public ActionResult<IEnumerable<TopicDTO>> GetTopics()
         {
-            var topics = _topicRepository.GetAll();
+            var topics = _topicRepository.GetByCondition(x => x.IsInvisible == false);
 
             if (topics is null)
             {
@@ -79,6 +79,40 @@ namespace WisApi.Controllers.ForumControllers
 
             return Ok("Success!");
             
+        }
+
+        [HttpPut("invisible")]
+        [Authorize(Roles = "Admin, Super")]
+        public ActionResult MakeInvisible([FromBody] int topicId)
+        {
+
+            var topic = _topicRepository.GetByCondition(x => x.Id == topicId).SingleOrDefault();
+
+            if (topic == null) return NotFound();
+
+            topic.IsInvisible = true;
+
+            _topicRepository.Update(topic);
+            _topicRepository.Save();
+
+            return Ok();
+        }
+
+        [HttpPut("visible")]
+        [Authorize(Roles = "Admin, Super")]
+        public ActionResult MakeVisible([FromBody] int topicId)
+        {
+
+            var topic = _topicRepository.GetByCondition(x => x.Id == topicId).SingleOrDefault();
+
+            if (topic == null) return NotFound();
+
+            topic.IsInvisible = false;
+
+            _topicRepository.Update(topic);
+            _topicRepository.Save();
+
+            return Ok();
         }
 
     }

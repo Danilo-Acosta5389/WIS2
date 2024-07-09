@@ -10,6 +10,7 @@ namespace WisApi.Data
         public DbSet<TopicModel> Topics { get; set; }
         public DbSet<PostModel> Posts { get; set; }
         public DbSet<CommentModel> Comments { get; set; }
+        public DbSet<ReportModel> Reports { get; set; }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

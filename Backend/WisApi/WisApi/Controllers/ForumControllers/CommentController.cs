@@ -98,5 +98,38 @@ namespace WisApi.Controllers.ForumControllers
             }
         }
 
+        [HttpPut("invisible")]
+        [Authorize(Roles = "Admin, Super")]
+        public ActionResult MakeInvisible([FromBody] int commentId)
+        {
+
+            var comment = _commentRepository.GetByCondition(x => x.Id == commentId).SingleOrDefault();
+
+            if (comment == null) return NotFound();
+
+            comment.IsInvisible = true;
+
+            _commentRepository.Update(comment);
+            _commentRepository.Save();
+
+            return Ok();
+        }
+
+        [HttpPut("visible")]
+        [Authorize(Roles = "Admin, Super")]
+        public ActionResult MakeVisible([FromBody] int commentId)
+        {
+
+            var comment = _commentRepository.GetByCondition(x => x.Id == commentId).SingleOrDefault();
+
+            if (comment == null) return NotFound();
+
+            comment.IsInvisible = false;
+
+            _commentRepository.Update(comment);
+            _commentRepository.Save();
+
+            return Ok();
+        }
     }
 }

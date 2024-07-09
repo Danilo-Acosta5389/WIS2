@@ -1,14 +1,9 @@
-﻿using Azure.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using WisApi.Migrations.ApplicationDb;
 using WisApi.Models;
 using WisApi.Models.DTO_s.ProfileDTOs;
-using WisApi.Repositories.Interfaces;
 
 namespace WisApi.Controllers.UserControllers
 {
@@ -29,7 +24,7 @@ namespace WisApi.Controllers.UserControllers
 
         //Change GetUser to retrieve data from UserRepository instead of 
         [HttpGet("{userName}")]
-        public ActionResult<GetProfileDTO> GetUser(string userName) 
+        public ActionResult<GetProfileDTO> GetUser(string userName)
         {
             var user = _userManager.Users.Where(x => x.UserName == userName).SingleOrDefault();
             if (user == null)
@@ -42,7 +37,7 @@ namespace WisApi.Controllers.UserControllers
                 UserName = user.UserName,
                 Bio = user.Bio,
                 ImageName = user.ImageName,
-                ImageSrc = string.Format("{0}://{1}{2}/Images/{3}",Request.Scheme,Request.Host,Request.PathBase,user.ImageName)
+                ImageSrc = string.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, user.ImageName)
             };
 
             return Ok(result);
@@ -84,11 +79,10 @@ namespace WisApi.Controllers.UserControllers
         }
 
 
-        //Don't forget to set authorized roles here
         //Blocking action 
         [HttpPut("block")]
         [Authorize(Roles = "Admin, Super")]
-        public async Task<ActionResult> BlockUser([FromBody]string userName)
+        public async Task<ActionResult> BlockUser([FromBody] string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
             if (user.UserName == userName)
@@ -100,7 +94,6 @@ namespace WisApi.Controllers.UserControllers
             return BadRequest();
         }
 
-        //Don't forget to set authorized roles here
         //Unblocking user
         [HttpPut("unblock")]
         [Authorize(Roles = "Admin, Super")]
@@ -116,7 +109,7 @@ namespace WisApi.Controllers.UserControllers
             return BadRequest();
         }
 
-        //UpgradeUserRole 
+        //Upgrade User Role 
         [HttpPut("upgrade/user")]
         [Authorize(Roles = "Creator, Admin, Super")]
         public async Task<ActionResult> UpgradeUserRole([FromBody] UpgradeRoleDTO upgradeInfo)
@@ -136,9 +129,10 @@ namespace WisApi.Controllers.UserControllers
                 var currentRoleList = await _userManager.GetRolesAsync(user);
                 var currentRole = currentRoleList.SingleOrDefault();
 
-                if (byRole == "Creator") {
+                if (byRole == "Creator")
+                {
 
-                    if (currentRole != "User") 
+                    if (currentRole != "User")
                         return BadRequest($"{upgradeInfo.TargetUser} is not upgradable by {byUserName}");
 
                     await _userManager.AddToRoleAsync(user, upgradeInfo.NewRole);
@@ -148,7 +142,7 @@ namespace WisApi.Controllers.UserControllers
 
                 if (byRole == "Admin")
                 {
-                    if (currentRole != "User" || currentRole != "Creator") 
+                    if (currentRole != "User" || currentRole != "Creator")
                         return BadRequest($"{upgradeInfo.TargetUser} is not upgradable by {byUserName}");
 
                     await _userManager.AddToRoleAsync(user, upgradeInfo.NewRole);
