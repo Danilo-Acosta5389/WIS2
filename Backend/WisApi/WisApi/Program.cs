@@ -41,6 +41,7 @@ namespace WisApi
             builder.Services.AddScoped<IPostRepository, PostService>();
             builder.Services.AddScoped<ICommentRepository, CommentService>();
             builder.Services.AddScoped<IUserRepository, UserService>();
+            builder.Services.AddScoped<IReportRepository, ReportService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

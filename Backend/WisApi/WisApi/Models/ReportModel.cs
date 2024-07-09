@@ -8,16 +8,16 @@
 
         public string User { get; set; }
 
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
         public DateTime Created { get; set; }
 
         public string Ip {  get; set; }
 
-        public bool IsHandled { get; set; }
+        public bool? IsHandled { get; set; }
 
-        public string HandledBy { get; set; }
+        public string? HandledBy { get; set; }
 
-        public DateTime HandledTime { get; set; }
+        public DateTime? HandledTime { get; set; }
     }
 }
