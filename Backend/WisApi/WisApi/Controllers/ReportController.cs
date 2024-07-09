@@ -17,8 +17,8 @@ namespace WisApi.Controllers
             _reportRepository = reportRepository;
         }
 
-        [Authorize(Roles = "Admin, Super")]
         [HttpGet]
+        [Authorize(Roles = "Admin, Super")]
         public IActionResult GetAllReports()
         {
             var reports = _reportRepository.GetAll();
@@ -30,7 +30,7 @@ namespace WisApi.Controllers
         [Authorize(Roles = "Admin, Super")]
         public IActionResult GetUnHandledReports()
         {
-            var reports = _reportRepository.GetByCondition(x => x.IsHandled == false);
+            var reports = _reportRepository.GetByCondition(x => x.IsHandled == false || x.IsHandled == null);
             return Ok(reports);
         }
 
@@ -39,7 +39,7 @@ namespace WisApi.Controllers
         public IActionResult GetHandledReports()
         {
             var reports = _reportRepository.GetByCondition(x => x.IsHandled == true);
-            return Ok();
+            return Ok(reports);
         }
 
         [HttpPost]
@@ -49,6 +49,8 @@ namespace WisApi.Controllers
             if (report == null) return BadRequest("Empty report filed");
 
             var user = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            if (user == null) return BadRequest();
+
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             var newReport = new ReportModel
@@ -68,16 +70,32 @@ namespace WisApi.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Admin, Super")]
-        public ActionResult UpdateReport()
+        public ActionResult UpdateReport([FromBody] int id)
         {
+
+            var report = _reportRepository.GetByCondition(x => x.Id == id).SingleOrDefault();
+            
+            if (report == null) return BadRequest();
+            
+            report.IsHandled = true;
+            report.HandledBy = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            report.HandledTime = DateTime.UtcNow;
+            _reportRepository.Update(report);
+            _reportRepository.Save();
 
             return Ok();
         }
 
         [HttpDelete]
         [Authorize(Roles = "Admin, Super")]
-        public ActionResult DeleteReport()
+        public ActionResult DeleteReport([FromBody] int id)
         {
+            var report = _reportRepository.GetByCondition(x => x.Id == id).SingleOrDefault();
+            if (report == null) return BadRequest();
+
+            _reportRepository.Delete(report);
+            _reportRepository.Save();
+
             return Ok();
         }
     }

@@ -48,7 +48,7 @@ namespace WisApi.Controllers
 
                 _tokenRepository.SetTokensInsideCookie(cookieDTO, HttpContext);
 
-                var response = new AccessTokenDTO(loginResult.JwtToken);
+                var response = new AccessTokenDTO(loginResult.JwtToken!);
 
                 return Ok(response);
             }

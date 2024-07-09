@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using WisApi.Models;
 using WisApi.Models.DTO_s.ProfileDTOs;
@@ -22,19 +23,19 @@ namespace WisApi.Controllers.UserControllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        //Change GetUser to retrieve data from UserRepository instead of 
+        //Maybe change to get and set data from UserRepository instead of UserManager
+
         [HttpGet("{userName}")]
         public ActionResult<GetProfileDTO> GetUser(string userName)
         {
+            if (userName.IsNullOrEmpty()) return BadRequest("UserName is missing");
+
             var user = _userManager.Users.Where(x => x.UserName == userName).SingleOrDefault();
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return NotFound();
 
             var result = new GetProfileDTO()
             {
-                UserName = user.UserName,
+                UserName = user.UserName!,
                 Bio = user.Bio,
                 ImageName = user.ImageName,
                 ImageSrc = string.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, user.ImageName)
@@ -44,7 +45,7 @@ namespace WisApi.Controllers.UserControllers
         }
 
         //The following action updates users Bio and Image
-        [HttpPut]
+        [HttpPut("UpdateProfile")]
         public async Task<IActionResult> UpdateUserDetails([FromForm] EditProfileDTO model)
         {
             var user = _userManager.Users.Where(x => x.UserName == model.UserName).SingleOrDefault();
@@ -85,6 +86,8 @@ namespace WisApi.Controllers.UserControllers
         public async Task<ActionResult> BlockUser([FromBody] string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
+            if (user == null) return BadRequest();
+
             if (user.UserName == userName)
             {
                 user.IsBlocked = true;
@@ -100,6 +103,8 @@ namespace WisApi.Controllers.UserControllers
         public async Task<ActionResult> UnBlockUser([FromBody] string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
+            if (user == null) return BadRequest();
+
             if (user.UserName == userName)
             {
                 user.IsBlocked = false;
@@ -118,16 +123,22 @@ namespace WisApi.Controllers.UserControllers
             //Make This Action less fat
             //Use repository/Services
 
-            var upgradedByUser = _httpContextAccessor.HttpContext.User;
+            var upgradedByUser = _httpContextAccessor.HttpContext!.User;
+            if (upgradeInfo == null) return BadRequest();
+
             var byUserName = upgradedByUser.FindFirstValue(ClaimTypes.Name);
             var byRole = upgradedByUser.FindFirstValue(ClaimTypes.Role);
 
             //Lookup target user, if not found, return NotFound()
             var user = await _userManager!.FindByNameAsync(upgradeInfo.TargetUser);
+            if (user == null) return BadRequest();
+
             if (user.UserName == upgradeInfo.TargetUser)
             {
                 var currentRoleList = await _userManager.GetRolesAsync(user);
+
                 var currentRole = currentRoleList.SingleOrDefault();
+                if (currentRole == null) return BadRequest();
 
                 if (byRole == "Creator")
                 {
