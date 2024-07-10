@@ -14,6 +14,7 @@ export const useUserApi = () => {
     }
   }
 
+  // Needs to send bearer token
   async function EditUser(formData: FormData) {
     try {
       console.log(formData);
@@ -30,11 +31,38 @@ export const useUserApi = () => {
     }
   }
 
+  async function UpgradeUserRole(params: UpgradeRoleDetails, token: string) {
+    try {
+      const response = await fetch(
+        "https://localhost:7118/api/User/upgradeRole",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          method: "PUT",
+          body: JSON.stringify(params),
+        }
+      );
+      console.log(response.status);
+    } catch (err) {
+      //Maybe RefreshToken and second try here
+
+      console.log(err);
+    }
+  }
+
   return {
     GetUser,
     EditUser,
+    UpgradeUserRole,
   };
 };
+
+export interface UpgradeRoleDetails {
+  targetUser: string;
+  newRole: string;
+}
 
 export interface UserDetails {
   userName: string;

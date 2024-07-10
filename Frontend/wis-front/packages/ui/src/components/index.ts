@@ -40,3 +40,4 @@ export * from "./ui/label";
 export * as d from "./ui/dialog";
 export * from "./ui/checkbox";
 export * from "./ui/alert-dialog";
+export * from "./ui/select";

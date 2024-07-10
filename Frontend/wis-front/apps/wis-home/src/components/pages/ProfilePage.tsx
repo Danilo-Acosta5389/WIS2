@@ -31,10 +31,15 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@repo/ui";
 import { useGlobalState } from "../../main";
 import { Route } from "../../routes/user/$userName";
-import { UserDetails, useUserApi } from "../../api/UserApi";
+import { UserDetails, useUserApi, UpgradeRoleDetails } from "../../api/UserApi";
 import { useEffect, useState } from "react";
 
 const ProfilePage = () => {
@@ -200,8 +205,8 @@ const ProfilePage = () => {
                 className=" h-fit w-fit"
                 src={
                   userDetails.imageSrc === newValues.imageSrc
-                    ? userDetails.imageSrc
-                    : newValues.imageSrc
+                    ? newValues.imageSrc
+                    : userDetails.imageSrc
                 }
               />
               <AvatarFallback className=" text-7xl font-semibold">
@@ -223,8 +228,14 @@ const ProfilePage = () => {
           <div className="flex flex-col mt-8 sm:ml-8 sm:mt-0 text-white">
             <div className=" flex flex-row">
               <p className=" text-4xl font-semibold">{userDetails.userName}</p>
-              {/* <div className=" m-1 relative bottom-1 pt-1 pb-1 rounded hover:bg-slate-700 cursor-pointer max-w-fit"></div> */}
-              <UserActions />
+              {globalState.isLoggedIn && (
+                <UserActions
+                  targetUser={userDetails.userName}
+                  jwt={globalState.accessToken}
+                  role={globalState.role}
+                  user={globalState.userName}
+                />
+              )}
             </div>
             {globalState.isLoggedIn &&
               globalState.userName === userDetails.userName && (
@@ -252,9 +263,24 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+/*
 
-const UserActions = () => {
+We need:
+
+UserAction should have info about the user and the targeted user
+it needs: 
+Logged in users JWT,
+targeted users userName,
+targeted users new Role
+
+
+
+*/
+
+const UserActions = (props: any) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [option, setOption] = useState<"UPGRADE" | "REPORT" | "BLOCK" | "">("");
+
   return (
     <AlertDialog>
       <DropdownMenu open={openDialog}>
@@ -279,40 +305,172 @@ const UserActions = () => {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className=" bg-black text-white mr-3 ">
-          {/* <DropdownMenuLabel className=" font-bold">
-                    Interactions
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator /> */}
+          {props.role !== "User" && props.user !== props.targetUser && (
+            <>
+              <DropdownMenuItem className="cursor-pointer">
+                <AlertDialogTrigger
+                  onClick={() => setOption("UPGRADE")}
+                  className=" text-white w-full text-start"
+                >
+                  Upgrade
+                </AlertDialogTrigger>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem className="cursor-pointer">
-            Upgrade
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer">Report</DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
-            {/* <BlockUser
-                      name={"Block"}
-                      desc="This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers."
-                    /> */}
-            <AlertDialogTrigger className=" text-white w-full text-start">
-              Block
+            <AlertDialogTrigger
+              onClick={() => setOption("REPORT")}
+              className=" text-white w-full text-start"
+            >
+              Report
             </AlertDialogTrigger>
           </DropdownMenuItem>
+          {props.targetUser !== props.user &&
+            (props.role === "Admin" || props.role === "Super") && (
+              <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
+                <AlertDialogTrigger
+                  onClick={() => setOption("BLOCK")}
+                  className=" text-white w-full text-start"
+                >
+                  Block
+                </AlertDialogTrigger>
+              </DropdownMenuItem>
+            )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
+
+      {option === "BLOCK" && <Block />}
+      {option === "REPORT" && <Report />}
+      {option === "UPGRADE" && (
+        <Upgrade
+          targetUser={props.targetUser}
+          jwt={props.jwt}
+          role={props.role}
+        />
+      )}
     </AlertDialog>
   );
 };
+
+//UPGRADE USER
+function Upgrade(props: any) {
+  const { UpgradeUserRole } = useUserApi();
+  const details: UpgradeRoleDetails = {
+    targetUser: props.targetUser,
+    newRole: props.role,
+  };
+
+  const formSchema = z.object({
+    role: z.string({
+      required_error: "Please select a role.",
+    }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { role: "Role" },
+  });
+
+  function handleUpgrade(newDetails: UpgradeRoleDetails) {
+    console.log("UPGRADE USER " + JSON.stringify(newDetails));
+    //UpgradeUserRole(details, props.jwt);
+  }
+
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    console.log(data);
+    details.newRole = data.role;
+    handleUpgrade(details);
+    form.reset;
+  }
+
+  return (
+    <AlertDialogContent>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-2/3 space-y-6"
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle>Change users role</AlertDialogTitle>
+            <AlertDialogDescription>Choose a role</AlertDialogDescription>
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="User">User</SelectItem>
+                      <SelectItem value="Creator">Creator</SelectItem>
+                      <SelectItem value="Admin">Admin</SelectItem>
+                      <SelectItem value="Super">Super</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction type="submit">Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </form>
+      </Form>
+    </AlertDialogContent>
+  );
+}
+
+//REPORT USER
+function Report() {
+  function handleReport() {
+    console.log("REPORT USER");
+  }
+  return (
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Are you absolutely sure about reporting this user?
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your
+          account and remove your data from our servers.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction onClick={handleReport}>Continue</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  );
+}
+
+//BLOCK USER
+function Block() {
+  function handleBlock() {
+    console.log("BLOCK USER");
+  }
+  return (
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Are you absolutely sure about blocking this user?
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your
+          account and remove your data from our servers.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction onClick={handleBlock}>Continue</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  );
+}

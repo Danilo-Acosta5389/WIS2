@@ -45,7 +45,7 @@ namespace WisApi.Controllers.UserControllers
         }
 
         //The following action updates users Bio and Image
-        [HttpPut("UpdateProfile")]
+        [HttpPut("updateProfile")]
         public async Task<IActionResult> UpdateUserDetails([FromForm] EditProfileDTO model)
         {
             var user = _userManager.Users.Where(x => x.UserName == model.UserName).SingleOrDefault();
@@ -115,16 +115,17 @@ namespace WisApi.Controllers.UserControllers
         }
 
         //Upgrade User Role 
-        [HttpPut("upgrade/user")]
+        [HttpPut("upgradeRole")]
         [Authorize(Roles = "Creator, Admin, Super")]
         public async Task<ActionResult> UpgradeUserRole([FromBody] UpgradeRoleDTO upgradeInfo)
         {
 
             //Make This Action less fat
-            //Use repository/Services
+            //validato target user is not same as requesting user
+
+            if (upgradeInfo == null) return BadRequest();
 
             var upgradedByUser = _httpContextAccessor.HttpContext!.User;
-            if (upgradeInfo == null) return BadRequest();
 
             var byUserName = upgradedByUser.FindFirstValue(ClaimTypes.Name);
             var byRole = upgradedByUser.FindFirstValue(ClaimTypes.Role);
