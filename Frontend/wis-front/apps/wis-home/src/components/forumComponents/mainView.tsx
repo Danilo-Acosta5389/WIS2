@@ -123,7 +123,15 @@ function MainView() {
   return (
     <ScrollArea className=" flex flex-col p-6 bg-black w-full">
       <span className=" m-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-white">
-        {topic} <ComponentActionsDropdown />
+        {topic}{" "}
+        {globalState.isLoggedIn && (
+          <ActionsDropdown
+            type={"TOPIC"}
+            role={globalState.role}
+            title={topic}
+            jwt={globalState.accessToken}
+          />
+        )}
       </span>
 
       {(globalState.role === "User" ||
@@ -296,8 +304,10 @@ function MainView() {
 
 export default MainView;
 
-export const ComponentActionsDropdown = () => {
+export const ActionsDropdown = (props: any) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [option, setOption] = useState<"REPORT" | "INVISIBLE" | "">("");
+  console.log(props.id);
   return (
     <AlertDialog>
       <DropdownMenu open={openDialog}>
@@ -318,36 +328,93 @@ export const ComponentActionsDropdown = () => {
           <lucide.EllipsisVertical className=" m-0" color="lightgray" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className=" bg-black text-white mr-3 relative top-2 ">
-          {/* <DropdownMenuLabel className=" font-bold">
-                    Interactions
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator /> */}
-          <DropdownMenuItem className="cursor-pointer">Report</DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
-            {/* <BlockUser
-                      name={"Block"}
-                      desc="This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers."
-                    /> */}
-            <AlertDialogTrigger className=" text-white w-full text-start">
-              Make invisible
+          <DropdownMenuItem className="cursor-pointer">
+            <AlertDialogTrigger
+              onClick={() => setOption("REPORT")}
+              className=" text-white w-full text-start"
+            >
+              Report
             </AlertDialogTrigger>
           </DropdownMenuItem>
+          {(props.role === "Admin" || props.role === "Super") && (
+            <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
+              <AlertDialogTrigger
+                onClick={() => setOption("INVISIBLE")}
+                className=" text-white w-full text-start"
+              >
+                Make invisible
+              </AlertDialogTrigger>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
+      {option === "REPORT" && <Report />}
+      {option === "INVISIBLE" && (
+        <Invisible
+          type={props.type}
+          title={props.title}
+          jwt={props.jwt}
+          id={props.id}
+        />
+      )}
     </AlertDialog>
+  );
+};
+
+const Report = () => {
+  return (
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Are you absolutely sure about reporting?
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your
+          account and remove your data from our servers.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction>Continue</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  );
+};
+
+const Invisible = (props: any) => {
+  const [type, setType] = useState(props.type);
+  const { hideTopic, hidePost, hideComment } = useForumApi();
+
+  function handleOption() {
+    if (type === "TOPIC") {
+      console.log(props.title);
+      hideTopic(props.title, props.jwt);
+    }
+    if (type === "POST") {
+      console.log(props.title);
+      hidePost(props.id, props.jwt);
+    }
+    if (type === "COMMENT") {
+      console.log(props.title);
+      hideComment(props.id, props.jwt);
+    }
+  }
+
+  return (
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Are you absolutely sure about hiding {props.title}?
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your
+          account and remove your data from our servers.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction onClick={handleOption}>Continue</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
   );
 };

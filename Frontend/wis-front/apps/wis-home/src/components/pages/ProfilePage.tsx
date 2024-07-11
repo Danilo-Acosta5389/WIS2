@@ -36,6 +36,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
+  Checkbox,
 } from "@repo/ui";
 import { useGlobalState } from "../../main";
 import { Route } from "../../routes/user/$userName";
@@ -353,12 +354,17 @@ const UserActions = (props: any) => {
   );
 };
 
-//UPGRADE USER
+//#######    UPGRADE USER
 function Upgrade(props: any) {
   const { UpgradeUserRole } = useUserApi();
+  const [btnDisabled, setBtnDisabled] = useState(true);
+  // const [roleOption, setRoleOptions] = useState<
+  //   "Creator" | "Admin" | "Super" | ""
+  // >("");
+
   const details: UpgradeRoleDetails = {
     targetUser: props.targetUser,
-    newRole: props.role,
+    newRole: "",
   };
 
   const formSchema = z.object({
@@ -369,60 +375,117 @@ function Upgrade(props: any) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { role: "Role" },
+    defaultValues: { role: props.role },
   });
 
   function handleUpgrade(newDetails: UpgradeRoleDetails) {
     console.log("UPGRADE USER " + JSON.stringify(newDetails));
-    //UpgradeUserRole(details, props.jwt);
+    UpgradeUserRole(details, props.jwt);
+    form.reset;
+    setBtnDisabled(true);
   }
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     console.log(data);
     details.newRole = data.role;
     handleUpgrade(details);
-    form.reset;
   }
 
   return (
     <AlertDialogContent>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6"
-        >
-          <AlertDialogHeader>
-            <AlertDialogTitle>Change users role</AlertDialogTitle>
-            <AlertDialogDescription>Choose a role</AlertDialogDescription>
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Role" />
-                      </SelectTrigger>
+      {props.role === "Creator" ? (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-2/3 space-y-6"
+          >
+            <AlertDialogHeader>
+              <AlertDialogTitle>Change users role</AlertDialogTitle>
+              <AlertDialogDescription>
+                Change users role to Creator?
+              </AlertDialogDescription>
+              <FormField
+                control={form.control}
+                name="role"
+                render={() => (
+                  <FormItem className="flex flex-row mt-6 ml-5 sm:ml-0 sm:mr-[10rem]">
+                    <FormControl className="">
+                      <Checkbox
+                        onCheckedChange={() => setBtnDisabled(false)}
+                        className=" bg-slate-200 mt-2 size-5 mr-2"
+                      />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="User">User</SelectItem>
-                      <SelectItem value="Creator">Creator</SelectItem>
-                      <SelectItem value="Admin">Admin</SelectItem>
-                      <SelectItem value="Super">Super</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction type="submit">Continue</AlertDialogAction>
-          </AlertDialogFooter>
-        </form>
-      </Form>
+                    <FormLabel className="text-black flex-wrap">Yes</FormLabel>
+                  </FormItem>
+                )}
+              />
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setBtnDisabled(true)}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction disabled={btnDisabled} type="submit">
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </form>
+        </Form>
+      ) : (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-2/3 space-y-6"
+          >
+            <AlertDialogHeader>
+              <AlertDialogTitle>Change users role</AlertDialogTitle>
+              <AlertDialogDescription>Choose a role</AlertDialogDescription>
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      onValueChange={field.onChange}
+                      onOpenChange={() => setBtnDisabled(false)}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {props.role === "Super" && (
+                          <>
+                            <SelectItem value="User">User</SelectItem>
+                            <SelectItem value="Creator">Creator</SelectItem>
+                            <SelectItem value="Admin">Admin</SelectItem>
+                            <SelectItem value="Super">Super</SelectItem>
+                          </>
+                        )}
+                        {props.role === "Admin" && (
+                          <>
+                            <SelectItem value="Creator">Creator</SelectItem>
+                            <SelectItem value="Admin">Admin</SelectItem>
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setBtnDisabled(true)}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction disabled={btnDisabled} type="submit">
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </form>
+        </Form>
+      )}
     </AlertDialogContent>
   );
 }

@@ -95,6 +95,67 @@ export const useForumApi = () => {
     return data;
   }
 
+  async function hideTopic(title: string, jwt: string) {
+    try {
+      const response = await fetch(
+        "https://localhost:7118/api/Topic/invisible",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          credentials: "include",
+          body: JSON.stringify(title),
+        }
+      );
+      console.log(response.status);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function hidePost(id: number, jwt: string) {
+    try {
+      console.log(id);
+      const response = await fetch(
+        "https://localhost:7118/api/Post/invisible",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          credentials: "include",
+          body: JSON.stringify(id),
+        }
+      );
+      console.log(response.status);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function hideComment(id: number, jwt: string) {
+    try {
+      const response = await fetch(
+        "https://localhost:7118/api/Comment/invisible",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          credentials: "include",
+          body: JSON.stringify(id),
+        }
+      );
+      console.log(response.status);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return {
     getComments,
     createComment,
@@ -103,6 +164,9 @@ export const useForumApi = () => {
     createPost,
     getTopics,
     createTopic,
+    hideTopic,
+    hidePost,
+    hideComment,
   };
 };
 

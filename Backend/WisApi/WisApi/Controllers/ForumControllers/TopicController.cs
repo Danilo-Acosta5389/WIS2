@@ -83,10 +83,10 @@ namespace WisApi.Controllers.ForumControllers
 
         [HttpPut("invisible")]
         [Authorize(Roles = "Admin, Super")]
-        public ActionResult MakeInvisible([FromBody] int topicId)
+        public ActionResult MakeInvisible([FromBody] string title)
         {
 
-            var topic = _topicRepository.GetByCondition(x => x.Id == topicId).SingleOrDefault();
+            var topic = _topicRepository.GetByCondition(x => x.Title == title).SingleOrDefault();
 
             if (topic == null) return NotFound();
 

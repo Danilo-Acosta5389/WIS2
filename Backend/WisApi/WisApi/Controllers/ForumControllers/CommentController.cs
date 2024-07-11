@@ -30,7 +30,7 @@ namespace WisApi.Controllers.ForumControllers
                 var post = _postRepository.GetByCondition(x => x.Id == postId);
                 if (post.IsNullOrEmpty()) return NotFound("Could find post of the given id.");
 
-                var comments = _commentRepository.GetByCondition(x => x.PostId == postId);
+                var comments = _commentRepository.GetByCondition(x => x.PostId == postId && x.IsInvisible != true);
                 if (comments.IsNullOrEmpty()) return NotFound("Could not fin any comments associated with post.");
 
                 var response = comments.Select(x => new CommentDTO

@@ -25,7 +25,7 @@ namespace WisApi.Controllers.ForumControllers
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<PostDTO>> GetSinglePost(int id)
         {
-            var posts = _postRepository.GetByCondition(x => x.Id == id);
+            var posts = _postRepository.GetByCondition(x => x.Id == id && x.IsInvisible != true);
 
             if (posts is null)
                 return NotFound();
@@ -48,7 +48,7 @@ namespace WisApi.Controllers.ForumControllers
         [HttpGet("byTopic/{id}")]
         public ActionResult<IEnumerable<PostDTO>> GetPosts(int id)
         {
-            var posts = _postRepository.GetByCondition(x => x.TopicId == id);
+            var posts = _postRepository.GetByCondition(x => x.TopicId == id && x.IsInvisible != true);
 
             if (posts is null)
                 return NotFound();

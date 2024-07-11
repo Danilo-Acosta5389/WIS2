@@ -30,7 +30,7 @@ import { useEffect, useState } from "react";
 import { lucide } from "@repo/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { useGlobalState } from "../../main";
-import { ComponentActionsDropdown } from "./mainView";
+import { ActionsDropdown } from "./mainView";
 
 function PostCard() {
   const { postId } = Route.useParams();
@@ -103,7 +103,16 @@ function PostCard() {
           return (
             <div className=" m-4 text-white flex flex-col" key={p.id}>
               <span className="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6x">
-                {p.title} <ComponentActionsDropdown />
+                {p.title}{" "}
+                {globalState.isLoggedIn && (
+                  <ActionsDropdown
+                    type={"POST"}
+                    title={p.title}
+                    role={globalState.role}
+                    jwt={globalState.accessToken}
+                    id={p.id}
+                  />
+                )}
               </span>
               <span className=" mt-5">
                 {p.subTitle != null ? (
@@ -220,7 +229,15 @@ function PostCard() {
                   new Date(c.createdAt.toString())
                 )}
               </CardDescription>
-              <ComponentActionsDropdown />
+              {globalState.isLoggedIn && (
+                <ActionsDropdown
+                  type={"COMMENT"}
+                  title={"comment"}
+                  role={globalState.role}
+                  jwt={globalState.accessToken}
+                  id={c.id}
+                />
+              )}
             </CardHeader>
             <CardContent>
               <p>{c.comment}</p>

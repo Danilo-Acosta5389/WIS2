@@ -125,27 +125,34 @@ namespace WisApi.Controllers.UserControllers
 
             if (upgradeInfo == null) return BadRequest();
 
+            //Requesting users info
             var upgradedByUser = _httpContextAccessor.HttpContext!.User;
 
             var byUserName = upgradedByUser.FindFirstValue(ClaimTypes.Name);
             var byRole = upgradedByUser.FindFirstValue(ClaimTypes.Role);
 
-            //Lookup target user, if not found, return NotFound()
+            if (byUserName == upgradeInfo.TargetUser) return BadRequest("Cannot upgrade yourself");
+
+            //Lookup targeted user, if not found, return NotFound()
             var user = await _userManager!.FindByNameAsync(upgradeInfo.TargetUser);
             if (user == null) return BadRequest();
 
             if (user.UserName == upgradeInfo.TargetUser)
             {
+                //Get target users current role
                 var currentRoleList = await _userManager.GetRolesAsync(user);
-
                 var currentRole = currentRoleList.SingleOrDefault();
                 if (currentRole == null) return BadRequest();
+                if (currentRole == upgradeInfo.NewRole) return BadRequest("User already has this role");
 
                 if (byRole == "Creator")
                 {
 
                     if (currentRole != "User")
                         return BadRequest($"{upgradeInfo.TargetUser} is not upgradable by {byUserName}");
+
+                    if (upgradeInfo.NewRole != "Creator")
+                        return Unauthorized();
 
                     await _userManager.AddToRoleAsync(user, upgradeInfo.NewRole);
                     await _userManager.RemoveFromRoleAsync(user, currentRole);
@@ -154,8 +161,12 @@ namespace WisApi.Controllers.UserControllers
 
                 if (byRole == "Admin")
                 {
-                    if (currentRole != "User" || currentRole != "Creator")
+
+                    if (currentRole == "Admin" || currentRole == "Super")
                         return BadRequest($"{upgradeInfo.TargetUser} is not upgradable by {byUserName}");
+
+                    if (upgradeInfo.NewRole == "User" || upgradeInfo.NewRole == "Super")
+                        return Unauthorized();
 
                     await _userManager.AddToRoleAsync(user, upgradeInfo.NewRole);
                     await _userManager.RemoveFromRoleAsync(user, currentRole);
@@ -165,7 +176,7 @@ namespace WisApi.Controllers.UserControllers
 
                 if (byRole == "Super")
                 {
-                    //What if it is another super user?
+                    //What if Super tries to downgrade other Super, should it be able to do this?
 
                     await _userManager.AddToRoleAsync(user, upgradeInfo.NewRole);
                     await _userManager.RemoveFromRoleAsync(user, currentRole);
@@ -175,8 +186,5 @@ namespace WisApi.Controllers.UserControllers
             }
             return NotFound();
         }
-
-
-        //Report user action
     }
 }
