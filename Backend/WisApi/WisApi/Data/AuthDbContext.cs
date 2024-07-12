@@ -45,7 +45,42 @@ namespace WisApi.Data
                 }
 
             };
+
+            var alan = new ExtendedIdentityUser
+            {
+                Id = "6d8a0a9d-2f71-48c5-a2f0-38ec39c4e703",
+                UserName = "turing-c0mplete",
+                Email = "alan@example.com",
+                NormalizedEmail = "alan@example.com".ToUpper(),
+                EmailConfirmed = false,
+                PasswordHash = "AQAAAAIAAYagAAAAEIetXl7p1Ttix+2XzMxdrW8+tjzcUBUcgvb30e+YJInUDavI4XvLRSe21bT6aT1HFA==",
+                SecurityStamp = "GRDTK2VAAUGEO3H2ZVBOR4FRUU3EIWUE",
+                ConcurrencyStamp = "e8dc401f-24d8-45b5-85af-1091a93fa5dc",
+                PhoneNumber = null,
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                LockoutEnd = null,
+                LockoutEnabled = true,
+                AccessFailedCount = 0,
+                RefreshToken = "",
+                RefreshTokenExpiry = DateTime.UtcNow,
+                PublicId = "b3f7ad63-e494-4cf4-82b1-118d8ebd4545",
+                IsBlocked = false,
+                Bio = "Pioneering mathematician and logician, I developed the Turing machine concept and broke the Enigma code in WWII. My work laid the foundations for computer science and artificial intelligence. Passionate about mathematics and cryptography.",
+                ImageName = "",
+
+            };
+
+            var alanSuperRole = new IdentityUserRole<string>
+            {
+                UserId = alan.Id,
+                RoleId = superRoleId,
+            };
+
+            // Add the UserRole entity to the model builder
+            builder.Entity<ExtendedIdentityUser>().HasData(alan);
             builder.Entity<IdentityRole>().HasData(roles);
+            builder.Entity<IdentityUserRole<string>>().HasData(alanSuperRole);
         }
     }
 }

@@ -12,8 +12,8 @@ using WisApi.Data;
 namespace WisApi.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240706022115_IsInvisible")]
-    partial class IsInvisible
+    [Migration("20240712031424_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,9 +21,9 @@ namespace WisApi.Migrations.ApplicationDb
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("WisApi.Models.CommentModel", b =>
                 {
@@ -31,37 +31,37 @@ namespace WisApi.Migrations.ApplicationDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("IpAdress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsAnonymous")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsInvisible")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -76,44 +76,44 @@ namespace WisApi.Migrations.ApplicationDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("IpAdress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsAnonymous")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsInvisible")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SubTitle")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("TopicId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -125,7 +125,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7444),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5198),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -138,7 +138,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7447),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5200),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -151,7 +151,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7449),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5202),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -164,7 +164,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7450),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5203),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -177,7 +177,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7451),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5205),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -190,7 +190,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7453),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5206),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -203,7 +203,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7454),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5207),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -216,7 +216,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7455),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5209),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -229,7 +229,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7457),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5210),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -242,7 +242,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7458),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5211),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -254,44 +254,84 @@ namespace WisApi.Migrations.ApplicationDb
                         });
                 });
 
+            modelBuilder.Entity("WisApi.Models.ReportModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("HandledBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("HandledTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Ip")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool?>("IsHandled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reports");
+                });
+
             modelBuilder.Entity("WisApi.Models.TopicModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("IpAdress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsAnonymous")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsInvisible")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -301,7 +341,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7307),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5064),
                             Description = "Discuss anything and everything under the sun",
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
@@ -313,7 +353,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7310),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5070),
                             Description = "Explore the latest trends and memes from the web",
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
@@ -325,7 +365,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7311),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5071),
                             Description = "Share tips, reviews, and news about your favorite games",
                             IpAdress = "192.168.1.3",
                             IsAnonymous = false,
@@ -337,7 +377,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7313),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5072),
                             Description = "Ask questions and get answers from the community",
                             IpAdress = "192.168.1.4",
                             IsAnonymous = false,
@@ -349,7 +389,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7314),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5074),
                             Description = "Stay updated with the latest tech news and gadgets",
                             IpAdress = "192.168.1.5",
                             IsAnonymous = false,
@@ -361,7 +401,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7315),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5075),
                             Description = "Dive into discussions about music, celebrities, and more",
                             IpAdress = "192.168.1.6",
                             IsAnonymous = false,
@@ -373,7 +413,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7317),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5076),
                             Description = "Discuss the latest movies and TV shows",
                             IpAdress = "192.168.1.7",
                             IsAnonymous = false,
@@ -385,7 +425,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7318),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5078),
                             Description = "Engage in discussions about current political events",
                             IpAdress = "192.168.1.8",
                             IsAnonymous = false,
@@ -397,7 +437,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7319),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5079),
                             Description = "Share insights and news about the business world",
                             IpAdress = "192.168.1.9",
                             IsAnonymous = false,
@@ -409,7 +449,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2024, 7, 6, 2, 21, 15, 396, DateTimeKind.Utc).AddTicks(7320),
+                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5080),
                             Description = "Discuss your favorite anime series and movies",
                             IpAdress = "192.168.1.10",
                             IsAnonymous = false,

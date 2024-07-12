@@ -20,19 +20,28 @@ namespace WisApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //Auth Db Context
+            //Auth Db Context Microsoft SQL Server
+            //builder.Services.AddDbContext<AuthDbContext>(options =>
+            //{
+            //    options.UseSqlServer(
+            //    builder.Configuration.GetConnectionString("DefaultAuthConnection") ?? throw new InvalidOperationException("Could not find connection string: 'DefaultAuthConnection'."));
+
+            //    options.EnableSensitiveDataLogging();
+            //});
+
+
+            //Application Db Context Microsoft SQL Server
+            //builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            //options.UseSqlServer(
+            //    builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Could not find connection string: 'DefaultConnection'.")));
+
             builder.Services.AddDbContext<AuthDbContext>(options =>
-            {
-                options.UseSqlServer(
-                builder.Configuration.GetConnectionString("DefaultAuthConnection") ?? throw new InvalidOperationException("Could not find connection string: 'DefaultAuthConnection'."));
+                options.UseMySql(Secrets.AuthCString, ServerVersion.AutoDetect(Secrets.AuthCString)));
 
-                options.EnableSensitiveDataLogging();
-            });
 
-            //Application Db Context
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(
-                builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Could not find connection string: 'DefaultConnection'.")));
+                options.UseMySql(Secrets.GeneralCString, ServerVersion.AutoDetect(Secrets.GeneralCString)));
+
 
             //Services DI
             builder.Services.AddScoped<ITokenRepository, TokenService>();
