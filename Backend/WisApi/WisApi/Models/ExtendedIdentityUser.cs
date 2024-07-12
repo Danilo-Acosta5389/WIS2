@@ -13,8 +13,8 @@ namespace WisApi.Models
 
         public bool IsBlocked { get; set; } = false;
 
-        public string Bio {  get; set; }
+        public string? Bio {  get; set; }
 
-        public string ImageName {  get; set; }
+        public string? ImageName {  get; set; }
     }
 }
