@@ -125,11 +125,11 @@ namespace WisApi
                 app.UseSwaggerUI();
             }
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Images")),
-                RequestPath = "/images"
-            });
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Images")),
+            //    RequestPath = "/images"
+            //});
 
             app.UseHttpsRedirection();
             app.UseCors("WisCors");
