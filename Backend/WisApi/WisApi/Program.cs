@@ -30,7 +30,7 @@ namespace WisApi
             //});
 
 
-            //Application Db Context Microsoft SQL Server
+            ////Application Db Context Microsoft SQL Server
             //builder.Services.AddDbContext<ApplicationDbContext>(options =>
             //options.UseSqlServer(
             //    builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Could not find connection string: 'DefaultConnection'.")));

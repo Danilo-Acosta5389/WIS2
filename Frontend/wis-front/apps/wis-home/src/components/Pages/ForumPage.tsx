@@ -1,5 +1,5 @@
 import { Outlet } from "@tanstack/react-router";
-import TopicsMenu from "../forumComponents/topicsMenu";
+import TopicsMenu from "../forumComponents/topicsMenu.tsx";
 
 function ForumPage() {
   return (

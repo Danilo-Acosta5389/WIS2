@@ -16,8 +16,8 @@ import {
 } from "@repo/ui";
 // import { useAuth } from '../../hooks/useAuth';
 // import { useNavigate } from '@tanstack/react-router';
-import { useGlobalState } from "../../main";
-import { useAuth } from "../../hooks/useAuth";
+import { useGlobalState } from "../../main.tsx";
+import { useAuth } from "../../hooks/useAuth.ts";
 import { useEffect, useState } from "react";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 import { useNavigate } from "@tanstack/react-router";

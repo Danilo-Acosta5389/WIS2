@@ -18,10 +18,10 @@ import {
   zodResolver,
 } from "@repo/ui";
 import { Link } from "@tanstack/react-router";
-import { Route } from "../../routes/__root";
+import { Route } from "../../routes/__root.tsx";
 import { lucide } from "@repo/ui";
-import { useGlobalState } from "../../main";
-import { CreateTopic, useForumApi } from "../../api/ForumApi";
+import { useGlobalState } from "../../main.tsx";
+import { CreateTopic, useForumApi } from "../../api/ForumApi.ts";
 import { useEffect, useState } from "react";
 
 function TopicsMenu() {

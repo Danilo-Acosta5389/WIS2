@@ -38,9 +38,13 @@ import {
   SelectItem,
   Checkbox,
 } from "@repo/ui";
-import { useGlobalState } from "../../main";
-import { Route } from "../../routes/user/$userName";
-import { UserDetails, useUserApi, UpgradeRoleDetails } from "../../api/UserApi";
+import { useGlobalState } from "../../main.tsx";
+import { Route } from "../../routes/user/$userName.tsx";
+import {
+  UserDetails,
+  useUserApi,
+  UpgradeRoleDetails,
+} from "../../api/UserApi.ts";
 import { useEffect, useState } from "react";
 
 const ProfilePage = () => {

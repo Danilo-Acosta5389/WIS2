@@ -1,7 +1,7 @@
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
-import { AuthContext } from "../hooks/useAuth";
-import { NavBar } from "../components/NavBar";
-import { useForumApi } from "../api/ForumApi";
+import { AuthContext } from "../hooks/useAuth.ts";
+import { NavBar } from "../components/NavBar.tsx";
+import { useForumApi } from "../api/ForumApi.ts";
 
 type RouterContext = {
   authentication: AuthContext;

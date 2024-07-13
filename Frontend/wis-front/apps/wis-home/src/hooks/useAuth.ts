@@ -1,4 +1,4 @@
-import { REFRESH, SIGN_IN, SIGN_OUT } from "../api/urls";
+import { REFRESH, SIGN_IN, SIGN_OUT } from "../api/urls.ts";
 
 export const useAuth = () => {
   interface Credentials {

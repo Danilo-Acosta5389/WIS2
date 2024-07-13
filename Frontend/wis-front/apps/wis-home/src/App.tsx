@@ -1,7 +1,7 @@
-import { useAuth } from "./hooks/useAuth";
+import { useAuth } from "./hooks/useAuth.ts";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
-import { useGlobalState } from "./main";
+import { routeTree } from "./routeTree.gen.ts";
+import { useGlobalState } from "./main.tsx";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 import { useEffect, useRef } from "react";
 

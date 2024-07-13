@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import ProfilePage from "../../components/pages/ProfilePage";
-import { useUserApi } from "../../api/UserApi";
+import ProfilePage from "../../components/pages/ProfilePage.tsx";
+import { useUserApi } from "../../api/UserApi.ts";
 
 const { GetUser } = useUserApi();
 

@@ -22,10 +22,10 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui";
 import { Link } from "@tanstack/react-router";
-import { useGlobalState } from "../main";
-import { useAuth } from "../hooks/useAuth";
-import { Route } from "../routes/__root";
-import SignUpForm from "./authForms/SignUpForm";
+import { useGlobalState } from "../main.tsx";
+import { useAuth } from "../hooks/useAuth.ts";
+import { Route } from "../routes/__root.tsx";
+import SignUpForm from "./authForms/SignUpForm.tsx";
 
 const NavBar = () => {
   const { globalState, setGlobalState } = useGlobalState();

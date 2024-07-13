@@ -19,18 +19,18 @@ import {
   FormItem,
   FormMessage,
 } from "@repo/ui";
-import { Route } from "../../routes/forum/$topic/$postId";
+import { Route } from "../../routes/forum/$topic/$postId.tsx";
 import {
   CommentDetails,
   CreateComment,
   PostDetails,
   useForumApi,
-} from "../../api/ForumApi";
+} from "../../api/ForumApi.ts";
 import { useEffect, useState } from "react";
 import { lucide } from "@repo/ui";
 import { useNavigate } from "@tanstack/react-router";
-import { useGlobalState } from "../../main";
-import { ActionsDropdown } from "./mainView";
+import { useGlobalState } from "../../main.tsx";
+import { ActionsDropdown } from "./mainView.tsx";
 
 function PostCard() {
   const { postId } = Route.useParams();

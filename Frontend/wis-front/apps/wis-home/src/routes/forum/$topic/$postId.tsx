@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import PostCard from "../../../components/forumComponents/postCard";
-import { useForumApi } from "../../../api/ForumApi";
+import PostCard from "../../../components/forumComponents/postCard.tsx";
+import { useForumApi } from "../../../api/ForumApi.ts";
 
 const { getSinglePost } = useForumApi();
 

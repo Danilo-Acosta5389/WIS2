@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom/client";
 import "@repo/ui/main.css";
-import App from "./App";
+import App from "./App.tsx";
 
 // MUST REFACT THIS, PUT CONTEXT HOOK IN SEPARATE FILE
 

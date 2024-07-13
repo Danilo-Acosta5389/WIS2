@@ -37,10 +37,10 @@ import {
 } from "@repo/ui";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Route } from "../../routes/forum/$topic";
-import { Route as r } from "../../routes/__root";
-import { useForumApi, CreatePost, PostDetails } from "../../api/ForumApi";
-import { useGlobalState } from "../../main";
+import { Route } from "../../routes/forum/$topic/index.tsx";
+import { Route as r } from "../../routes/__root.tsx";
+import { useForumApi, CreatePost, PostDetails } from "../../api/ForumApi.ts";
+import { useGlobalState } from "../../main.tsx";
 
 function MainView() {
   const { topic } = Route.useParams();
@@ -382,7 +382,7 @@ const Report = () => {
 };
 
 const Invisible = (props: any) => {
-  const [type, setType] = useState(props.type);
+  let type = props.type;
   const { hideTopic, hidePost, hideComment } = useForumApi();
 
   function handleOption() {

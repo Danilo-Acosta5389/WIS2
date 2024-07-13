@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useGlobalState } from "../../main";
+import { useGlobalState } from "../../main.tsx";
 
 const HomePage = () => {
   const { globalState } = useGlobalState();

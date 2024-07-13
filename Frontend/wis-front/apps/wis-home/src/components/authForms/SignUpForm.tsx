@@ -14,7 +14,7 @@ import {
   Separator,
 } from "@repo/ui";
 import { useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth.ts";
 
 function SignUpForm() {
   const [success, setSuccess] = useState(false);
