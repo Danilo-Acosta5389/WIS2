@@ -12,7 +12,7 @@
 *.sln.docstates
 Images/
 Secrets.cs
-
+appsettings.Production.json
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

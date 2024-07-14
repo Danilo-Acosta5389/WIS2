@@ -108,7 +108,12 @@ namespace WisApi
                 options.AddPolicy(name: "WisCors",
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:5173","http://localhost:5174")
+                        policy.WithOrigins(
+                            "http://localhost:5173",
+                            "http://localhost:5174",
+                            "http://api.whatisspace.online",
+                            "http://whatisspace.online",
+                            "http://localhost:5000")
                         //policy.AllowAnyOrigin()
                         .AllowCredentials()
                         .AllowAnyHeader()
