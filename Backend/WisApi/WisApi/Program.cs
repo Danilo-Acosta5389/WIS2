@@ -117,7 +117,7 @@ namespace WisApi
                         .AllowCredentials();
                     });
             });
-
+             
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
