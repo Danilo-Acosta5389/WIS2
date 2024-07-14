@@ -1,6 +1,9 @@
 //API on development
 //export const BASE_URL = "https://localhost:7118";
 
+//Published on development
+//export const BASE_URL = "http://localhost:5000";
+
 //API on server
 export const BASE_URL = "http://api.whatisspace.online";
 

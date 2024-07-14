@@ -111,13 +111,10 @@ namespace WisApi
                         policy.WithOrigins(
                             "http://localhost:5173",
                             "http://localhost:5174",
-                            "http://api.whatisspace.online",
-                            "http://whatisspace.online",
-                            "http://localhost:5000")
-                        //policy.AllowAnyOrigin()
-                        .AllowCredentials()
+                            "http://whatisspace.online")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                     });
             });
 
@@ -136,8 +133,8 @@ namespace WisApi
             //    RequestPath = "/images"
             //});
 
-            app.UseHttpsRedirection();
             app.UseCors("WisCors");
+            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
