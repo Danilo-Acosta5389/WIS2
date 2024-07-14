@@ -1,4 +1,4 @@
-import { REFRESH, SIGN_IN, SIGN_OUT } from "../api/urls.ts";
+import { REFRESH, REGISTER, SIGN_IN, SIGN_OUT } from "../api/urls.ts";
 
 export const useAuth = () => {
   interface Credentials {
@@ -64,7 +64,7 @@ export const useAuth = () => {
       },
       credentials: "include",
     });
-    //console.log(response)
+    console.log(response);
     if (response.status === 200) {
       //localStorage.setItem("isAuthenticated", "true");
       return response;
@@ -83,7 +83,7 @@ export const useAuth = () => {
   const registerUser = async (
     params: RegisterForm
   ): Promise<RegisterForm | undefined> => {
-    const response = await fetch("https://localhost:7118/api/Auth/Register", {
+    const response = await fetch(REGISTER, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

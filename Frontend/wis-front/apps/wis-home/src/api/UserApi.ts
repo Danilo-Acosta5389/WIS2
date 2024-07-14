@@ -1,9 +1,13 @@
+import {
+  EDIT_USER_PROFILE,
+  getUserProfile,
+  UPGRADE_USER_ROLE,
+} from "./urls.ts";
+
 export const useUserApi = () => {
-  async function GetUser(userName: string | undefined): Promise<UserDetails[]> {
+  async function GetUser(userName: string): Promise<UserDetails[]> {
     try {
-      const response = await fetch(
-        `https://localhost:7118/api/User/${userName}`
-      );
+      const response = await fetch(getUserProfile(userName));
       const data: UserDetails[] = await response.json();
       //console.log(data);
       return data;
@@ -18,13 +22,10 @@ export const useUserApi = () => {
   async function EditUser(formData: FormData) {
     try {
       console.log(formData);
-      const response = await fetch(
-        "https://localhost:7118/api/User/UpdateProfile",
-        {
-          method: "PUT",
-          body: formData,
-        }
-      );
+      const response = await fetch(EDIT_USER_PROFILE, {
+        method: "PUT",
+        body: formData,
+      });
       console.log(response.status);
     } catch (err) {
       console.log(err);
@@ -33,17 +34,14 @@ export const useUserApi = () => {
 
   async function UpgradeUserRole(params: UpgradeRoleDetails, token: string) {
     try {
-      const response = await fetch(
-        "https://localhost:7118/api/User/upgradeRole",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          method: "PUT",
-          body: JSON.stringify(params),
-        }
-      );
+      const response = await fetch(UPGRADE_USER_ROLE, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(params),
+      });
       console.log(response.status);
     } catch (err) {
       //Maybe RefreshToken and second try here
