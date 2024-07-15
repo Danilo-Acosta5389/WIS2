@@ -57,7 +57,7 @@ function SignUpForm() {
       <d.DialogTrigger className=" h-10 w-20 text-sm text-white font-semibold inline-flex items-center justify-center whitespace-nowrap rounded-md font-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-gray-500 bg-blue-600 mx-8 lg:mx-0">
         Sign up <span aria-hidden="true"></span>
       </d.DialogTrigger>
-      <d.DialogContent className=" bg-black text-white min-w-72 w-[26rem]">
+      <d.DialogContent className=" bg-black text-white w-full max-w-96">
         <d.DialogTitle>Sign up</d.DialogTitle>
         <Separator className=" w-full" />
         {!success ? (
