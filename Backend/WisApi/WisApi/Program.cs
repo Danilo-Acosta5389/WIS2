@@ -117,6 +117,8 @@ namespace WisApi
              
             var app = builder.Build();
 
+            app.UseCors("WisCors");
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -130,7 +132,6 @@ namespace WisApi
             //    RequestPath = "/images"
             //});
 
-            app.UseCors("WisCors");
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
