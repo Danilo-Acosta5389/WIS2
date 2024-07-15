@@ -108,10 +108,10 @@ namespace WisApi
                 options.AddPolicy(name: "WisCors",
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:5173","http://localhost:5174","https://whatisspace.online")
+                        policy.WithOrigins("https://whatisspace.online", "https://www.whatisspace.online")
+                        .AllowCredentials()
                         .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
+                        .AllowAnyMethod();
                     });
             });
              
