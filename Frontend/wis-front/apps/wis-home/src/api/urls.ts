@@ -1,11 +1,11 @@
 //API on development
-export const BASE_URL = "https://localhost:7118";
+//export const BASE_URL = "https://localhost:7118";
 
 //Published on development
 //export const BASE_URL = "http://localhost:5000";
 
 //API on server
-//export const BASE_URL = "https://api.whatisspace.online";
+export const BASE_URL = "https://api.whatisspace.online";
 
 //AUTH
 export const SIGN_IN = BASE_URL + "/api/Auth/Login";

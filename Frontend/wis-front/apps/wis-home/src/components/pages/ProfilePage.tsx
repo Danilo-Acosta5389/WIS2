@@ -64,7 +64,7 @@ const ProfilePage = () => {
 
   const formSchema = z.object({
     bio: z.string().max(250, "Max 250 characters"),
-    image: z.instanceof(FileList),
+    // image: z.instanceof(FileList),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -81,7 +81,7 @@ const ProfilePage = () => {
     const formData = new FormData();
     formData.append("userName", globalState.userName);
     formData.append("bio", values.bio);
-    formData.append("imageFile", values.image[0]);
+    formData.append("imageFile", ""); //change here eventually..
     await EditUser(formData);
     //console.log(JSON.stringify(edit));
     setEdit(false);
@@ -102,7 +102,9 @@ const ProfilePage = () => {
   //   }
   // };
 
-  useEffect(() => {}, [edit]);
+  useEffect(() => {
+    console.log(edit);
+  }, [edit]);
   return (
     <>
       {edit ? (
@@ -209,6 +211,7 @@ const ProfilePage = () => {
                   jwt={globalState.accessToken}
                   role={globalState.role}
                   user={globalState.userName}
+                  setEdit={setEdit}
                 />
               )}
             </div>
@@ -237,7 +240,7 @@ const ProfilePage = () => {
                 {userDetails.userName.charAt(0)}
               </AvatarFallback>
             </Avatar> */}
-            {globalState.isLoggedIn &&
+            {/* {globalState.isLoggedIn &&
               globalState.userName === userDetails.userName && (
                 <Button
                   className=" w-fit mt-5 ml-5 self-center"
@@ -247,7 +250,7 @@ const ProfilePage = () => {
                 >
                   Edit profile
                 </Button>
-              )}
+              )} */}
           </div>
         </div>
       )}
@@ -319,14 +322,23 @@ const UserActions = (props: any) => {
               <DropdownMenuSeparator />
             </>
           )}
-          <DropdownMenuItem className="cursor-pointer">
-            <AlertDialogTrigger
-              onClick={() => setOption("REPORT")}
-              className=" text-white w-full text-start"
+          {props.targetUser === props.user ? (
+            <DropdownMenuItem
+              onClick={() => props.setEdit(true)}
+              className="cursor-pointer text-white w-full text-start"
             >
-              Report
-            </AlertDialogTrigger>
-          </DropdownMenuItem>
+              Edit profile
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem className="cursor-pointer">
+              <AlertDialogTrigger
+                onClick={() => setOption("REPORT")}
+                className=" text-white w-full text-start"
+              >
+                Report
+              </AlertDialogTrigger>
+            </DropdownMenuItem>
+          )}
           {props.targetUser !== props.user &&
             (props.role === "Admin" || props.role === "Super") && (
               <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
