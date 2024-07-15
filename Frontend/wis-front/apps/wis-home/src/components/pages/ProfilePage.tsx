@@ -1,9 +1,6 @@
 "use client";
 
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Button,
   Form,
   FormControl,
@@ -16,7 +13,6 @@ import {
   zodResolver,
   lucide,
   FormLabel,
-  Input,
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
@@ -78,7 +74,7 @@ const ProfilePage = () => {
     },
   });
   //console.log(userDetails.bio);
-  const fileRef = form.register("image");
+  //const fileRef = form.register("image");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setNewValues({ ...newValues, bio: values.bio });
@@ -91,20 +87,20 @@ const ProfilePage = () => {
     setEdit(false);
   }
 
-  const showPreview = (e: any) => {
-    if (e.target.files && e.target.files[0]) {
-      let imageFile = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (x: any) => {
-        setNewValues({
-          ...newValues,
-          imageSrc: x.target.result,
-          imageFile,
-        });
-      };
-      reader.readAsDataURL(imageFile);
-    }
-  };
+  // const showPreview = (e: any) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     let imageFile = e.target.files[0];
+  //     const reader = new FileReader();
+  //     reader.onload = (x: any) => {
+  //       setNewValues({
+  //         ...newValues,
+  //         imageSrc: x.target.result,
+  //         imageFile,
+  //       });
+  //     };
+  //     reader.readAsDataURL(imageFile);
+  //   }
+  // };
 
   useEffect(() => {}, [edit]);
   return (
@@ -116,7 +112,7 @@ const ProfilePage = () => {
             className="bg-black text-white flex flex-col max-w-[48rem]"
           >
             <div className=" flex flex-col sm:flex-row p-6">
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="image"
                 render={() => {
@@ -150,7 +146,7 @@ const ProfilePage = () => {
                     </FormItem>
                   );
                 }}
-              />
+              /> */}
               <div className="flex flex-col mt-8 sm:ml-8 sm:mt-0 text-white">
                 <p className=" text-4xl font-semibold">
                   {userDetails.userName}
@@ -203,33 +199,7 @@ const ProfilePage = () => {
           </form>
         </Form>
       ) : (
-        <div className=" flex flex-col sm:flex-row p-6">
-          <div className=" flex flex-col w-fit">
-            <Avatar className=" h-40 w-40">
-              <AvatarImage
-                className=" h-fit w-fit"
-                src={
-                  userDetails.imageSrc === newValues.imageSrc
-                    ? newValues.imageSrc
-                    : userDetails.imageSrc
-                }
-              />
-              <AvatarFallback className=" text-7xl font-semibold">
-                {userDetails.userName.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            {globalState.isLoggedIn &&
-              globalState.userName === userDetails.userName && (
-                <Button
-                  className=" w-fit mt-5 self-center"
-                  onClick={() => {
-                    setEdit(!edit);
-                  }}
-                >
-                  Edit profile
-                </Button>
-              )}
-          </div>
+        <div className=" flex flex-col sm:flex-col p-6">
           <div className="flex flex-col mt-8 sm:ml-8 sm:mt-0 text-white">
             <div className=" flex flex-row">
               <p className=" text-4xl font-semibold">{userDetails.userName}</p>
@@ -252,6 +222,32 @@ const ProfilePage = () => {
                 ? userDetails.bio
                 : newValues.bio}
             </p>
+          </div>
+          <div className=" flex flex-col w-fit">
+            {/* <Avatar className=" h-40 w-40">
+              <AvatarImage
+                className=" h-fit w-fit"
+                src={
+                  userDetails.imageSrc === newValues.imageSrc
+                    ? newValues.imageSrc
+                    : userDetails.imageSrc
+                }
+              />
+              <AvatarFallback className=" text-7xl font-semibold">
+                {userDetails.userName.charAt(0)}
+              </AvatarFallback>
+            </Avatar> */}
+            {globalState.isLoggedIn &&
+              globalState.userName === userDetails.userName && (
+                <Button
+                  className=" w-fit mt-5 ml-5 self-center"
+                  onClick={() => {
+                    setEdit(!edit);
+                  }}
+                >
+                  Edit profile
+                </Button>
+              )}
           </div>
         </div>
       )}

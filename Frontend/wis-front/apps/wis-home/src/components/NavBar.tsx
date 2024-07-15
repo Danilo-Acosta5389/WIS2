@@ -7,13 +7,11 @@ import {
   ScrollArea,
   ScrollBar,
   Transition,
+  lucide,
 } from "@repo/ui";
 import { Bars3Icon, XMarkIcon } from "@repo/ui";
 import {
   Button,
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -158,12 +156,13 @@ const NavBar = () => {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Avatar>
+                <lucide.User />
+                {/* <Avatar>
                   <AvatarImage src={globalState.image} />
                   <AvatarFallback className=" text-xl font-semibold">
                     {globalState.userName.charAt(0)}
                   </AvatarFallback>
-                </Avatar>
+                </Avatar> */}
               </DropdownMenuTrigger>
               <DropdownMenuContent className=" mr-3 ">
                 <DropdownMenuLabel>{globalState.userName}</DropdownMenuLabel>
@@ -178,9 +177,9 @@ const NavBar = () => {
                     Profile
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
+                {/* <DropdownMenuItem className="cursor-pointer">
                   Messages
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem className="cursor-pointer">
                   Settings
                 </DropdownMenuItem>
@@ -217,23 +216,21 @@ const NavBar = () => {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <div className="-m-1.5 p-1.5">
-              {signedIn ? (
+              {signedIn && (
                 <div className=" flex">
-                  <Avatar className="mt-1">
+                  {/* <Avatar className="mt-1">
                     <AvatarImage src={globalState.image} />
                     <AvatarFallback className=" text-xl font-semibold">
                       {globalState.userName.charAt(0)}
                     </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col ml-3 mt-0">
+                  </Avatar> */}
+                  <div className="flex flex-col mt-0">
                     <p className=" text-lg text-black font-semibold">
                       {globalState.userName}
                     </p>
                     <p className=" text-base font-medium">{globalState.role}</p>
                   </div>
                 </div>
-              ) : (
-                <p className="sr-only"></p>
               )}
             </div>
             <div className="flex">
@@ -268,7 +265,7 @@ const NavBar = () => {
                   >
                     Profile
                   </Link>
-                  <Link
+                  {/* <Link
                     to={"/"}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     onClick={() => {
@@ -276,7 +273,7 @@ const NavBar = () => {
                     }}
                   >
                     Messages
-                  </Link>
+                  </Link> */}
                   <Link
                     to={"/"}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
