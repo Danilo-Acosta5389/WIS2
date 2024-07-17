@@ -87,12 +87,12 @@ function MainView() {
         isAnonymous: values.isAnonymous,
       };
 
-      console.log(newPost);
+      // console.log(newPost);
       await createPost(newPost, globalState.accessToken);
       setShowTextArea(false);
       form.reset();
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       setShowTextArea(false);
       form.reset();
     }
@@ -109,6 +109,7 @@ function MainView() {
         }
       };
       fetchPosts();
+      //console.log(intercept.current);
     }
     intercept.current = true;
   }, [item, id, showTextArea]);
@@ -116,6 +117,7 @@ function MainView() {
   useEffect(() => {
     setItem(topic);
     setId(selected);
+    intercept.current = false;
   }, [topic]);
 
   return (
@@ -305,7 +307,7 @@ export default MainView;
 export const ActionsDropdown = (props: any) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [option, setOption] = useState<"REPORT" | "INVISIBLE" | "">("");
-  console.log(props.id);
+  //console.log(props.id);
   return (
     <AlertDialog>
       <DropdownMenu open={openDialog}>
@@ -385,15 +387,15 @@ const Invisible = (props: any) => {
 
   function handleOption() {
     if (type === "TOPIC") {
-      console.log(props.title);
+      // console.log(props.title);
       hideTopic(props.title, props.jwt);
     }
     if (type === "POST") {
-      console.log(props.title);
+      // console.log(props.title);
       hidePost(props.id, props.jwt);
     }
     if (type === "COMMENT") {
-      console.log(props.title);
+      // console.log(props.title);
       hideComment(props.id, props.jwt);
     }
   }
