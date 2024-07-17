@@ -24,6 +24,7 @@ import { useGlobalState } from "../main.tsx";
 import { useAuth } from "../hooks/useAuth.ts";
 import { Route } from "../routes/__root.tsx";
 import SignUpForm from "./authForms/SignUpForm.tsx";
+import { AddTopic } from "./forumComponents/addTopic.tsx";
 
 const NavBar = () => {
   const { globalState, setGlobalState } = useGlobalState();
@@ -110,8 +111,8 @@ const NavBar = () => {
               <Popover.Panel className="absolute -left-44 top-full z-10 mt-10 w-screen max-w-md overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
                   <div className=" flex justify-between p-2">
-                    <span className=" font-semibold">Recent topics</span>
-                    <Link
+                    <span className=" font-semibold">Topics</span>
+                    {/* <Link
                       to={"/forum/$topic"}
                       params={{
                         topic: "General",
@@ -119,7 +120,7 @@ const NavBar = () => {
                       className=" font-medium text-blue-700"
                     >
                       see all &rarr;
-                    </Link>
+                    </Link> */}
                   </div>
                   <ScrollArea className=" flex flex-col max-h-96">
                     {topics.map((item) => (
@@ -311,8 +312,8 @@ const NavBar = () => {
                       </Disclosure.Button>
                       <Disclosure.Panel className="mt-2 space-y-2">
                         <div className=" flex justify-between m-5">
-                          <span className=" font-semibold">Recent topics</span>
-                          <Link
+                          <span className=" font-bold">Topics</span>
+                          {/* <Link
                             to={"/forum/$topic"}
                             params={{
                               topic: topics[0].title,
@@ -323,7 +324,14 @@ const NavBar = () => {
                             }}
                           >
                             see all &rarr;
-                          </Link>
+                          </Link> */}
+                          <AddTopic
+                            className={
+                              " text-black text-lg flex flex-row hover:border-black hover:border-2 cursor-pointer hover:font-bold hover:rounded-sm pr-2"
+                            }
+                            plusSize={18}
+                            plusColor={"black"}
+                          />
                         </div>
                         {[...topics].map((item) => (
                           <Disclosure.Button
