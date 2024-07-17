@@ -71,13 +71,11 @@ export function AddTopic({ className, plusSize, plusColor }: AddTopicPorps) {
     }
   };
 
-  //   globalState.role === "Super" ||
-  //     globalState.role === "Creator" ||
-  //     globalState.role === "Admin";
-
   return (
     <>
-      {globalState.isLoggedIn === false && (
+      {(globalState.role === "Super" ||
+        globalState.role === "Creator" ||
+        globalState.role === "Admin") && (
         <d.Dialog>
           <d.DialogTrigger className={className}>
             <lucide.Plus
