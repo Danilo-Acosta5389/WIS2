@@ -101,15 +101,13 @@ function MainView() {
   useEffect(() => {
     // console.log("item is: " + item);
     // console.log("selected id is: " + id);
-
-    if (intercept.current === true) {
+    if (intercept.current === false) {
       const fetchPosts = async () => {
         if (id !== undefined) {
           const postList = await getPosts(id);
           setPosts(postList);
         }
       };
-
       fetchPosts();
     }
     intercept.current = true;

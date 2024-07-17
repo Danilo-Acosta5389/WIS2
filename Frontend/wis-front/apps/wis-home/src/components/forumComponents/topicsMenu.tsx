@@ -71,7 +71,7 @@ function TopicsMenu() {
   };
 
   useEffect(() => {
-    console.log(rerender);
+    //console.log(rerender);
     setRerender(false);
   }, [rerender]);
 
