@@ -235,11 +235,7 @@ const NavBar = () => {
               )}
             </div>
             <div className="flex">
-              {!signedIn && (
-                <Button className="text-sm font-semibold hover:bg-gray-500 bg-blue-600 mx-8">
-                  Sign up <span aria-hidden="true"></span>
-                </Button>
-              )}
+              {!signedIn && <SignUpForm />}
               <button
                 type="button"
                 className="-m-2.5 rounded-md p-2.5 text-gray-700"
