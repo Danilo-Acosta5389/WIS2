@@ -122,7 +122,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5198),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5923),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -135,7 +135,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5200),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5926),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -148,7 +148,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5202),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5928),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -161,7 +161,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5203),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5929),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -174,7 +174,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5205),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5930),
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -187,7 +187,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5206),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5932),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -200,7 +200,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5207),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5933),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -213,7 +213,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5209),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5934),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -226,7 +226,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5210),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5935),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -239,7 +239,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5211),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5936),
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
                             IsInvisible = false,
@@ -338,7 +338,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5064),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5800),
                             Description = "Discuss anything and everything under the sun",
                             IpAdress = "192.168.1.1",
                             IsAnonymous = false,
@@ -350,7 +350,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5070),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5803),
                             Description = "Explore the latest trends and memes from the web",
                             IpAdress = "192.168.1.2",
                             IsAnonymous = false,
@@ -362,7 +362,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5071),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5804),
                             Description = "Share tips, reviews, and news about your favorite games",
                             IpAdress = "192.168.1.3",
                             IsAnonymous = false,
@@ -374,7 +374,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5072),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5805),
                             Description = "Ask questions and get answers from the community",
                             IpAdress = "192.168.1.4",
                             IsAnonymous = false,
@@ -386,7 +386,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5074),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5806),
                             Description = "Stay updated with the latest tech news and gadgets",
                             IpAdress = "192.168.1.5",
                             IsAnonymous = false,
@@ -398,7 +398,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5075),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5808),
                             Description = "Dive into discussions about music, celebrities, and more",
                             IpAdress = "192.168.1.6",
                             IsAnonymous = false,
@@ -410,7 +410,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5076),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5809),
                             Description = "Discuss the latest movies and TV shows",
                             IpAdress = "192.168.1.7",
                             IsAnonymous = false,
@@ -422,7 +422,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5078),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5810),
                             Description = "Engage in discussions about current political events",
                             IpAdress = "192.168.1.8",
                             IsAnonymous = false,
@@ -434,7 +434,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5079),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5811),
                             Description = "Share insights and news about the business world",
                             IpAdress = "192.168.1.9",
                             IsAnonymous = false,
@@ -446,7 +446,7 @@ namespace WisApi.Migrations.ApplicationDb
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2024, 7, 12, 3, 14, 23, 914, DateTimeKind.Utc).AddTicks(5080),
+                            CreatedAt = new DateTime(2024, 7, 18, 13, 25, 14, 953, DateTimeKind.Utc).AddTicks(5812),
                             Description = "Discuss your favorite anime series and movies",
                             IpAdress = "192.168.1.10",
                             IsAnonymous = false,
