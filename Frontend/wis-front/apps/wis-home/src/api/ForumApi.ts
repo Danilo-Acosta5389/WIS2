@@ -86,8 +86,8 @@ export const useForumApi = () => {
   async function createTopic(
     params: CreateTopic,
     token: string
-  ): Promise<undefined> {
-    const response = await fetch(CREATE_TOPIC, {
+  ): Promise<void> {
+    await fetch(CREATE_TOPIC, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,9 +97,9 @@ export const useForumApi = () => {
       body: JSON.stringify(params),
     });
 
-    const data = await response.json();
-    console.log(data);
-    return data;
+    //const data = response.json();
+    // console.log(response.statusText);
+    // return response;
   }
 
   async function hideTopic(title: string, jwt: string) {
