@@ -86,7 +86,7 @@ export const useForumApi = () => {
   async function createTopic(
     params: CreateTopic,
     token: string
-  ): Promise<CreateTopic | undefined> {
+  ): Promise<undefined> {
     const response = await fetch(CREATE_TOPIC, {
       method: "POST",
       headers: {
@@ -97,8 +97,8 @@ export const useForumApi = () => {
       body: JSON.stringify(params),
     });
 
-    const data = response.json();
-    // console.log(data);
+    const data = await response.json();
+    console.log(data);
     return data;
   }
 

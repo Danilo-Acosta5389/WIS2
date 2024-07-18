@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WisApi.Models;
+using WisApi.Models.DTO_s;
 using WisApi.Models.DTO_s.ForumDTOs;
 using WisApi.Repositories.Interfaces;
 
@@ -77,7 +79,9 @@ namespace WisApi.Controllers.ForumControllers
             _topicRepository.Create(newTopic);
             _topicRepository.Save();
 
-            return Ok("Success!");
+            var responseMsg = new statusMessageDTO("Success!");
+
+            return Ok(responseMsg);
             
         }
 
