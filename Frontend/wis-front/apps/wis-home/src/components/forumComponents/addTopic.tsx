@@ -17,7 +17,7 @@ import {
 } from "@repo/ui";
 import { lucide } from "@repo/ui";
 import { useGlobalState } from "../../main.tsx";
-import { CreateTopic } from "../../api/ForumApi.ts";
+import { CreateTopic, Topics } from "../../api/ForumApi.ts";
 import { useState } from "react";
 import { useForumApi } from "../../api/ForumApi.ts";
 
@@ -25,9 +25,19 @@ type AddTopicPorps = {
   className: string;
   plusSize: number;
   plusColor: string;
+  topicsArr: Topics[];
+  setTopicsArr: React.Dispatch<React.SetStateAction<Topics[]>>;
+  setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function AddTopic({ className, plusSize, plusColor }: AddTopicPorps) {
+export function AddTopic({
+  className,
+  plusSize,
+  plusColor,
+  topicsArr,
+  setTopicsArr,
+  setTrigger,
+}: AddTopicPorps) {
   const { globalState } = useGlobalState();
   const [successful, setSuccessful] = useState(false);
   const { createTopic } = useForumApi();
@@ -61,8 +71,21 @@ export function AddTopic({ className, plusSize, plusColor }: AddTopicPorps) {
 
       await createTopic(newPost, globalState.accessToken);
 
+      const newTopic: Topics = {
+        id: 0,
+        title: newPost.title,
+        description: newPost.description,
+        userName: newPost.userName,
+        createdAt: newPost.createdAt,
+        updatedAt: newPost.createdAt,
+      };
+      //console.log("before: " + topicsArr.length);
+      //topicsArr.push(newTopic);
+      //console.log("After: " + topicsArr.length);
+      setTopicsArr([...topicsArr, newTopic]);
+      setTrigger(true);
       form.reset();
-      console.log(newPost);
+      //console.log(newPost);
       setSuccessful(true);
     } catch (err) {
       console.log(err);

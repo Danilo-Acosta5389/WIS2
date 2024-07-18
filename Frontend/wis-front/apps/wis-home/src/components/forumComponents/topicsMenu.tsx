@@ -3,14 +3,28 @@ import { Link } from "@tanstack/react-router";
 import { Route } from "../../routes/__root.tsx";
 import { useEffect, useState } from "react";
 import { AddTopic } from "./addTopic.tsx";
+import { useForumApi } from "../../api/ForumApi.ts";
 
 function TopicsMenu() {
   const topics = Route.useLoaderData();
-  const [rerender, setRerender] = useState(false);
+  const [topicsArr, setTopicsArr] = useState(topics);
+  const { getTopics } = useForumApi();
+  const [trigger, setTrigger] = useState(false);
+
   useEffect(() => {
-    //console.log(rerender);
-    setRerender(false);
-  }, [rerender]);
+    // Define an async function inside the useEffect
+    async function fetchTopicsAndUpdateState() {
+      try {
+        const newTopicsList = await getTopics(); // Wait for the promise to resolve
+        setTopicsArr(newTopicsList); // Then update the state with the fetched topics
+      } catch (error) {
+        console.error("Failed to fetch topics:", error);
+        // Handle error (e.g., show an error message)
+      }
+    }
+
+    fetchTopicsAndUpdateState(); // Call the async function
+  }, [trigger]);
 
   return (
     <>
@@ -25,9 +39,12 @@ function TopicsMenu() {
           }
           plusSize={28}
           plusColor={"white"}
+          topicsArr={topics}
+          setTopicsArr={setTopicsArr}
+          setTrigger={setTrigger}
         />
         <ScrollArea className=" pl-5">
-          {topics.map((topic) => (
+          {topicsArr.map((topic) => (
             <div
               key={topic.id}
               className=" text-white text-md cursor-pointer p-2 hover:bg-gray-500 hover:text-2xl hover:rounded-sm"

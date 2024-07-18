@@ -25,6 +25,7 @@ import { useAuth } from "../hooks/useAuth.ts";
 import { Route } from "../routes/__root.tsx";
 import SignUpForm from "./authForms/SignUpForm.tsx";
 import { AddTopic } from "./forumComponents/addTopic.tsx";
+import { useForumApi } from "../api/ForumApi.ts";
 
 const NavBar = () => {
   const { globalState, setGlobalState } = useGlobalState();
@@ -33,6 +34,9 @@ const NavBar = () => {
   const { signOut } = useAuth();
   const [showPopover, setShowPopover] = useState<boolean>();
   const topics = Route.useLoaderData();
+  const [topicsArr, setTopicsArr] = useState(topics);
+  const { getTopics } = useForumApi();
+  const [trigger, setTrigger] = useState(false);
 
   const handleSignOut = async () => {
     const response = await signOut();
@@ -52,6 +56,21 @@ const NavBar = () => {
   useEffect(() => {
     setSignedIn(globalState.isLoggedIn);
   }, [globalState]);
+
+  useEffect(() => {
+    // Define an async function inside the useEffect
+    async function fetchTopicsAndUpdateState() {
+      try {
+        const newTopicsList = await getTopics(); // Wait for the promise to resolve
+        setTopicsArr(newTopicsList); // Then update the state with the fetched topics
+      } catch (error) {
+        console.error("Failed to fetch topics:", error);
+        // Handle error (e.g., show an error message)
+      }
+    }
+
+    fetchTopicsAndUpdateState(); // Call the async function
+  }, [trigger]);
 
   return (
     <header className=" bg-white ">
@@ -123,7 +142,7 @@ const NavBar = () => {
                     </Link> */}
                   </div>
                   <ScrollArea className=" flex flex-col max-h-96">
-                    {topics.map((item) => (
+                    {topicsArr.map((item) => (
                       <div
                         key={item.id}
                         className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50 cursor-pointer"
@@ -327,9 +346,12 @@ const NavBar = () => {
                             }
                             plusSize={18}
                             plusColor={"black"}
+                            topicsArr={topicsArr}
+                            setTopicsArr={setTopicsArr}
+                            setTrigger={setTrigger}
                           />
                         </div>
-                        {[...topics].map((item) => (
+                        {[...topicsArr].map((item) => (
                           <Disclosure.Button
                             key={item.id}
                             className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"

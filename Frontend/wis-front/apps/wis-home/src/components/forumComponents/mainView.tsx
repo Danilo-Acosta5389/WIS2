@@ -87,16 +87,20 @@ function MainView() {
         isAnonymous: values.isAnonymous,
       };
 
-      // console.log(newPost);
+      console.log(newPost);
       await createPost(newPost, globalState.accessToken);
       setShowTextArea(false);
       form.reset();
     } catch (err) {
-      // console.log(err);
+      console.log(err);
       setShowTextArea(false);
       form.reset();
     }
   };
+
+  //Th useEffect hooks below are triggering the rerendering of the page.
+  //Currently the postlist be fetched when component loads and when 'Create new post' textArea is opened and closed.
+  //Might whant to change this to only fetch when textArea is closed to prevent too many requests.
 
   useEffect(() => {
     // console.log("item is: " + item);
@@ -118,7 +122,7 @@ function MainView() {
     setItem(topic);
     setId(selected);
     intercept.current = false;
-  }, [topic]);
+  }, [posts, topic, showTextArea]);
 
   return (
     <ScrollArea className=" flex flex-col p-6 bg-black w-full">
