@@ -77,7 +77,7 @@ namespace WisApi.Controllers.ForumControllers
             _topicRepository.Create(newTopic);
             _topicRepository.Save();
 
-
+             
             return Ok();
 
         }
