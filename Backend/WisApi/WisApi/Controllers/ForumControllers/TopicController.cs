@@ -1,9 +1,7 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WisApi.Models;
-using WisApi.Models.DTO_s;
 using WisApi.Models.DTO_s.ForumDTOs;
 using WisApi.Repositories.Interfaces;
 
@@ -15,7 +13,7 @@ namespace WisApi.Controllers.ForumControllers
     {
         private readonly ITopicRepository _topicRepository;
         private readonly UserManager<ExtendedIdentityUser> _userManager;
-        public TopicController(ITopicRepository topicRepository, UserManager<ExtendedIdentityUser> userManager) 
+        public TopicController(ITopicRepository topicRepository, UserManager<ExtendedIdentityUser> userManager)
         {
             _topicRepository = topicRepository;
             _userManager = userManager;
@@ -47,7 +45,7 @@ namespace WisApi.Controllers.ForumControllers
 
         [HttpPost("Create")]
         [Authorize(Roles = "Creator, Admin, Super")]
-        public IActionResult CreateTopic(CreateTopicDTO topic) 
+        public IActionResult CreateTopic(CreateTopicDTO topic)
         {
             HttpContext.Request.Cookies.TryGetValue("publicId", out var publicId);
             HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
@@ -70,7 +68,7 @@ namespace WisApi.Controllers.ForumControllers
                 Title = topic.Title,
                 Description = topic.Description,
                 CreatedAt = topic.CreatedAt,
-                UserName= topic.UserName,
+                UserName = topic.UserName,
                 UserId = user.Id,
                 IpAdress = ip,
                 IsAnonymous = topic.IsAnonymous
@@ -79,10 +77,9 @@ namespace WisApi.Controllers.ForumControllers
             _topicRepository.Create(newTopic);
             _topicRepository.Save();
 
-            //var responseMsg = new statusMessageDTO("Success!");
 
             return Ok();
-            
+
         }
 
         [HttpPut("invisible")]
