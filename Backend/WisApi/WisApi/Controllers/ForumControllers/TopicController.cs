@@ -79,9 +79,9 @@ namespace WisApi.Controllers.ForumControllers
             _topicRepository.Create(newTopic);
             _topicRepository.Save();
 
-            var responseMsg = new statusMessageDTO("Success!");
+            //var responseMsg = new statusMessageDTO("Success!");
 
-            return Ok(responseMsg);
+            return Ok();
             
         }
 
