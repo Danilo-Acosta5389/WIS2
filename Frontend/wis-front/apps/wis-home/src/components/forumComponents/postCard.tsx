@@ -39,7 +39,6 @@ function PostCard() {
   const [showTextArea, setShowTextArea] = useState(false);
   const navigate = useNavigate({ from: "/forum/$topic/$postId" });
   const { globalState } = useGlobalState();
-  //console.log(globalState.accessToken);
   const { createComment, getComments } = useForumApi();
 
   // zod form schema
@@ -106,7 +105,7 @@ function PostCard() {
                 {p.title}{" "}
                 {globalState.isLoggedIn && (
                   <ActionsDropdown
-                    type={"POST"}
+                    type={"Post"}
                     title={p.title}
                     role={globalState.role}
                     jwt={globalState.accessToken}
@@ -231,7 +230,7 @@ function PostCard() {
               </CardDescription>
               {globalState.isLoggedIn && (
                 <ActionsDropdown
-                  type={"COMMENT"}
+                  type={"Comment"}
                   title={"comment"}
                   role={globalState.role}
                   jwt={globalState.accessToken}

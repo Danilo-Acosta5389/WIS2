@@ -41,6 +41,7 @@ import {
   useUserApi,
   UpgradeRoleDetails,
 } from "../../api/UserApi.ts";
+import Report from "../reportComponent.tsx";
 import { useEffect, useState } from "react";
 
 const ProfilePage = () => {
@@ -103,7 +104,7 @@ const ProfilePage = () => {
   // };
 
   useEffect(() => {
-    console.log(edit);
+    //console.log(edit);
   }, [edit]);
   return (
     <>
@@ -332,7 +333,10 @@ const UserActions = (props: any) => {
           ) : (
             <DropdownMenuItem className="cursor-pointer">
               <AlertDialogTrigger
-                onClick={() => setOption("REPORT")}
+                onClick={() => {
+                  setOption("REPORT");
+                  setOpenDialog(!openDialog);
+                }}
                 className=" text-white w-full text-start"
               >
                 Report
@@ -354,7 +358,14 @@ const UserActions = (props: any) => {
       </DropdownMenu>
 
       {option === "BLOCK" && <Block />}
-      {option === "REPORT" && <Report />}
+      {option === "REPORT" && (
+        <Report
+          id={0}
+          userName={props.targetUser}
+          jwt={props.jwt}
+          type={"User"}
+        />
+      )}
       {option === "UPGRADE" && (
         <Upgrade
           targetUser={props.targetUser}
@@ -390,17 +401,17 @@ function Upgrade(props: any) {
     defaultValues: { role: props.role },
   });
 
-  function handleUpgrade(newDetails: UpgradeRoleDetails) {
-    console.log("UPGRADE USER " + JSON.stringify(newDetails));
+  // function handleUpgrade(newDetails: UpgradeRoleDetails) {
+  //   //console.log("UPGRADE USER " + JSON.stringify(newDetails));
+
+  // }
+
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    //console.log(data);
+    details.newRole = data.role;
     UpgradeUserRole(details, props.jwt);
     form.reset;
     setBtnDisabled(true);
-  }
-
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data);
-    details.newRole = data.role;
-    handleUpgrade(details);
   }
 
   return (
@@ -498,30 +509,6 @@ function Upgrade(props: any) {
           </form>
         </Form>
       )}
-    </AlertDialogContent>
-  );
-}
-
-//REPORT USER
-function Report() {
-  function handleReport() {
-    console.log("REPORT USER");
-  }
-  return (
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>
-          Are you absolutely sure about reporting this user?
-        </AlertDialogTitle>
-        <AlertDialogDescription>
-          This action cannot be undone. This will permanently delete your
-          account and remove your data from our servers.
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <AlertDialogAction onClick={handleReport}>Continue</AlertDialogAction>
-      </AlertDialogFooter>
     </AlertDialogContent>
   );
 }

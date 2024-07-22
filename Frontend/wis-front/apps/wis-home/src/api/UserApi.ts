@@ -21,7 +21,7 @@ export const useUserApi = () => {
   // Needs to send bearer token
   async function EditUser(formData: FormData) {
     try {
-      console.log(formData);
+      //console.log(formData);
       const response = await fetch(EDIT_USER_PROFILE, {
         method: "PUT",
         body: formData,

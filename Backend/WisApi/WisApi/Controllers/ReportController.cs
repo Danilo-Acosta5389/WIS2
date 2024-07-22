@@ -43,10 +43,10 @@ namespace WisApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = ("User, Creator, Admin, Super"))]
+        [Authorize]
         public IActionResult CreateReport([FromBody] NewReportDTO report)
         {
-            if (report == null) return BadRequest("Empty report filed");
+            if (report == null) return BadRequest("Empty report");
 
             var user = HttpContext.User.FindFirstValue(ClaimTypes.Name);
             if (user == null) return BadRequest();
@@ -55,8 +55,11 @@ namespace WisApi.Controllers
 
             var newReport = new ReportModel
             {
+                Type = report.Type,
+                ReportedItemId = report.ItemId,
+                ReportedUser = report.UserName,
                 Url = report.Url,
-                User = user,
+                ReportedBy = user,
                 Message = report.Message,
                 Created = DateTime.UtcNow,
                 Ip = ip

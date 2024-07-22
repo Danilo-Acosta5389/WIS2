@@ -1,5 +1,5 @@
-//export const BASE_URL = "https://localhost:7118"; //API on development
-export const BASE_URL = "https://api.whatisspace.online"; //API on server
+export const BASE_URL = "https://localhost:7118"; //API on development
+//export const BASE_URL = "https://api.whatisspace.online"; //API on server
 //export const BASE_URL = "http://localhost:5000"; //API on development
 
 //AUTH
@@ -48,3 +48,6 @@ export const getUserProfile = (userName: string) => {
 export const EDIT_USER_PROFILE = BASE_URL + "/api/User/UpdateProfile";
 
 export const UPGRADE_USER_ROLE = BASE_URL + "/api/User/upgradeRole";
+
+//REPORT
+export const CREATE_REPORT = BASE_URL + "/api/Report";

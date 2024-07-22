@@ -41,6 +41,7 @@ import { Route } from "../../routes/forum/$topic/index.tsx";
 import { Route as r } from "../../routes/__root.tsx";
 import { useForumApi, CreatePost, PostDetails } from "../../api/ForumApi.ts";
 import { useGlobalState } from "../../main.tsx";
+import Report from "../reportComponent.tsx";
 
 function MainView() {
   const { topic } = Route.useParams();
@@ -87,12 +88,12 @@ function MainView() {
         isAnonymous: values.isAnonymous,
       };
 
-      console.log(newPost);
+      //console.log(newPost);
       await createPost(newPost, globalState.accessToken);
       setShowTextArea(false);
       form.reset();
     } catch (err) {
-      console.log(err);
+      //console.log(err);
       setShowTextArea(false);
       form.reset();
     }
@@ -103,8 +104,8 @@ function MainView() {
   //Might whant to change this to only fetch when textArea is closed to prevent too many requests.
 
   useEffect(() => {
-    // console.log("item is: " + item);
-    // console.log("selected id is: " + id);
+    //console.log("item is: " + item);
+    //console.log("selected id is: " + id);
     if (intercept.current === false) {
       const fetchPosts = async () => {
         if (id !== undefined) {
@@ -130,10 +131,11 @@ function MainView() {
         {topic}{" "}
         {globalState.isLoggedIn && (
           <ActionsDropdown
-            type={"TOPIC"}
+            type={"Topic"}
             role={globalState.role}
             title={topic}
             jwt={globalState.accessToken}
+            id={id}
           />
         )}
       </span>
@@ -320,7 +322,7 @@ export const ActionsDropdown = (props: any) => {
             onClick={() => {
               setOpenDialog(!openDialog);
             }}
-            className=" bg-black fixed top-0 bottom-0 left-0 right-0 z-50 pointer-events-auto opacity-55"
+            className=" bg-black fixed top-0 bottom-0 left-0 right-0 z-10 pointer-events-auto opacity-55"
           ></div>
         )}
         <DropdownMenuTrigger
@@ -334,7 +336,10 @@ export const ActionsDropdown = (props: any) => {
         <DropdownMenuContent className=" bg-black text-white mr-3 relative top-2 ">
           <DropdownMenuItem className="cursor-pointer">
             <AlertDialogTrigger
-              onClick={() => setOption("REPORT")}
+              onClick={() => {
+                setOption("REPORT");
+                setOpenDialog(!openDialog);
+              }}
               className=" text-white w-full text-start"
             >
               Report
@@ -352,7 +357,9 @@ export const ActionsDropdown = (props: any) => {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      {option === "REPORT" && <Report />}
+      {option === "REPORT" && (
+        <Report type={props.type} id={props.id} userName={""} jwt={props.jwt} />
+      )}
       {option === "INVISIBLE" && (
         <Invisible
           type={props.type}
@@ -362,26 +369,6 @@ export const ActionsDropdown = (props: any) => {
         />
       )}
     </AlertDialog>
-  );
-};
-
-const Report = () => {
-  return (
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>
-          Are you absolutely sure about reporting?
-        </AlertDialogTitle>
-        <AlertDialogDescription>
-          This action cannot be undone. This will permanently delete your
-          account and remove your data from our servers.
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <AlertDialogAction>Continue</AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
   );
 };
 
