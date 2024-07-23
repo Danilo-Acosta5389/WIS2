@@ -25,7 +25,7 @@ namespace WisApi.Repositories.Services
             {
                 var response = new LoginResponseDTO();
 
-                if (user.IsBlocked)
+                if (user.IsBlocked == true)
                 {
                     response.IsBlocked = true;
                     return response;

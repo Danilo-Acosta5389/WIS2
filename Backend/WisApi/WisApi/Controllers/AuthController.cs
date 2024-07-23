@@ -43,7 +43,8 @@ namespace WisApi.Controllers
             {
                 if (loginResult.IsBlocked == true)
                 {
-                    return Unauthorized(new statusMessageDTO("BLOCKED"));
+                    var blockedResponse = new statusMessageDTO("BLOCKED");
+                    return Unauthorized(blockedResponse);
                 }
 
                 var cookieDTO = new RefreshCookieDTO(loginResult.PublicId, loginResult.RefreshToken);
@@ -78,12 +79,6 @@ namespace WisApi.Controllers
                 
                 var tokens = new RefreshCookieDTO(publicId, refreshToken);
                 var refreshResponse = await _tokenRepository.RefreshToken(tokens);
-                
-                //Console.WriteLine("############ Incomming refresh token: " + tokens.RefreshToken);
-                //Console.WriteLine("############ PublicId: " + tokens.PublicId);
-                //Console.WriteLine("############ Outgoing refreshToken: " + refreshResponse.RefreshToken);
-                
-
 
                 var tokenResponse = new RefreshCookieDTO(refreshResponse.PublicId, refreshResponse.RefreshToken);
 
