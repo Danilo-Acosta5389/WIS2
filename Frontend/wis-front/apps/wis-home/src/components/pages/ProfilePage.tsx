@@ -74,8 +74,6 @@ const ProfilePage = () => {
       bio: userDetails.bio,
     },
   });
-  //console.log(userDetails.bio);
-  //const fileRef = form.register("image");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setNewValues({ ...newValues, bio: values.bio });
@@ -357,7 +355,9 @@ const UserActions = (props: any) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {option === "BLOCK" && <Block />}
+      {option === "BLOCK" && (
+        <Block userName={props.targetUser} token={props.jwt} />
+      )}
       {option === "REPORT" && (
         <Report
           id={0}
@@ -514,9 +514,12 @@ function Upgrade(props: any) {
 }
 
 //BLOCK USER
-function Block() {
+function Block({ userName, token }: { userName: string; token: string }) {
+  const [btnDisabled, setBtnDisabled] = useState(true);
+  const { blockUser } = useUserApi();
   function handleBlock() {
     console.log("BLOCK USER");
+    blockUser({ userName, token });
   }
   return (
     <AlertDialogContent>
@@ -525,13 +528,22 @@ function Block() {
           Are you absolutely sure about blocking this user?
         </AlertDialogTitle>
         <AlertDialogDescription>
-          This action cannot be undone. This will permanently delete your
-          account and remove your data from our servers.
+          This action may cause damage to the person behind this account. You
+          should not block someone unless truly needed.
         </AlertDialogDescription>
       </AlertDialogHeader>
+      <span>
+        <Checkbox
+          onCheckedChange={() => setBtnDisabled(false)}
+          className=" bg-slate-200 mt-2 size-5 mr-2"
+        />{" "}
+        Yes
+      </span>
       <AlertDialogFooter>
         <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <AlertDialogAction onClick={handleBlock}>Continue</AlertDialogAction>
+        <AlertDialogAction disabled={btnDisabled} onClick={handleBlock}>
+          Continue
+        </AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   );

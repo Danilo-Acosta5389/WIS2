@@ -23,6 +23,14 @@ namespace WisApi.Repositories.Services
 
             if (user != null)
             {
+                var response = new LoginResponseDTO();
+
+                if (user.IsBlocked)
+                {
+                    response.IsBlocked = true;
+                    return response;
+                }
+
                 var checkPasswordResult = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
                 if (checkPasswordResult)
                 {
@@ -33,14 +41,10 @@ namespace WisApi.Repositories.Services
                         // Create tokens
                         var jwtToken = _tokenRepository!.CreateJWTToken(user, roles.ToList());
                         var refreshToken = _tokenRepository!.GenerateRefreshTokenString();
-                        var response = new LoginResponseDTO
-                        {
-                            PublicId = user.PublicId,
-                            JwtToken = jwtToken,
-                            RefreshToken = refreshToken,
-                        };
 
-
+                        response.PublicId = user.PublicId;
+                        response.JwtToken = jwtToken;
+                        response.RefreshToken = refreshToken;
 
                         //Setting new refresh token to user
                         user.RefreshToken = response.RefreshToken;

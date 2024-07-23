@@ -21,17 +21,23 @@ export const useAuth = () => {
 
       //console.log(response);
       //console.log("api response: " + response.status);
+      let data;
 
       if (response.status === 200) {
         //console.log(loginAttempt)
-        const data = await response.json();
-        //console.log(data)
+        data = await response.json();
+        //console.log(data);
         //setJwt(data.token);
         //console.log("user logged in");
 
         return data.token;
       } else {
-        console.log("Failed to log in, response status: " + response.status);
+        data = await response.json();
+        //console.log(data);
+        //console.log("Failed to log in, response status: " + data.message);
+        if (data.message === "BLOCKED") {
+          return data.message;
+        }
       }
     } catch (err) {
       console.log("API ERROR: " + err);

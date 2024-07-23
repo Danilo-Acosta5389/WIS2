@@ -1,4 +1,5 @@
 import {
+  BLOCK_USER,
   EDIT_USER_PROFILE,
   getUserProfile,
   UPGRADE_USER_ROLE,
@@ -50,10 +51,32 @@ export const useUserApi = () => {
     }
   }
 
+  async function blockUser({
+    userName,
+    token,
+  }: {
+    userName: string;
+    token: string;
+  }) {
+    try {
+      await fetch(BLOCK_USER, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(userName),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return {
     GetUser,
     EditUser,
     UpgradeUserRole,
+    blockUser,
   };
 };
 

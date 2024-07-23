@@ -49,5 +49,7 @@ export const EDIT_USER_PROFILE = BASE_URL + "/api/User/UpdateProfile";
 
 export const UPGRADE_USER_ROLE = BASE_URL + "/api/User/upgradeRole";
 
+export const BLOCK_USER = BASE_URL + "/api/User/block";
+
 //REPORT
 export const CREATE_REPORT = BASE_URL + "/api/Report";

@@ -36,6 +36,7 @@ const LoginForm = () => {
   const [jwt, setJwt] = useState<string | undefined>(undefined);
   const { signIn } = useAuth();
   const [error, setError] = useState<boolean>(false);
+  const [blocked, setBlocked] = useState(false);
 
   // zod form schema
   const formSchema = z.object({
@@ -60,6 +61,10 @@ const LoginForm = () => {
         password: values.password,
       });
       //console.log(login === undefined ? "did not work" : "worked");
+      if (login === "BLOCKED") {
+        setBlocked(true);
+        return;
+      }
       if (login === undefined) {
         setError(true);
       } else {
@@ -100,49 +105,58 @@ const LoginForm = () => {
   }, [jwt]);
 
   return (
-    <div className=" w-80 pb-6 bg-black rounded-lg border  shadow-md  flex flex-col items-center justify-center text-white ">
+    <div className=" w-full max-w-80 pb-6 bg-black rounded-lg border  shadow-md  flex flex-col items-center justify-center text-white ">
       <div className=" h-16 border-b mb-6 w-full rounded-t-lg flex flex-row items-center justify-center ">
         <h3 className=" text-lg font-semibold ">Log in</h3>
       </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input {...field} className="bg-black text-white" />
-                </FormControl>
-                <FormDescription className="sr-only">
-                  This is your email.
-                </FormDescription>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" className="bg-black" {...field} />
-                </FormControl>
+      {blocked ? (
+        <>
+          <p className=" w-full flex flex-wrap text-red-500 font-semibold text-lg p-5 m-2 text-center">
+            This account has been blocked. Please contact admin to resolve this
+            issue.
+          </p>
+        </>
+      ) : (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="bg-black text-white" />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    This is your email.
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" className="bg-black" {...field} />
+                  </FormControl>
 
-                <FormMessage />
-                {error && (
-                  <p className=" text-red-500 font-semibold pt-2">
-                    Wrong email or password
-                  </p>
-                )}
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
+                  <FormMessage />
+                  {error && (
+                    <p className=" text-red-500 font-semibold pt-2">
+                      Wrong email or password
+                    </p>
+                  )}
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      )}
     </div>
   );
 };
