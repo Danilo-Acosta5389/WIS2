@@ -1,5 +1,5 @@
-export const BASE_URL = "https://localhost:7118"; //API on development
-//export const BASE_URL = "https://api.whatisspace.online"; //API on server
+//export const BASE_URL = "https://localhost:7118"; //API on development
+export const BASE_URL = "https://api.whatisspace.online"; //API on server
 //export const BASE_URL = "http://localhost:5000"; //API on development
 
 //AUTH

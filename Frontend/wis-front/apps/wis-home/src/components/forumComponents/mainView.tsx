@@ -322,7 +322,7 @@ export const ActionsDropdown = (props: any) => {
             onClick={() => {
               setOpenDialog(!openDialog);
             }}
-            className=" bg-black fixed top-0 bottom-0 left-0 right-0 z-10 pointer-events-auto opacity-55"
+            className=" bg-black fixed top-0 bottom-0 left-0 right-0 z-50 pointer-events-auto opacity-55"
           ></div>
         )}
         <DropdownMenuTrigger
@@ -377,16 +377,16 @@ const Invisible = (props: any) => {
   const { hideTopic, hidePost, hideComment } = useForumApi();
 
   function handleOption() {
-    if (type === "TOPIC") {
+    if (type === "Topic") {
       // console.log(props.title);
       hideTopic(props.title, props.jwt);
     }
-    if (type === "POST") {
+    if (type === "Post") {
       // console.log(props.title);
       hidePost(props.id, props.jwt);
     }
-    if (type === "COMMENT") {
-      // console.log(props.title);
+    if (type === "Comment") {
+      //console.log(props.title);
       hideComment(props.id, props.jwt);
     }
   }
