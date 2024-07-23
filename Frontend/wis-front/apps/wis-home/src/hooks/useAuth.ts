@@ -2,12 +2,17 @@ import { REFRESH, REGISTER, SIGN_IN, SIGN_OUT } from "../api/urls.ts";
 
 export const useAuth = () => {
   interface Credentials {
-    username: String;
-    password: String;
+    username: string;
+    password: string;
+  }
+
+  interface Response {
+    token?: string;
+    message?: string;
   }
 
   // SignIn Function
-  const signIn = async (creds: Credentials) => {
+  const signIn = async (creds: Credentials): Promise<Response | undefined> => {
     //localStorage.setItem("isAuthenticated", "true");
     try {
       const response = await fetch(SIGN_IN, {
@@ -21,24 +26,26 @@ export const useAuth = () => {
 
       //console.log(response);
       //console.log("api response: " + response.status);
-      let data;
+      const data: Response | undefined = await response.json();
 
-      if (response.status === 200) {
-        //console.log(loginAttempt)
-        data = await response.json();
-        //console.log(data);
-        //setJwt(data.token);
-        //console.log("user logged in");
+      return data;
 
-        return data.token;
-      } else {
-        data = await response.json();
-        //console.log(data);
-        //console.log("Failed to log in, response status: " + data.message);
-        if (data.message === "BLOCKED") {
-          return data.message;
-        }
-      }
+      // if (response.status === 200) {
+      //   //console.log(loginAttempt)
+      //   data = await response.json();
+      //   //console.log(data);
+      //   //setJwt(data.token);
+      //   //console.log("user logged in");
+
+      //   return data;
+      // } else {
+      //   data = await response.json();
+      //   //console.log(data);
+      //   //console.log("Failed to log in, response status: " + data.message);
+      //   // if (data.message === "BLOCKED") {
+      //   //   return data.message;
+      //   // }
+      // }
     } catch (err) {
       console.log("API ERROR: " + err);
     }
@@ -71,13 +78,7 @@ export const useAuth = () => {
       credentials: "include",
     });
     //console.log(response);
-    if (response.status === 200) {
-      //localStorage.setItem("isAuthenticated", "true");
-      return response;
-    } else {
-      //localStorage.removeItem("isAuthenticated");
-      return response;
-    }
+    return response;
   };
 
   interface RegisterForm {

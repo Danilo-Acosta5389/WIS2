@@ -61,14 +61,14 @@ const LoginForm = () => {
         password: values.password,
       });
       console.log(login);
-      if (login === "BLOCKED") {
+      if (login?.message === "BLOCKED") {
         setBlocked(true);
         return;
       }
       if (login === undefined) {
         setError(true);
       } else {
-        setJwt(login);
+        setJwt(login?.token);
       }
     } catch (err) {
       console.log(err);
