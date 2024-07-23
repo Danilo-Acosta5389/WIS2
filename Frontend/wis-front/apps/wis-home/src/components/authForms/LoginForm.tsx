@@ -54,19 +54,23 @@ const LoginForm = () => {
     },
   });
 
+  useEffect(() => {
+    console.log("Blocked is: " + blocked);
+  }, [blocked]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const login = await signIn({
         username: values.email,
         password: values.password,
       });
-      //console.log(login);
+
       if (login?.message === "BLOCKED") {
         setBlocked(true);
-        console.log("Blocked is: " + blocked);
         return;
       }
       if (login === undefined) {
+        console.log(login);
         setError(true);
       } else {
         setJwt(login?.token);

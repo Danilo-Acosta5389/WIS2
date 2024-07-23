@@ -24,8 +24,7 @@ export const useAuth = () => {
         body: JSON.stringify(creds),
       });
 
-      const data: Response | undefined = await response.json();
-
+      const data = await response.json();
       return data;
     } catch (err) {
       console.log("API ERROR: " + err);
