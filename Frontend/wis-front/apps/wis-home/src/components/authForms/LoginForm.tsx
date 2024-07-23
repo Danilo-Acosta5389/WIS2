@@ -60,9 +60,10 @@ const LoginForm = () => {
         username: values.email,
         password: values.password,
       });
-      console.log(login);
+      //console.log(login);
       if (login?.message === "BLOCKED") {
         setBlocked(true);
+        console.log("Blocked is: " + blocked);
         return;
       }
       if (login === undefined) {

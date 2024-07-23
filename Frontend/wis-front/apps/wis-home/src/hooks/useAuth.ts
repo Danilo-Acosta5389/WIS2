@@ -24,28 +24,9 @@ export const useAuth = () => {
         body: JSON.stringify(creds),
       });
 
-      //console.log(response);
-      //console.log("api response: " + response.status);
       const data: Response | undefined = await response.json();
 
       return data;
-
-      // if (response.status === 200) {
-      //   //console.log(loginAttempt)
-      //   data = await response.json();
-      //   //console.log(data);
-      //   //setJwt(data.token);
-      //   //console.log("user logged in");
-
-      //   return data;
-      // } else {
-      //   data = await response.json();
-      //   //console.log(data);
-      //   //console.log("Failed to log in, response status: " + data.message);
-      //   // if (data.message === "BLOCKED") {
-      //   //   return data.message;
-      //   // }
-      // }
     } catch (err) {
       console.log("API ERROR: " + err);
     }
