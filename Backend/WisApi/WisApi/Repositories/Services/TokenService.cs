@@ -53,13 +53,10 @@ namespace WisApi.Repositories.Services
             var user = _userManager.Users.Where(x => x.PublicId == model.PublicId).SingleOrDefault();
 
             var response = new LoginResponseDTO();
-            if (user is null)
-                return response;
 
             //var identityUser = await _userManager.FindByEmailAsync(principal.Identity.Name); 
-            
 
-            if (user is null || user.RefreshToken != model.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
+            if (user is null || user.RefreshToken != model.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow || user.IsBlocked == true)
             {
                 return response;
             }
