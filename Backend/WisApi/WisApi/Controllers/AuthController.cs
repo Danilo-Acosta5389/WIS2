@@ -39,24 +39,29 @@ namespace WisApi.Controllers
         {
             var loginResult = await _authRepository.LoginAsync(loginRequestDTO);
 
+            var response = new ResponseDTO();
+
             if (loginResult != null)
             {
                 if (loginResult.IsBlocked == true)
                 {
-                    var blockedResponse = new statusMessageDTO("BLOCKED");
-                    return Unauthorized(blockedResponse);
+                    response.Message = "BLOCKED";
+                    
+                    return Unauthorized(response);
                 }
 
                 var cookieDTO = new RefreshCookieDTO(loginResult.PublicId, loginResult.RefreshToken);
 
                 _tokenRepository.SetTokensInsideCookie(cookieDTO, HttpContext);
-
-                var response = new AccessTokenDTO(loginResult.JwtToken!);
+                
+                response.Token = loginResult.JwtToken;
 
                 return Ok(response);
             }
 
-            else return Unauthorized("username or password was incorrect");
+            response.Message = "username or password was incorrect";
+
+            return Unauthorized(response);
         }
 
         
