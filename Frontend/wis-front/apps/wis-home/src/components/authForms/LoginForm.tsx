@@ -30,10 +30,10 @@ interface CustomJwtPayload extends JwtPayload {
 }
 
 //For login
-interface LoginResult {
-  token?: string;
-  message?: string;
-}
+// interface LoginResult {
+//   token?: string;
+//   message?: string;
+// }
 
 //Login form component
 const LoginForm = () => {
