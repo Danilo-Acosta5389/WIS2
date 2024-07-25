@@ -6,13 +6,15 @@ export const useAuth = () => {
     password: string;
   }
 
-  // interface LoginResponse {
-  //   token?: string;
-  //   message?: string;
-  // }
+  interface LoginResponse {
+    token?: string;
+    message?: string;
+  }
 
   // SignIn Function
-  async function signIn(creds: Credentials): Promise<Response | undefined> {
+  async function signIn(
+    creds: Credentials
+  ): Promise<LoginResponse | undefined> {
     try {
       const response = await fetch(SIGN_IN, {
         method: "POST",
@@ -24,9 +26,9 @@ export const useAuth = () => {
       });
 
       //console.log("Response in signIn(): " + response);
-      // const data = await response.json();
+      const data = await response.json();
       // console.log("Data in signIn(): " + data);
-      return response;
+      return data;
     } catch (err) {
       console.log("API ERROR: " + err);
       if (err instanceof TypeError && err.message.includes("Failed to fetch")) {

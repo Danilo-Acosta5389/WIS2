@@ -72,20 +72,16 @@ const LoginForm = () => {
       });
 
       console.log(login);
-
-      if (login === undefined || login.status != 200) {
-        console.log(login);
-        setError(true);
+      if (login?.message === "BLOCKED") {
+        setBlocked(true);
         return;
       }
 
-      const loginResult: LoginResult = await login?.json();
-      console.log(loginResult);
-
-      if (loginResult.message === "BLOCKED") {
-        setBlocked(true);
+      if (login === undefined) {
+        console.log(login);
+        setError(true);
       } else {
-        setJwt(loginResult.token);
+        setJwt(login.token);
       }
     } catch (err) {
       console.log("OnSubmit error: " + err);
