@@ -12,30 +12,29 @@ export const useAuth = () => {
   // }
 
   // SignIn Function
-  async function signIn(creds: Credentials) {
-    // try {
+  async function signIn(creds: Credentials): Promise<Response | undefined> {
+    try {
+      const response = await fetch(SIGN_IN, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(creds),
+      });
 
-    // } catch (err) {
-    //   console.log("API ERROR: " + err);
-    //   if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
-    //     console.error(
-    //       "Fetch failed - check network, CORS policy, and server status."
-    //     );
-    //   }
-    // }
-    const response = await fetch(SIGN_IN, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(creds),
-    });
-
-    console.log("Response in signIn(): " + response);
-    // const data = await response.json();
-    // console.log("Data in signIn(): " + data);
-    return response;
+      //console.log("Response in signIn(): " + response);
+      // const data = await response.json();
+      // console.log("Data in signIn(): " + data);
+      return response;
+    } catch (err) {
+      console.log("API ERROR: " + err);
+      if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
+        console.error(
+          "Fetch failed - check network, CORS policy, and server status."
+        );
+      }
+    }
   }
 
   // SignOut Function

@@ -73,17 +73,17 @@ const LoginForm = () => {
 
       console.log(login);
 
-      const loginResult: LoginResult = await login.json();
+      if (login === undefined || login.status != 200) {
+        console.log(login);
+        setError(true);
+        return;
+      }
+
+      const loginResult: LoginResult = await login?.json();
       console.log(loginResult);
 
-      if (login.status != 200) {
-        if (loginResult.message === "BLOCKED") {
-          setBlocked(true);
-        } else {
-          console.log(login);
-          setError(true);
-        }
-        return;
+      if (loginResult.message === "BLOCKED") {
+        setBlocked(true);
       } else {
         setJwt(loginResult.token);
       }
