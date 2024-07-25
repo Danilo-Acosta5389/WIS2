@@ -45,7 +45,7 @@ namespace WisApi.Controllers
             {
                 if (loginResult.IsBlocked == true)
                 {
-                    response.Message = "BLOCKED";
+                    response.Token = "BLOCKED";
                     
                     return Unauthorized(response);
                 }

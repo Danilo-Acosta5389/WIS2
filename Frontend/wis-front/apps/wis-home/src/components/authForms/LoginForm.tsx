@@ -65,7 +65,7 @@ const LoginForm = () => {
         password: values.password,
       });
 
-      if (login?.message === "BLOCKED") {
+      if (login?.token === "BLOCKED") {
         setBlocked(true);
         return;
       }
