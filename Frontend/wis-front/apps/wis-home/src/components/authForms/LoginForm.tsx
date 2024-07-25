@@ -74,8 +74,8 @@ const LoginForm = () => {
       console.log(login);
 
       const loginResult: LoginResult = await login?.json();
-
-      if (login?.status === 401) {
+      console.log(loginResult);
+      if (login?.status != 200) {
         if (loginResult.message === "BLOCKED") {
           setBlocked(true);
         } else {
@@ -87,12 +87,7 @@ const LoginForm = () => {
         setJwt(loginResult?.token);
       }
     } catch (err) {
-      console.log("OnSubmit error:" + err);
-      if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
-        console.error(
-          "Fetch failed - check network, CORS policy, and server status."
-        );
-      }
+      console.log("OnSubmit error: " + err);
     }
   }
 

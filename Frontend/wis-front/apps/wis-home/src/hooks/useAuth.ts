@@ -23,7 +23,7 @@ export const useAuth = () => {
         credentials: "include",
         body: JSON.stringify(creds),
       });
-
+      console.log(response);
       //const data = await response.json();
       return response;
     } catch (err) {
