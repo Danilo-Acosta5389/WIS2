@@ -29,6 +29,12 @@ interface CustomJwtPayload extends JwtPayload {
   image: string;
 }
 
+//For login
+interface LoginResult {
+  token?: string;
+  message?: string;
+}
+
 //Login form component
 const LoginForm = () => {
   const { setGlobalState } = useGlobalState();
@@ -65,18 +71,28 @@ const LoginForm = () => {
         password: values.password,
       });
 
-      if (login?.token === "BLOCKED") {
-        setBlocked(true);
+      console.log(login);
+
+      const loginResult: LoginResult = await login?.json();
+
+      if (login?.status === 401) {
+        if (loginResult.message === "BLOCKED") {
+          setBlocked(true);
+        } else {
+          console.log(login);
+          setError(true);
+        }
         return;
-      }
-      if (login === undefined) {
-        console.log(login);
-        setError(true);
       } else {
-        setJwt(login?.token);
+        setJwt(loginResult?.token);
       }
     } catch (err) {
-      console.log(err);
+      console.log("OnSubmit error:" + err);
+      if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
+        console.error(
+          "Fetch failed - check network, CORS policy, and server status."
+        );
+      }
     }
   }
 

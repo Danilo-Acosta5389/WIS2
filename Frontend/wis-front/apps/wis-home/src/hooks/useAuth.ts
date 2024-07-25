@@ -6,10 +6,10 @@ export const useAuth = () => {
     password: string;
   }
 
-  interface Response {
-    token?: string;
-    message?: string;
-  }
+  // interface LoginResponse {
+  //   token?: string;
+  //   message?: string;
+  // }
 
   // SignIn Function
   const signIn = async (creds: Credentials): Promise<Response | undefined> => {
@@ -24,10 +24,15 @@ export const useAuth = () => {
         body: JSON.stringify(creds),
       });
 
-      const data = await response.json();
-      return data;
+      //const data = await response.json();
+      return response;
     } catch (err) {
       console.log("API ERROR: " + err);
+      if (err instanceof TypeError && err.message.includes("Failed to fetch")) {
+        console.error(
+          "Fetch failed - check network, CORS policy, and server status."
+        );
+      }
     }
   };
 

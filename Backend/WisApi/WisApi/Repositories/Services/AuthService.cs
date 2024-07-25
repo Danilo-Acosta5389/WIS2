@@ -20,10 +20,11 @@ namespace WisApi.Repositories.Services
         public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO loginRequestDTO)
         {
             var user = await _userManager!.FindByEmailAsync(loginRequestDTO.Username);
+            var response = new LoginResponseDTO();
 
             if (user != null)
             {
-                var response = new LoginResponseDTO();
+                response.IsSuccess = true;
 
                 if (user.IsBlocked == true)
                 {
@@ -55,7 +56,9 @@ namespace WisApi.Repositories.Services
                     }
                 }
             }
-            return new LoginResponseDTO();
+
+            response.IsSuccess = false;
+            return response;
         }
 
         //Register  USER NOT ALLOWED TO USE "-" and maybe other special chars aswell

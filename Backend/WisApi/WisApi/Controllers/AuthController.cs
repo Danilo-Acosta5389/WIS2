@@ -41,11 +41,11 @@ namespace WisApi.Controllers
 
             var response = new ResponseDTO();
 
-            if (loginResult != null)
+            if (loginResult.IsSuccess == true)
             {
                 if (loginResult.IsBlocked == true)
                 {
-                    response.Token = "BLOCKED";
+                    response.Message = "BLOCKED";
                     
                     return Unauthorized(response);
                 }
