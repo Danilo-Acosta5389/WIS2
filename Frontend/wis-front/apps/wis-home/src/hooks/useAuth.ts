@@ -25,9 +25,13 @@ export const useAuth = () => {
         body: JSON.stringify(creds),
       });
 
-      //console.log("Response in signIn(): " + response);
+      console.log(response);
       const data = await response.json();
-      // console.log("Data in signIn(): " + data);
+      if (response.status === 403) {
+        console.log("wooorked");
+        console.log(data.message);
+      }
+
       return data;
     } catch (err) {
       console.log("API ERROR: " + err);
