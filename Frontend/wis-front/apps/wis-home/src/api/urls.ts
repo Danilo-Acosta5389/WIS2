@@ -51,5 +51,7 @@ export const UPGRADE_USER_ROLE = BASE_URL + "/api/User/upgradeRole";
 
 export const BLOCK_USER = BASE_URL + "/api/User/block";
 
+export const UNBLOCK_USER = BASE_URL + "/api/User/unblock";
+
 //REPORT
 export const CREATE_REPORT = BASE_URL + "/api/Report";

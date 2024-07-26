@@ -1,8 +1,8 @@
 ﻿namespace WisApi.Models.DTO_s
 {
-    public class statusMessageDTO
+    public class StatusMessageDTO
     {
-        public statusMessageDTO(string message)
+        public StatusMessageDTO(string message)
         {
             Message = message;
         }

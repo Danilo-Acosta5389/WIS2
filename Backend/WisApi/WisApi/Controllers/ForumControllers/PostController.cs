@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WisApi.Models;
+using WisApi.Models.DTO_s;
 using WisApi.Models.DTO_s.ForumDTOs;
 using WisApi.Repositories.Interfaces;
 
@@ -73,17 +74,17 @@ namespace WisApi.Controllers.ForumControllers
         {
             try
             {
-                if (post is null) return BadRequest("Post is empty.");
+                if (post is null) return BadRequest(new StatusMessageDTO("Post is empty."));
 
                 HttpContext.Request.Cookies.TryGetValue("publicId", out var publicId);
                 HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
                 var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-                if (publicId is null && refreshToken is null) return Unauthorized("Credentials not found.");
+                if (publicId is null && refreshToken is null) return Unauthorized(new StatusMessageDTO("Credentials not found."));
 
                 var user = _userManager.Users.Where(x => x.PublicId == publicId && x.RefreshToken == refreshToken).SingleOrDefault();
 
-                if (user == null) return BadRequest("User not found");
+                if (user == null) return BadRequest(new StatusMessageDTO("User not found"));
 
                 var newPost = new PostModel()
                 {
@@ -107,7 +108,7 @@ namespace WisApi.Controllers.ForumControllers
             catch (Exception e)
             {
 
-                return Conflict("Error: " + e.Message);
+                return Conflict(new StatusMessageDTO("Error: " + e.Message));
             }
 
             

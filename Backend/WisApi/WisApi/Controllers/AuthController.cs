@@ -26,9 +26,9 @@ namespace WisApi.Controllers
             var registerResult = await _authRepository.RegisterAsync(registerRequestDTO);
 
             if (registerResult == true)
-                return Ok("The user was successfully registered! You can now login.");
+                return Ok(new StatusMessageDTO("The user was successfully registered! You can now login."));
 
-            else return BadRequest("Something went wrong, please try again.");
+            else return BadRequest(new StatusMessageDTO("Something went wrong, please try again."));
 
         }
 

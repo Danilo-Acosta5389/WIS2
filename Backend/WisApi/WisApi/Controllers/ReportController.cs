@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WisApi.Models;
+using WisApi.Models.DTO_s;
 using WisApi.Models.DTO_s.ReportDTO;
 using WisApi.Repositories.Interfaces;
 
@@ -46,7 +47,7 @@ namespace WisApi.Controllers
         [Authorize]
         public IActionResult CreateReport([FromBody] NewReportDTO report)
         {
-            if (report == null) return BadRequest("Empty report");
+            if (report == null) return BadRequest(new StatusMessageDTO("Empty report"));
 
             var user = HttpContext.User.FindFirstValue(ClaimTypes.Name);
             if (user == null) return BadRequest();
@@ -68,7 +69,7 @@ namespace WisApi.Controllers
             _reportRepository.Create(newReport);
             _reportRepository.Save();
 
-            return Ok("Report successfully filed!");
+            return Ok(new StatusMessageDTO("Report successfully filed!"));
         }
 
         [HttpPut]

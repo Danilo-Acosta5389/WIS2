@@ -2,6 +2,7 @@ import {
   BLOCK_USER,
   EDIT_USER_PROFILE,
   getUserProfile,
+  UNBLOCK_USER,
   UPGRADE_USER_ROLE,
 } from "./urls.ts";
 
@@ -72,11 +73,33 @@ export const useUserApi = () => {
     }
   }
 
+  async function unBlockUser({
+    userName,
+    token,
+  }: {
+    userName: string;
+    token: string;
+  }) {
+    try {
+      await fetch(UNBLOCK_USER, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(userName),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return {
     GetUser,
     EditUser,
     UpgradeUserRole,
     blockUser,
+    unBlockUser,
   };
 };
 
@@ -90,6 +113,7 @@ export interface UserDetails {
   bio: string;
   imageName: string;
   imageSrc: string;
+  isBlocked: boolean;
 }
 
 export interface UpdatedDetails {

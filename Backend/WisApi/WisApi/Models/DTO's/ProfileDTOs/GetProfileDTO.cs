@@ -10,5 +10,7 @@
 
         public string ImageSrc { get; set; }
 
+        public bool IsBlocked { get; set; }
+
     }
 }

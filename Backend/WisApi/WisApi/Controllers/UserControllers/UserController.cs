@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using WisApi.Models;
+using WisApi.Models.DTO_s;
 using WisApi.Models.DTO_s.ProfileDTOs;
 
 namespace WisApi.Controllers.UserControllers
@@ -26,9 +27,9 @@ namespace WisApi.Controllers.UserControllers
         //Maybe change to get and set data from UserRepository instead of UserManager
 
         [HttpGet("{userName}")]
-        public ActionResult<GetProfileDTO> GetUser(string userName)
+        public IActionResult GetUser(string userName)
         {
-            if (userName.IsNullOrEmpty()) return BadRequest("UserName is missing");
+            if (userName.IsNullOrEmpty()) return BadRequest(new StatusMessageDTO("UserName is missing"));
 
             var user = _userManager.Users.Where(x => x.UserName == userName).SingleOrDefault();
             if (user == null) return NotFound();
@@ -38,7 +39,8 @@ namespace WisApi.Controllers.UserControllers
                 UserName = user.UserName!,
                 Bio = user.Bio,
                 ImageName = user.ImageName,
-                ImageSrc = string.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, user.ImageName)
+                ImageSrc = string.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, user.ImageName),
+                IsBlocked = user.IsBlocked,
             };
 
             return Ok(result);
@@ -92,7 +94,7 @@ namespace WisApi.Controllers.UserControllers
             {
                 user.IsBlocked = true;
                 await _userManager!.UpdateAsync(user);
-                return Ok("User blocked");
+                return Ok(new StatusMessageDTO("User blocked"));
             }
             return BadRequest();
         }
@@ -109,7 +111,7 @@ namespace WisApi.Controllers.UserControllers
             {
                 user.IsBlocked = false;
                 await _userManager!.UpdateAsync(user);
-                return Ok("User unblocked");
+                return Ok(new StatusMessageDTO("User unblocked"));
             }
             return BadRequest();
         }
@@ -131,7 +133,7 @@ namespace WisApi.Controllers.UserControllers
             var byUserName = upgradedByUser.FindFirstValue(ClaimTypes.Name);
             var byRole = upgradedByUser.FindFirstValue(ClaimTypes.Role);
 
-            if (byUserName == upgradeInfo.TargetUser) return BadRequest("Cannot upgrade yourself");
+            if (byUserName == upgradeInfo.TargetUser) return BadRequest(new StatusMessageDTO("Cannot upgrade yourself"));
 
             //Lookup targeted user, if not found, return NotFound()
             var user = await _userManager!.FindByNameAsync(upgradeInfo.TargetUser);
@@ -143,7 +145,7 @@ namespace WisApi.Controllers.UserControllers
                 var currentRoleList = await _userManager.GetRolesAsync(user);
                 var currentRole = currentRoleList.SingleOrDefault();
                 if (currentRole == null) return BadRequest();
-                if (currentRole == upgradeInfo.NewRole) return BadRequest("User already has this role");
+                if (currentRole == upgradeInfo.NewRole) return BadRequest(new StatusMessageDTO("User already has this role"));
 
                 if (byRole == "Creator")
                 {
@@ -156,7 +158,7 @@ namespace WisApi.Controllers.UserControllers
 
                     await _userManager.AddToRoleAsync(user, upgradeInfo.NewRole);
                     await _userManager.RemoveFromRoleAsync(user, currentRole);
-                    return Ok($"Successfully changed {user.UserName}'s role from {currentRole} to {upgradeInfo.NewRole}");
+                    return Ok(new StatusMessageDTO($"Successfully changed {user.UserName}'s role from {currentRole} to {upgradeInfo.NewRole}"));
                 }
 
                 if (byRole == "Admin")
@@ -170,7 +172,7 @@ namespace WisApi.Controllers.UserControllers
 
                     await _userManager.AddToRoleAsync(user, upgradeInfo.NewRole);
                     await _userManager.RemoveFromRoleAsync(user, currentRole);
-                    return Ok($"Successfully changed {user.UserName}'s role from {currentRole} to {upgradeInfo.NewRole}");
+                    return Ok(new StatusMessageDTO($"Successfully changed {user.UserName}'s role from {currentRole} to {upgradeInfo.NewRole}"));
 
                 }
 
@@ -182,7 +184,7 @@ namespace WisApi.Controllers.UserControllers
                     await _userManager.RemoveFromRoleAsync(user, currentRole);
                     return Ok($"Successfully changed {user.UserName}'s role from {currentRole} to {upgradeInfo.NewRole}");
                 }
-                return BadRequest("Something went wrong. Please try again.");
+                return BadRequest(new StatusMessageDTO("Something went wrong. Please try again."));
             }
             return NotFound();
         }

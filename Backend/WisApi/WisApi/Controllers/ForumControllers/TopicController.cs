@@ -54,16 +54,16 @@ namespace WisApi.Controllers.ForumControllers
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             if (refreshToken is null && publicId is null)
-                return BadRequest("User credentials not found.");
+                return BadRequest(new StatusMessageDTO("User credentials not found."));
 
             if (topic is null)
-                return BadRequest("Something went wrong, topic content not found.");
+                return BadRequest(new StatusMessageDTO("Something went wrong, topic content not found."));
 
             //Add more validation parameters in the futurre, for now this is ok
             var user = _userManager.Users.Where(x => x.PublicId == publicId && x.RefreshToken == refreshToken).SingleOrDefault();
 
             if (user is null)
-                return NotFound("User not found");
+                return NotFound(new StatusMessageDTO("User not found"));
 
             var newTopic = new TopicModel()
             {
@@ -79,7 +79,7 @@ namespace WisApi.Controllers.ForumControllers
             _topicRepository.Create(newTopic);
             _topicRepository.Save();
 
-            var responseMsg = new statusMessageDTO("Success!");
+            var responseMsg = new StatusMessageDTO("Success!");
 
             return Ok(responseMsg);
             

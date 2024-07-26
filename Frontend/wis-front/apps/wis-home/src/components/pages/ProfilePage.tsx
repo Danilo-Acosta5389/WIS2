@@ -60,6 +60,15 @@ const ProfilePage = () => {
   const [edit, setEdit] = useState(false);
   const [newValues, setNewValues] = useState(initialState);
   const { EditUser } = useUserApi();
+  const [isUserBlocked, setIsUserBlocked] = useState(userDetails.isBlocked);
+
+  useEffect(() => {
+    setIsUserBlocked(userDetails.isBlocked);
+  }, [userDetails.isBlocked]);
+
+  useEffect(() => {
+    //console.log(edit);
+  }, [edit]);
 
   //console.log("values" + JSON.stringify(newValues));
 
@@ -101,9 +110,6 @@ const ProfilePage = () => {
   //   }
   // };
 
-  useEffect(() => {
-    //console.log(edit);
-  }, [edit]);
   return (
     <>
       {edit ? (
@@ -206,11 +212,13 @@ const ProfilePage = () => {
               <p className=" text-4xl font-semibold">{userDetails.userName}</p>
               {globalState.isLoggedIn && (
                 <UserActions
-                  targetUser={userDetails.userName}
+                  targetUser={userDetails}
                   jwt={globalState.accessToken}
                   role={globalState.role}
                   user={globalState.userName}
                   setEdit={setEdit}
+                  isUserBlocked={isUserBlocked}
+                  setIsUserBlocked={setIsUserBlocked}
                 />
               )}
             </div>
@@ -270,11 +278,7 @@ export default ProfilePage;
 
 We need:
 
-UserAction should have info about the user and the targeted user
-it needs: 
-Logged in users JWT,
-targeted users userName,
-targeted users new Role
+To refactor this code -.-
 
 
 
@@ -282,7 +286,10 @@ targeted users new Role
 
 const UserActions = (props: any) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [option, setOption] = useState<"UPGRADE" | "REPORT" | "BLOCK" | "">("");
+  const [option, setOption] = useState<
+    "UPGRADE" | "REPORT" | "BLOCK" | "UNBLOCK" | ""
+  >("");
+  //const [userBlocked, setUserBlocked] = useState(props.targetUser.isBlocked);
 
   return (
     <AlertDialog>
@@ -308,20 +315,21 @@ const UserActions = (props: any) => {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className=" bg-black text-white mr-3 ">
-          {props.role !== "User" && props.user !== props.targetUser && (
-            <>
-              <DropdownMenuItem className="cursor-pointer">
-                <AlertDialogTrigger
-                  onClick={() => setOption("UPGRADE")}
-                  className=" text-white w-full text-start"
-                >
-                  Upgrade
-                </AlertDialogTrigger>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-            </>
-          )}
-          {props.targetUser === props.user ? (
+          {props.role !== "User" &&
+            props.user !== props.targetUser.userName && (
+              <>
+                <DropdownMenuItem className="cursor-pointer">
+                  <AlertDialogTrigger
+                    onClick={() => setOption("UPGRADE")}
+                    className=" text-white w-full text-start"
+                  >
+                    Upgrade
+                  </AlertDialogTrigger>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            )}
+          {props.targetUser.userName === props.user ? (
             <DropdownMenuItem
               onClick={() => props.setEdit(true)}
               className="cursor-pointer text-white w-full text-start"
@@ -341,8 +349,18 @@ const UserActions = (props: any) => {
               </AlertDialogTrigger>
             </DropdownMenuItem>
           )}
-          {props.targetUser !== props.user &&
-            (props.role === "Admin" || props.role === "Super") && (
+          {props.targetUser.userName !== props.user &&
+            (props.role === "Admin" || props.role === "Super") &&
+            (props.isUserBlocked ? (
+              <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
+                <AlertDialogTrigger
+                  onClick={() => setOption("UNBLOCK")}
+                  className=" text-white w-full text-start"
+                >
+                  Unblock
+                </AlertDialogTrigger>
+              </DropdownMenuItem>
+            ) : (
               <DropdownMenuItem className="cursor-pointer bg-red-600 focus:bg-red-700 focus:text-white">
                 <AlertDialogTrigger
                   onClick={() => setOption("BLOCK")}
@@ -351,24 +369,35 @@ const UserActions = (props: any) => {
                   Block
                 </AlertDialogTrigger>
               </DropdownMenuItem>
-            )}
+            ))}
         </DropdownMenuContent>
       </DropdownMenu>
 
       {option === "BLOCK" && (
-        <Block userName={props.targetUser} token={props.jwt} />
+        <Block
+          userName={props.targetUser.userName}
+          token={props.jwt}
+          setIsUserBlocked={props.setIsUserBlocked}
+        />
+      )}
+      {option === "UNBLOCK" && (
+        <Unblock
+          userName={props.targetUser.userName}
+          token={props.jwt}
+          setIsUserBlocked={props.setIsUserBlocked}
+        />
       )}
       {option === "REPORT" && (
         <Report
           id={0}
-          userName={props.targetUser}
+          userName={props.targetUser.userName}
           jwt={props.jwt}
           type={"User"}
         />
       )}
       {option === "UPGRADE" && (
         <Upgrade
-          targetUser={props.targetUser}
+          targetUser={props.targetUser.userName}
           jwt={props.jwt}
           role={props.role}
         />
@@ -514,12 +543,21 @@ function Upgrade(props: any) {
 }
 
 //BLOCK USER
-function Block({ userName, token }: { userName: string; token: string }) {
+function Block({
+  userName,
+  token,
+  setIsUserBlocked,
+}: {
+  userName: string;
+  token: string;
+  setIsUserBlocked: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [btnDisabled, setBtnDisabled] = useState(true);
   const { blockUser } = useUserApi();
-  function handleBlock() {
+  async function handleBlock() {
     console.log("BLOCK USER");
-    blockUser({ userName, token });
+    await blockUser({ userName, token });
+    setIsUserBlocked(true);
   }
   return (
     <AlertDialogContent>
@@ -528,8 +566,8 @@ function Block({ userName, token }: { userName: string; token: string }) {
           Are you absolutely sure about blocking this user?
         </AlertDialogTitle>
         <AlertDialogDescription>
-          This action may cause damage to the person behind this account. You
-          should not block someone unless truly needed.
+          This action may cause damage to the owner of this account. You should
+          not block someone unless truly needed.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <span>
@@ -542,6 +580,51 @@ function Block({ userName, token }: { userName: string; token: string }) {
       <AlertDialogFooter>
         <AlertDialogCancel>Cancel</AlertDialogCancel>
         <AlertDialogAction disabled={btnDisabled} onClick={handleBlock}>
+          Continue
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  );
+}
+
+//UNBLOCK USER
+function Unblock({
+  userName,
+  token,
+  setIsUserBlocked,
+}: {
+  userName: string;
+  token: string;
+  setIsUserBlocked: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const [btnDisabled, setBtnDisabled] = useState(true);
+  const { unBlockUser } = useUserApi();
+  async function handleUnblock() {
+    console.log("USER UNBLOCKED");
+    await unBlockUser({ userName, token });
+    setIsUserBlocked(false);
+  }
+  return (
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Are you absolutely sure about unblocking this user?
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          This user may have been blocked for good reasons. Please consider
+          thoroughly if it should be unblocked.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <span>
+        <Checkbox
+          onCheckedChange={() => setBtnDisabled(false)}
+          className=" bg-slate-200 mt-2 size-5 mr-2"
+        />{" "}
+        Yes
+      </span>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction disabled={btnDisabled} onClick={handleUnblock}>
           Continue
         </AlertDialogAction>
       </AlertDialogFooter>
