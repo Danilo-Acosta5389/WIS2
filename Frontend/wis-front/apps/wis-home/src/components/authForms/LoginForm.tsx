@@ -71,7 +71,7 @@ const LoginForm = () => {
         password: values.password,
       });
 
-      console.log(login);
+      //console.log(login);
       if (login?.message === "BLOCKED") {
         setBlocked(true);
         return;

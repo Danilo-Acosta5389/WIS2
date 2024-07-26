@@ -47,7 +47,7 @@ namespace WisApi.Controllers
                 {
                     response.Message = "BLOCKED";
                     
-                    return StatusCode(StatusCodes.Status403Forbidden, response);
+                    return Ok(response);
                 }
 
                 var cookieDTO = new RefreshCookieDTO(loginResult.PublicId, loginResult.RefreshToken);

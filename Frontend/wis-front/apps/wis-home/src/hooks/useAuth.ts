@@ -25,12 +25,13 @@ export const useAuth = () => {
         body: JSON.stringify(creds),
       });
 
-      console.log(response);
+      //console.log(response);
       const data = await response.json();
-      if (response.status === 403) {
-        console.log("wooorked");
-        console.log(data.message);
-      }
+
+      // if (response.status === 204) {
+      //   console.log("wooorked");
+      //   //console.log(data.message);
+      // }
 
       return data;
     } catch (err) {
