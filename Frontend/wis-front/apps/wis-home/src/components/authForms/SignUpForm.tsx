@@ -24,9 +24,14 @@ function SignUpForm() {
   const formSchema = z.object({
     email: z.string().email({ message: "Please enter email" }),
     userName: z.string().min(5, {
-      message: "Please enter a userName that's at least 5 characters long",
+      message: "Please enter a username that is at least 5 characters long",
     }),
-    password: z.string().min(4, { message: "Please enter password" }),
+    password: z
+      .string()
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+        "Password must be at least 6 characters long and include special characters, alphanumerics, upper and lower case"
+      ),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({

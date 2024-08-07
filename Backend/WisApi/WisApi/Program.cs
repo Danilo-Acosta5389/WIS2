@@ -72,15 +72,9 @@ namespace WisApi
 
             //Bad Password only for development
             // Identity & Auth config
-            builder.Services.AddIdentity<ExtendedIdentityUser, IdentityRole>(options =>
-            {
-                options.Password.RequiredLength = 3;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<AuthDbContext>()
-            .AddDefaultTokenProviders();
+            builder.Services.AddIdentity<ExtendedIdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AuthDbContext>()
+                .AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(options =>
             {
