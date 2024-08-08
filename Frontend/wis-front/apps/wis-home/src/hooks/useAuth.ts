@@ -58,8 +58,8 @@ export const useAuth = () => {
     return response;
   };
 
-  // Check if authenticated
-  const isLogged = () => localStorage.getItem("isAuthenticated") === "true";
+  // Check if authenticated - NOT IN USE
+  // const isLogged = () => localStorage.getItem("isAuthenticated") === "true";
 
   // get refresh token
   const refresh = async () => {
@@ -80,9 +80,13 @@ export const useAuth = () => {
     password: string;
   }
 
+  interface RegisterResponse {
+    message: string;
+  }
+
   const registerUser = async (
     params: RegisterForm
-  ): Promise<RegisterForm | undefined> => {
+  ): Promise<RegisterResponse | undefined> => {
     const response = await fetch(REGISTER, {
       method: "POST",
       headers: {
@@ -90,12 +94,14 @@ export const useAuth = () => {
       },
       body: JSON.stringify(params),
     });
+    console.log(response);
 
     const data = await response.json();
+
     return data;
   };
 
-  return { signIn, signOut, isLogged, refresh, registerUser };
+  return { signIn, signOut, refresh, registerUser };
 };
 
 export type AuthContext = ReturnType<typeof useAuth>;

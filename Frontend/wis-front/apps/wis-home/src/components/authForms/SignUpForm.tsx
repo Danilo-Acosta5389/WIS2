@@ -18,6 +18,7 @@ import { useAuth } from "../../hooks/useAuth.ts";
 
 function SignUpForm() {
   const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | undefined>("");
   const { registerUser } = useAuth();
 
   // zod form schema
@@ -45,17 +46,23 @@ function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await registerUser({
+      const data = await registerUser({
         email: values.email,
         userName: values.userName,
         password: values.password,
       });
+      console.log(data);
+      if (data?.message != "Success") {
+        setErrorMsg(data?.message);
+        return;
+      }
     } catch (err) {
       console.log(err);
     }
     form.reset();
     console.log(values);
     setSuccess(true);
+    setErrorMsg("");
   }
   return (
     <d.Dialog>
@@ -69,7 +76,7 @@ function SignUpForm() {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="bg-black text-white flex flex-col my-10 max-w-[48rem]"
+              className="bg-black text-white flex flex-col my-5 max-w-[48rem]"
             >
               <FormField
                 control={form.control}
@@ -132,7 +139,12 @@ function SignUpForm() {
                           className=" bg-slate-600 text-white max-w-[40rem] placeholder:text-slate-400"
                         />
                       </FormControl>
-                      <FormMessage className=" text-lg sm:mt-1 sm:ml-5 justify-self-end" />
+                      <FormMessage className=" text-lg pt-2 sm:mt-1 sm:ml-5 justify-self-end" />
+                      {errorMsg != "" && (
+                        <p className=" text-lg pt-2 font-semibold sm:mt-1 sm:ml-5 justify-self-end text-destructive">
+                          {errorMsg}
+                        </p>
+                      )}
                     </FormItem>
                   );
                 }}

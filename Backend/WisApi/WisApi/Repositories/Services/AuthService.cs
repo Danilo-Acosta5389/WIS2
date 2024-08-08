@@ -62,14 +62,26 @@ namespace WisApi.Repositories.Services
         }
 
         //Register  USER NOT ALLOWED TO USE "-" and maybe other special chars aswell
-        public async Task<bool> RegisterAsync(RegisterRequestDTO registerRequestDTO)
+        public async Task<string> RegisterAsync(RegisterRequestDTO registerRequestDTO)
         {
+            var result = new RegisterResultDTO();
+
             var user = new ExtendedIdentityUser
             {
                 UserName = registerRequestDTO.UserName,
                 Email = registerRequestDTO.Email,
                 PublicId = Guid.NewGuid().ToString()
             };
+
+            var emailCheck = await _userManager!.FindByEmailAsync(user.Email);
+            if (emailCheck != null)
+                return "Email already registered";
+
+            //Check username availabillity
+            var userNameCheck = await _userManager!.FindByNameAsync(user.UserName);
+            if (userNameCheck != null)
+                return "Username already taken";
+
             var identityResult = await _userManager!.CreateAsync(user, registerRequestDTO.Password);
 
             if (identityResult.Succeeded)
@@ -82,7 +94,7 @@ namespace WisApi.Repositories.Services
                 identityResult = await _userManager.AddToRolesAsync(user, roles);
                 if (identityResult.Succeeded)
                 {
-                    return true;
+                    return "Success";
                 }
 
                 //Save this for later
@@ -95,7 +107,7 @@ namespace WisApi.Repositories.Services
                 //    }
                 //}
             }
-            return false;
+            return "Error";
         }
 
         //Sign out by deleting HttpOnly Cookies

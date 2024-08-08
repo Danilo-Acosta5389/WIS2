@@ -7,7 +7,7 @@ namespace WisApi.Repositories.Interfaces
     {
         Task<LoginResponseDTO> LoginAsync([FromBody] LoginRequestDTO loginRequestDTO);
 
-        Task<bool> RegisterAsync([FromBody] RegisterRequestDTO registerRequestDTO);
+        Task<string> RegisterAsync([FromBody] RegisterRequestDTO registerRequestDTO);
 
         Task<bool> SignOutAsync(HttpContext context);
     }
