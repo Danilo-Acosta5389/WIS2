@@ -65,7 +65,7 @@ namespace WisApi.Repositories.Services
 
             // Create tokens
             var jwtToken = CreateJWTToken(user, roles.ToList());
-            var refreshToken = GenerateRefreshTokenString();
+            var refreshToken = GenerateTokenString(64);
 
             response = new LoginResponseDTO
             {
@@ -100,9 +100,9 @@ namespace WisApi.Repositories.Services
         }
 
 
-        public string GenerateRefreshTokenString()
+        public string GenerateTokenString(int byteSize)
         {
-            var randomNumber = new byte[64];
+            var randomNumber = new byte[byteSize];
 
             using (var numberGenerator = RandomNumberGenerator.Create())
             {

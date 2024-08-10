@@ -16,5 +16,7 @@ namespace WisApi.Models
         public string? Bio {  get; set; }
 
         public string? ImageName {  get; set; }
+
+        public string? VerificationCode { get; set; }  //Need new migration
     }
 }

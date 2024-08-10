@@ -7,5 +7,6 @@
         public string? RefreshToken { get; set; } = "";
         public bool? IsBlocked { get; set; }
         public bool? IsSuccess { get; set; }
+        public bool? IsVerified { get; set; }
     }
 }

@@ -11,6 +11,8 @@ export const SIGN_OUT = BASE_URL + "/api/Auth/SignOut";
 
 export const REGISTER = BASE_URL + "/api/Auth/Register";
 
+export const VERIFY_EMAIL = BASE_URL + "/api/Auth/Verify";
+
 //TOPICS
 export const GET_TOPICS = BASE_URL + "/api/Topic/Topics";
 

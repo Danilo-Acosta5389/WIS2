@@ -21,6 +21,7 @@ import { useAuth } from "../../hooks/useAuth.ts";
 import { useEffect, useState } from "react";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 import { useNavigate } from "@tanstack/react-router";
+import VerificationForm from "./VerificationForm.tsx";
 
 // For decoder
 interface CustomJwtPayload extends JwtPayload {
@@ -42,7 +43,11 @@ const LoginForm = () => {
   const [jwt, setJwt] = useState<string | undefined>(undefined);
   const { signIn } = useAuth();
   const [error, setError] = useState<boolean>(false);
-  const [blocked, setBlocked] = useState(false);
+  const [signInState, setSignInState] = useState<
+    "NORMAL" | "BLOCKED" | "UNVERIFIED"
+  >("NORMAL");
+
+  const [email, setEmail] = useState("");
 
   // zod form schema
   const formSchema = z.object({
@@ -61,8 +66,8 @@ const LoginForm = () => {
   });
 
   useEffect(() => {
-    console.log("Blocked is: " + blocked);
-  }, [blocked]);
+    console.log("SignInState is: " + signInState);
+  }, [signInState]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -73,7 +78,14 @@ const LoginForm = () => {
 
       //console.log(login);
       if (login?.message === "BLOCKED") {
-        setBlocked(true);
+        setSignInState("BLOCKED");
+        return;
+      }
+
+      if (login?.message === "UNVERIFIED") {
+        console.log("UNVERIFIED");
+        setSignInState("UNVERIFIED");
+        setEmail(values.email);
         return;
       }
 
@@ -122,14 +134,7 @@ const LoginForm = () => {
       <div className=" h-16 border-b mb-6 w-full rounded-t-lg flex flex-row items-center justify-center ">
         <h3 className=" text-lg font-semibold ">Log in</h3>
       </div>
-      {blocked ? (
-        <>
-          <p className=" w-full flex flex-wrap text-red-500 font-semibold text-lg p-5 m-2 text-center">
-            This account has been blocked. Please contact admin to resolve this
-            issue.
-          </p>
-        </>
-      ) : (
+      {signInState === "NORMAL" && (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -169,6 +174,17 @@ const LoginForm = () => {
             <Button type="submit">Submit</Button>
           </form>
         </Form>
+      )}
+      {signInState === "BLOCKED" && (
+        <>
+          <p className=" w-full flex flex-wrap text-red-500 font-semibold text-lg p-5 m-2 text-center">
+            This account has been blocked. Please contact admin to resolve this
+            issue.
+          </p>
+        </>
+      )}
+      {signInState === "UNVERIFIED" && (
+        <VerificationForm email={email} setSignInState={setSignInState} />
       )}
     </div>
   );

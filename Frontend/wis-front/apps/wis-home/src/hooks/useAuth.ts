@@ -1,4 +1,10 @@
-import { REFRESH, REGISTER, SIGN_IN, SIGN_OUT } from "../api/urls.ts";
+import {
+  REFRESH,
+  REGISTER,
+  SIGN_IN,
+  SIGN_OUT,
+  VERIFY_EMAIL,
+} from "../api/urls.ts";
 
 export const useAuth = () => {
   interface Credentials {
@@ -25,13 +31,7 @@ export const useAuth = () => {
         body: JSON.stringify(creds),
       });
 
-      //console.log(response);
       const data = await response.json();
-
-      // if (response.status === 204) {
-      //   console.log("wooorked");
-      //   //console.log(data.message);
-      // }
 
       return data;
     } catch (err) {
@@ -41,6 +41,33 @@ export const useAuth = () => {
           "Fetch failed - check network, CORS policy, and server status."
         );
       }
+    }
+  }
+
+  //Verify email
+  interface VerifyResponse {
+    message: string;
+  }
+  interface VerifyRequest {
+    email: string;
+    code: string;
+  }
+  async function verifyEmail(
+    params: VerifyRequest
+  ): Promise<VerifyResponse | undefined> {
+    try {
+      const response = await fetch(VERIFY_EMAIL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -101,7 +128,7 @@ export const useAuth = () => {
     return data;
   };
 
-  return { signIn, signOut, refresh, registerUser };
+  return { signIn, signOut, refresh, registerUser, verifyEmail };
 };
 
 export type AuthContext = ReturnType<typeof useAuth>;

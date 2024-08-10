@@ -43,6 +43,13 @@ namespace WisApi.Controllers
 
             if (loginResult.IsSuccess == true)
             {
+                if (loginResult.IsVerified == false)
+                {
+                    response.Message = "UNVERIFIED";
+                    
+                    return Ok(response);
+                }
+
                 if (loginResult.IsBlocked == true)
                 {
                     response.Message = "BLOCKED";
@@ -62,6 +69,17 @@ namespace WisApi.Controllers
             response.Message = "username or password was incorrect";
 
             return Unauthorized(response);
+        }
+
+        [HttpPost("Verify")]
+        public async Task<IActionResult> VerifyEmail(VerifyEmailRequestDTO verify)
+        {
+            var response = await _authRepository.VerifyAccountAsync(verify);
+            
+            if (response)
+                return Ok(new StatusMessageDTO("VERIFIED"));
+            
+            return BadRequest();
         }
 
         
