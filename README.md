@@ -6,6 +6,8 @@ This project is a Single Page Application (SPA) that serves as an online forum. 
 
 The backend consists of a RESTful web API, written in C# with .NET 8, and uses a SQL database.
 
+This project is hosted on a development server. You may visit and test it out [here.](https://dev.whatisspace.online/forum/General)
+
 ## Main Functionality
 
 - Default forum functions such as fetching topics, posts, and comments.
